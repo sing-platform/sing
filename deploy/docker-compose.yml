@@ -1,0 +1,178 @@
+name: sgs-cadi-ms
+
+# Infra base da stack poliglota (E1).
+# Servicos de aplicacao entram nas entregas seguintes:
+#   E2 documents (Python) · E3 communication (Node) · E4 finance (C#) · E5 reports (Python)
+#
+#   docker compose up -d
+#   docker compose --profile observability up -d   # + Jaeger e Prometheus
+
+services:
+  # ------------------------------------------------------------- gateway ----
+  traefik:
+    image: traefik:v3.1
+    container_name: cadi-traefik
+    restart: unless-stopped
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true            # dashboard sem auth: apenas ambiente local
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --accesslog=true
+    ports:
+      - "${TRAEFIK_HTTP_PORT:-8080}:80"
+      - "${TRAEFIK_DASHBOARD_PORT:-8081}:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [cadi]
+
+  # ------------------------------------------------------------ core ---------
+  postgres-core:
+    image: postgres:16-alpine
+    container_name: cadi-postgres-core
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${CORE_DB_NAME:-cadi_core}
+      POSTGRES_USER: ${CORE_DB_USER:-cadi}
+      POSTGRES_PASSWORD: ${CORE_DB_PASSWORD:-cadi}
+    ports:
+      - "${CORE_DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata-core:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${CORE_DB_USER:-cadi} -d ${CORE_DB_NAME:-cadi_core}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [cadi]
+
+  core:
+    build:
+      context: ../services/core
+      dockerfile: Dockerfile
+    container_name: cadi-core
+    restart: unless-stopped
+    depends_on:
+      postgres-core:
+        condition: service_healthy       # sem isto o Spring sobe antes do banco e morre
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres-core:5432/${CORE_DB_NAME:-cadi_core}
+      DB_USER: ${CORE_DB_USER:-cadi}
+      DB_PASSWORD: ${CORE_DB_PASSWORD:-cadi}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER:-cadi}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-cadi}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      CADI_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
+      LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-INFO}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.core.rule=PathPrefix(`/api`) || PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`) || PathPrefix(`/actuator`)
+      - traefik.http.routers.core.entrypoints=web
+      - traefik.http.services.core.loadbalancer.server.port=8080
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 90s
+    networks: [cadi]
+
+  # -------------------------------------------------------- mensageria ------
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: cadi-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-cadi}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-cadi}
+    ports:
+      - "${RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_UI_PORT:-15672}:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 15
+    networks: [cadi]
+
+  # ------------------------------------------------------------ storage -----
+  # MinIO substitui o Azure Blob. Usado pelo servico documents (E2).
+  minio:
+    image: minio/minio:latest
+    container_name: cadi-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USER:-cadiadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?defina MINIO_PASSWORD no .env}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+    networks: [cadi]
+
+  # ----------------------------------------------------------- identity -----
+  # Keycloak emite JWT RS256 e publica o JWKS: nenhum servico precisa da chave
+  # privada, entao nenhum deles consegue forjar token. Ver docs/adr/0002.
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0
+    container_name: cadi-keycloak
+    restart: unless-stopped
+    command: start-dev --http-port=8080
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_PASSWORD:?defina KEYCLOAK_PASSWORD no .env}
+      KC_DB: dev-file
+      KC_HEALTH_ENABLED: "true"
+    ports:
+      - "${KEYCLOAK_PORT:-8180}:8080"
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+    networks: [cadi]
+
+  # ----------------------------------------------- observabilidade (opt) ----
+  jaeger:
+    image: jaegertracing/all-in-one:1.60
+    container_name: cadi-jaeger
+    restart: unless-stopped
+    profiles: [observability]
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "${JAEGER_UI_PORT:-16686}:16686"   # UI
+      - "4317:4317"                        # OTLP gRPC
+      - "4318:4318"                        # OTLP HTTP
+    networks: [cadi]
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: cadi-prometheus
+    restart: unless-stopped
+    profiles: [observability]
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    networks: [cadi]
+
+volumes:
+  pgdata-core:
+  rabbitmq-data:
+  minio-data:
+  keycloak-data:
+
+networks:
+  cadi:
+    driver: bridge

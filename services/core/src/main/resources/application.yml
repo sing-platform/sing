@@ -1,0 +1,108 @@
+spring:
+  application:
+    name: cadi-core
+
+  # ---------------------------------------------------------------- banco ----
+  # PostgreSQL unico (dev, teste e producao). Sem bifurcacao de dialeto.
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/cadi_core}
+    username: ${DB_USER:cadi}
+    password: ${DB_PASSWORD:cadi}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:10}
+      connection-timeout: 30000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/postgresql
+    baseline-on-migrate: true
+    validate-on-migrate: true
+
+  # ------------------------------------------------------------ mensageria ---
+  # A aplicacao sobe mesmo sem broker: os listeners nao iniciam sozinhos e o
+  # outbox retem as mensagens ate o RabbitMQ voltar.
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    virtual-host: ${RABBITMQ_VHOST:/}
+    ssl:
+      enabled: ${RABBITMQ_SSL_ENABLED:false}
+    connection-timeout: 5000ms
+    template:
+      retry:
+        enabled: true
+        initial-interval: 2s
+        max-attempts: 3
+        multiplier: 2.0
+    listener:
+      simple:
+        auto-startup: ${RABBITMQ_LISTENER_AUTO_STARTUP:false}
+
+  # ------------------------------------------------------------------ mail ---
+  # Sem credencial versionada. Deixe SPRING_MAIL_* vazio para nao enviar e-mail.
+  mail:
+    host: ${SPRING_MAIL_HOST:localhost}
+    port: ${SPRING_MAIL_PORT:1025}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${SPRING_MAIL_SMTP_AUTH:false}
+          starttls:
+            enable: ${SPRING_MAIL_STARTTLS:false}
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+server:
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  # Sem broker/SMTP no ambiente padrao: nao deixar o health geral cair por isso.
+  health:
+    rabbit:
+      enabled: ${HEALTH_RABBIT_ENABLED:false}
+    mail:
+      enabled: ${HEALTH_MAIL_ENABLED:false}
+
+cadi:
+  jwt:
+    # Obrigatorio em qualquer ambiente real. Ver docs/adr/0002 (RS256 + JWKS).
+    secret: ${JWT_SECRET:8472B4B6250646352665582F413F4536A586E3272357538767566B5970404E42}
+    expiration: ${JWT_EXPIRATION:86400000}
+  cors:
+    allowed-origin-patterns: ${CADI_CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,http://localhost}
+  storage:
+    connection-string: ${AZURE_STORAGE_CONNECTION_STRING:}
+    container-name: ${AZURE_STORAGE_CONTAINER_NAME:cadistorage}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    br.cadi: ${LOG_LEVEL_CADI:INFO}

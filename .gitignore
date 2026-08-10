@@ -1,0 +1,48 @@
+# ---- Java / Maven (services/core) ----
+target/
+!.mvn/wrapper/maven-wrapper.jar
+*.jar
+*.war
+*.class
+
+# ---- Python (services/documents, services/reports) ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---- Node / TypeScript (services/communication) ----
+node_modules/
+dist/
+*.tsbuildinfo
+.pnpm-store/
+
+# ---- .NET (services/finance) ----
+bin/
+obj/
+*.user
+
+# ---- Segredos e ambiente ----
+.env
+.env.local
+*.pem
+*.key
+!deploy/**/*.example
+
+# ---- Dados de container (volumes locais) ----
+deploy/**/data/
+deploy/**/pgdata/
+
+# ---- IDEs ----
+.idea/
+.vscode/
+*.iml
+*.swp
+.DS_Store
+
+# ---- Logs ----
+*.log
+logs/

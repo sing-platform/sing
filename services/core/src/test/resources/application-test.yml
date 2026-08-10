@@ -1,0 +1,51 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:cadidb-test;DB_CLOSE_DELAY=-1;MODE=LEGACY;NON_KEYWORDS=USER,ROLE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    open-in-view: false
+
+  # Flyway desligado nos testes — schema gerado pelo Hibernate
+  flyway:
+    enabled: false
+
+  # RabbitMQ desativado — listeners não sobem; ResilientMessagingService cai em outbox
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 1000ms
+    listener:
+      simple:
+        auto-startup: false
+
+  # Mail mock (não há servidor real nos testes)
+  mail:
+    host: localhost
+    port: 25
+    test-connection: false
+
+cadi:
+  jwt:
+    # Chave HMAC-SHA256 fixa para testes (32 bytes hex, 64 chars)
+    secret: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    expiration: 3600000   # 1 h
+  cors:
+    allowed-origin-patterns: http://localhost:5173
+  storage:
+    connection-string: DefaultEndpointsProtocol=https;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://127.0.0.1:10000/devstoreaccount1;
+    container-name: test
+
+logging:
+  level:
+    org.springframework: WARN
+    org.hibernate: WARN
+    br.cadi: INFO
