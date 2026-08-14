@@ -42,7 +42,7 @@ docs/           decisões e notas de implementação
 
 | # | Entrega | Status |
 |---|---|---|
-| **E1** | Infra base (compose, Traefik, Keycloak, OTel) + core migrado para PostgreSQL | 🚧 em andamento |
+| **E1** | Infra base (compose, Traefik, Keycloak, OTel) + core migrado para PostgreSQL | ✅ concluída |
 | E2 | `documents` (Python) | ⬜ |
 | E3 | `communication` (Node/TS + MongoDB) | ⬜ |
 | E4 | `finance` (C#/.NET + MySQL) | ⬜ |
