@@ -24,8 +24,8 @@ public class DescriptiveReportsSummaryReport extends AbstractReport implements R
             INNER JOIN collaborator c ON c.person_id = dr.author_id
             INNER JOIN person ap ON ap.id = c.person_id
             WHERE dr.is_active = TRUE
-              AND (:schoolroomId IS NULL OR dr.schoolroom_id = :schoolroomId)
-              AND (:status IS NULL OR dr.status = :status)
+              AND (CAST(:schoolroomId AS BIGINT) IS NULL OR dr.schoolroom_id = :schoolroomId)
+              AND (CAST(:status AS VARCHAR) IS NULL OR dr.status = :status)
             GROUP BY sr.name, ap.name, dr.status
             ORDER BY sr.name, dr.status
             """;

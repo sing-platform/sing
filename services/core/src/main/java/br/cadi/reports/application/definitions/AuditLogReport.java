@@ -22,8 +22,8 @@ public class AuditLogReport extends AbstractReport implements ReportDefinition {
                 al.changed_at
             FROM audit_log al
             WHERE CAST(al.changed_at AS DATE) BETWEEN :start AND :end
-              AND (:tableName IS NULL OR al.table_name = :tableName)
-              AND (:changedBy IS NULL OR al.changed_by = :changedBy)
+              AND (CAST(:tableName AS VARCHAR) IS NULL OR al.table_name = :tableName)
+              AND (CAST(:changedBy AS BIGINT) IS NULL OR al.changed_by = :changedBy)
             ORDER BY al.changed_at DESC
             """;
 

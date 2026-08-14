@@ -10,21 +10,23 @@ name: sgs-cadi-ms
 services:
   # ------------------------------------------------------------- gateway ----
   traefik:
-    image: traefik:v3.1
+    image: traefik:v3.3
     container_name: cadi-traefik
     restart: unless-stopped
     command:
       - --api.dashboard=true
       - --api.insecure=true            # dashboard sem auth: apenas ambiente local
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
+      # File provider em vez de docker provider: nao exige montar o docker.sock
+      # (que daria acesso root ao host) e nao depende da API do daemon.
+      - --providers.file.directory=/etc/traefik/dynamic
+      - --providers.file.watch=true
       - --entrypoints.web.address=:80
       - --accesslog=true
     ports:
       - "${TRAEFIK_HTTP_PORT:-8080}:80"
       - "${TRAEFIK_DASHBOARD_PORT:-8081}:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/dynamic:/etc/traefik/dynamic:ro
     networks: [cadi]
 
   # ------------------------------------------------------------ core ---------
@@ -45,6 +47,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 20
+      start_period: 30s
     networks: [cadi]
 
   core:
@@ -68,11 +71,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
       CADI_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-INFO}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.core.rule=PathPrefix(`/api`) || PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`) || PathPrefix(`/actuator`)
-      - traefik.http.routers.core.entrypoints=web
-      - traefik.http.services.core.loadbalancer.server.port=8080
+    # Roteamento declarado em traefik/dynamic/routes.yml (file provider).
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1"]
       interval: 15s
@@ -99,6 +98,9 @@ services:
       interval: 10s
       timeout: 10s
       retries: 15
+      # O broker leva ~60s para subir (feature flags + mnesia). Sem start_period
+      # o Docker conta as falhas do boot como reais e o depends_on desiste antes.
+      start_period: 90s
     networks: [cadi]
 
   # ------------------------------------------------------------ storage -----
@@ -121,6 +123,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 15
+      start_period: 30s
     networks: [cadi]
 
   # ----------------------------------------------------------- identity -----

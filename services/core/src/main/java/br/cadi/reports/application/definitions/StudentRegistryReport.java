@@ -35,7 +35,7 @@ public class StudentRegistryReport extends AbstractReport implements ReportDefin
             LEFT JOIN address a ON a.id = p.address_id
             LEFT JOIN enrollment en ON en.student_id = s.person_id AND en.status = TRUE AND en.is_active = TRUE
             LEFT JOIN schoolroom sr ON sr.id = en.schoolroom_id
-            WHERE (:schoolroomId IS NULL OR en.schoolroom_id = :schoolroomId)
+            WHERE (CAST(:schoolroomId AS BIGINT) IS NULL OR en.schoolroom_id = :schoolroomId)
             ORDER BY p.name
             """;
 

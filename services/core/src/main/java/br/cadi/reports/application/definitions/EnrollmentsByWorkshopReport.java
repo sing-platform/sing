@@ -30,7 +30,7 @@ public class EnrollmentsByWorkshopReport extends AbstractReport implements Repor
             INNER JOIN workshop w ON w.id = sr.workshop_id
             LEFT JOIN enrollment en ON en.schoolroom_id = sr.id AND en.status = TRUE AND en.is_active = TRUE
             WHERE sr.is_active = TRUE
-              AND (:workshopId IS NULL OR w.id = :workshopId)
+              AND (CAST(:workshopId AS BIGINT) IS NULL OR w.id = :workshopId)
             GROUP BY w.name, sr.id, sr.name, sr.capacity
             ORDER BY w.name, sr.name
             """;

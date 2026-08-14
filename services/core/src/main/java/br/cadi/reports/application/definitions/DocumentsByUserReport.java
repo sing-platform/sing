@@ -25,9 +25,9 @@ public class DocumentsByUserReport extends AbstractReport implements ReportDefin
                 ud.active
             FROM user_documents ud
             INNER JOIN person p ON p.id = ud.owner_person_id
-            WHERE (:ownerPersonId IS NULL OR ud.owner_person_id = :ownerPersonId)
-              AND (:category IS NULL OR ud.category = :category)
-              AND (:activeOnly IS NULL OR ud.active = :activeOnly)
+            WHERE (CAST(:ownerPersonId AS BIGINT) IS NULL OR ud.owner_person_id = :ownerPersonId)
+              AND (CAST(:category AS VARCHAR) IS NULL OR ud.category = :category)
+              AND (CAST(:activeOnly AS BOOLEAN) IS NULL OR ud.active = :activeOnly)
             ORDER BY ud.uploaded_at DESC
             """;
 

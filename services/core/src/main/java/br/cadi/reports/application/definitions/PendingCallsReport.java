@@ -16,7 +16,9 @@ public class PendingCallsReport extends AbstractReport implements ReportDefiniti
             WITH RECURSIVE dates(dt) AS (
                 SELECT CAST(:start AS DATE)
                 UNION ALL
-                SELECT dt + INTERVAL '1 day' FROM dates WHERE dt < :end
+                -- dt + 1 (nao INTERVAL): em PostgreSQL date+interval devolve
+                -- timestamp e o CTE recursivo exige o mesmo tipo dos dois lados.
+                SELECT dt + 1 FROM dates WHERE dt < :end
             ),
             expected_days AS (
                 SELECT sr.id AS schoolroom_id, sr.name AS schoolroom_name,
@@ -26,7 +28,7 @@ public class PendingCallsReport extends AbstractReport implements ReportDefiniti
                 CROSS JOIN dates d
                 LEFT JOIN person tp ON tp.id = sr.teacher_id
                 WHERE sr.is_active = TRUE AND sr.teacher_id IS NOT NULL
-                  AND (:teacherId IS NULL OR sr.teacher_id = :teacherId)
+                  AND (CAST(:teacherId AS BIGINT) IS NULL OR sr.teacher_id = :teacherId)
                   AND (
                     (EXTRACT(ISODOW FROM d.dt) = 1 AND slot.day_of_week = 'MONDAY')
                     OR (EXTRACT(ISODOW FROM d.dt) = 2 AND slot.day_of_week = 'TUESDAY')

@@ -25,7 +25,7 @@ public class TeacherWorkloadReport extends AbstractReport implements ReportDefin
             INNER JOIN person p ON p.id = sr.teacher_id
             INNER JOIN workshop w ON w.id = sr.workshop_id
             WHERE sr.is_active = TRUE AND sr.teacher_id IS NOT NULL
-              AND (:teacherId IS NULL OR sr.teacher_id = :teacherId)
+              AND (CAST(:teacherId AS BIGINT) IS NULL OR sr.teacher_id = :teacherId)
             ORDER BY p.name, slot.day_of_week, slot.start_time
             """;
 

@@ -72,8 +72,13 @@ docker compose exec postgres-core psql -U cadi -d cadi_core -c '\dt'
 ## Notas
 
 - **Healthcheck com `depends_on: service_healthy`** é obrigatório aqui: sem isso o Spring
-  sobe antes do PostgreSQL aceitar conexão e o container morre no boot.
-- **Traefik roteia por path** (`/api`, `/swagger-ui`, `/actuator`). Serviços novos entram
-  declarando labels no próprio compose — sem arquivo de configuração central.
+  sobe antes do PostgreSQL aceitar conexão e o container morre no boot. O RabbitMQ precisa
+  de `start_period: 90s` — leva ~60s para subir e sem carência o Docker conta as falhas de
+  boot como reais.
+- **Traefik roteia por path** (`/api`, `/swagger-ui`, `/actuator`) via **file provider**,
+  em `traefik/dynamic/routes.yml`. Serviços novos entram editando esse arquivo (recarrega
+  sozinho, sem restart). Não usamos o docker provider: ele exige montar `/var/run/docker.sock`
+  no gateway — acesso root ao host — e o socket do Docker Desktop 29.x não responde a
+  clientes em container.
 - O core roda com `ddl-auto: validate`: o schema vem das migrations Flyway em
   `services/core/src/main/resources/db/migration/postgresql`, nunca do Hibernate.

@@ -1,0 +1,30 @@
+# Roteamento declarativo (file provider).
+#
+# Optamos por file provider em vez do docker provider por dois motivos:
+#   1. seguranca — o docker provider exige montar /var/run/docker.sock no
+#      container do gateway, o que equivale a dar acesso root ao host;
+#   2. compatibilidade — o socket do Docker Desktop 29.x nao responde a
+#      clientes em container (o Traefik recebe erro vazio do daemon).
+#
+# Os servicos sao poucos e conhecidos, entao declarar aqui e explicito e
+# revisavel. Alterar este arquivo NAO exige reiniciar o Traefik (watch: true).
+
+http:
+  routers:
+    core:
+      rule: "PathPrefix(`/api`) || PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`) || PathPrefix(`/actuator`)"
+      entryPoints: [web]
+      service: core
+
+    # E2..E5 entram aqui conforme os servicos forem criados. Exemplo:
+    # documents:
+    #   rule: "PathPrefix(`/api/documents`)"
+    #   entryPoints: [web]
+    #   service: documents
+    #   priority: 100        # mais especifico que o router do core
+
+  services:
+    core:
+      loadBalancer:
+        servers:
+          - url: "http://core:8080"

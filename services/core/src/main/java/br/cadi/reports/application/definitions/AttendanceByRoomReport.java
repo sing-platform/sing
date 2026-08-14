@@ -16,7 +16,9 @@ public class AttendanceByRoomReport extends AbstractReport implements ReportDefi
             WITH RECURSIVE dates(dt) AS (
                 SELECT CAST(:start AS DATE)
                 UNION ALL
-                SELECT dt + INTERVAL '1 day' FROM dates WHERE dt < :end
+                -- dt + 1 (nao INTERVAL): em PostgreSQL date+interval devolve
+                -- timestamp e o CTE recursivo exige o mesmo tipo dos dois lados.
+                SELECT dt + 1 FROM dates WHERE dt < :end
             ),
             expected AS (
                 SELECT sr.id AS schoolroom_id, COUNT(*) AS expected_lectures
@@ -24,7 +26,7 @@ public class AttendanceByRoomReport extends AbstractReport implements ReportDefi
                 INNER JOIN schoolroom_schedule_slot slot ON slot.schoolroom_id = sr.id AND slot.is_active = TRUE
                 CROSS JOIN dates d
                 WHERE sr.is_active = TRUE
-                  AND (:workshopId IS NULL OR sr.workshop_id = :workshopId)
+                  AND (CAST(:workshopId AS BIGINT) IS NULL OR sr.workshop_id = :workshopId)
                   AND (
                     (EXTRACT(ISODOW FROM d.dt) = 1 AND slot.day_of_week = 'MONDAY')
                     OR (EXTRACT(ISODOW FROM d.dt) = 2 AND slot.day_of_week = 'TUESDAY')
@@ -60,7 +62,7 @@ public class AttendanceByRoomReport extends AbstractReport implements ReportDefi
                 AND CAST(l.date_time AS DATE) BETWEEN :start AND :end AND l.is_active = TRUE
             LEFT JOIN attendance a ON a.lecture_id = l.id AND a.is_active = TRUE
             WHERE sr.is_active = TRUE
-              AND (:workshopId IS NULL OR sr.workshop_id = :workshopId)
+              AND (CAST(:workshopId AS BIGINT) IS NULL OR sr.workshop_id = :workshopId)
             GROUP BY sr.id, sr.name, w.name, tp.name, e.expected_lectures
             ORDER BY sr.name
             """;

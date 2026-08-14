@@ -26,8 +26,8 @@ public class StudentAttendanceDetailReport extends AbstractReport implements Rep
             INNER JOIN person sp ON sp.id = a.student_id
             WHERE a.is_active = TRUE
               AND CAST(l.date_time AS DATE) BETWEEN :start AND :end
-              AND (:studentId IS NULL OR a.student_id = :studentId)
-              AND (:schoolroomId IS NULL OR l.schoolroom_id = :schoolroomId)
+              AND (CAST(:studentId AS BIGINT) IS NULL OR a.student_id = :studentId)
+              AND (CAST(:schoolroomId AS BIGINT) IS NULL OR l.schoolroom_id = :schoolroomId)
             ORDER BY sp.name, l.date_time
             """;
 

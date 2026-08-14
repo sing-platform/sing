@@ -47,7 +47,7 @@ public class StudentsAtRiskReport extends AbstractReport implements ReportDefini
             INNER JOIN lecture l ON l.schoolroom_id = sr.id
                 AND CAST(l.date_time AS DATE) BETWEEN :start AND :end AND l.is_active = TRUE
             INNER JOIN attendance a ON a.lecture_id = l.id AND a.student_id = s.person_id AND a.is_active = TRUE
-            WHERE (:schoolroomId IS NULL OR sr.id = :schoolroomId)
+            WHERE (CAST(:schoolroomId AS BIGINT) IS NULL OR sr.id = :schoolroomId)
             GROUP BY s.person_id, sp.name, sr.id, sr.name
             HAVING COUNT(a.id) > 0
                AND (100.0 * SUM(CASE WHEN a.status = 'PRESENT' THEN 1 ELSE 0 END) / COUNT(a.id)) < :thresholdPct

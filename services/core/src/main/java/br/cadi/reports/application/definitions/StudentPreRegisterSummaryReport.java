@@ -21,7 +21,7 @@ public class StudentPreRegisterSummaryReport extends AbstractReport implements R
                 MAX(spr.created_at) AS newest_registration
             FROM student_pre_register spr
             INNER JOIN workshop w ON w.id = spr.workshop_id
-            WHERE (:workshopId IS NULL OR spr.workshop_id = :workshopId)
+            WHERE (CAST(:workshopId AS BIGINT) IS NULL OR spr.workshop_id = :workshopId)
             GROUP BY w.name, spr.shift
             ORDER BY w.name, spr.shift
             """;

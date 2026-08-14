@@ -23,10 +23,10 @@ public class StudentPreRegisterListReport extends AbstractReport implements Repo
                 spr.created_at
             FROM student_pre_register spr
             INNER JOIN workshop w ON w.id = spr.workshop_id
-            WHERE (:workshopId IS NULL OR spr.workshop_id = :workshopId)
-              AND (:shift IS NULL OR spr.shift = :shift)
-              AND (:start IS NULL OR CAST(spr.created_at AS DATE) >= :start)
-              AND (:end   IS NULL OR CAST(spr.created_at AS DATE) <= :end)
+            WHERE (CAST(:workshopId AS BIGINT) IS NULL OR spr.workshop_id = :workshopId)
+              AND (CAST(:shift AS VARCHAR) IS NULL OR spr.shift = :shift)
+              AND (CAST(:start AS DATE) IS NULL OR CAST(spr.created_at AS DATE) >= :start)
+              AND (CAST(:end AS DATE)   IS NULL OR CAST(spr.created_at AS DATE) <= :end)
             ORDER BY spr.created_at ASC
             """;
 
