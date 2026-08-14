@@ -68,6 +68,12 @@ services:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_USER: ${RABBITMQ_USER:-cadi}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-cadi}
+      # O compose ja espera o broker ficar saudavel, entao os listeners podem
+      # subir junto com a aplicacao (o RabbitListenerInitializer segue como
+      # rede de seguranca se o broker cair depois).
+      RABBITMQ_LISTENER_AUTO_STARTUP: "true"
+      CADI_EVENTS_EXCHANGE: ${EVENTS_EXCHANGE:-cadi.events}
+      CADI_SERVICES_DOCUMENTS_BASE_URL: http://documents:8000
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
       CADI_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-INFO}
@@ -78,6 +84,61 @@ services:
       timeout: 5s
       retries: 10
       start_period: 90s
+    networks: [cadi]
+
+  # ------------------------------------------------------- documents --------
+  # Servico em Python (FastAPI) com banco proprio: nenhum servico le a tabela
+  # do outro. Substitui o modulo `document` do core.
+  postgres-documents:
+    image: postgres:16-alpine
+    container_name: cadi-postgres-documents
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DOCS_DB_NAME:-cadi_documents}
+      POSTGRES_USER: ${DOCS_DB_USER:-cadi}
+      POSTGRES_PASSWORD: ${DOCS_DB_PASSWORD:-cadi}
+    ports:
+      - "${DOCS_DB_PORT:-5433}:5432"
+    volumes:
+      - pgdata-documents:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DOCS_DB_USER:-cadi} -d ${DOCS_DB_NAME:-cadi_documents}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    networks: [cadi]
+
+  documents:
+    build:
+      context: ../services/documents
+      dockerfile: Dockerfile
+    container_name: cadi-documents
+    restart: unless-stopped
+    depends_on:
+      postgres-documents:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${DOCS_DB_USER:-cadi}:${DOCS_DB_PASSWORD:-cadi}@postgres-documents:5432/${DOCS_DB_NAME:-cadi_documents}
+      S3_ENDPOINT: http://minio:9000
+      S3_ACCESS_KEY: ${MINIO_USER:-cadiadmin}
+      S3_SECRET_KEY: ${MINIO_PASSWORD:?defina MINIO_PASSWORD no .env}
+      S3_BUCKET: ${DOCS_BUCKET:-cadi-documents}
+      # Mesmo segredo do core: a assinatura ainda e HS256 (ver app/security.py).
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: ${RABBITMQ_USER:-cadi}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-cadi}
+      RABBITMQ_EXCHANGE: ${EVENTS_EXCHANGE:-cadi.events}
+      CORE_BASE_URL: http://core:8080
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8000/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
     networks: [cadi]
 
   # -------------------------------------------------------- mensageria ------
@@ -172,6 +233,7 @@ services:
 
 volumes:
   pgdata-core:
+  pgdata-documents:
   rabbitmq-data:
   minio-data:
   keycloak-data:

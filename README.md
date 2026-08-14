@@ -43,7 +43,7 @@ docs/           decisões e notas de implementação
 | # | Entrega | Status |
 |---|---|---|
 | **E1** | Infra base (compose, Traefik, Keycloak, OTel) + core migrado para PostgreSQL | ✅ concluída |
-| E2 | `documents` (Python) | ⬜ |
+| **E2** | [`documents`](services/documents) (Python + PostgreSQL + MinIO), evento `AtestadoApproved` | ✅ concluída |
 | E3 | `communication` (Node/TS + MongoDB) | ⬜ |
 | E4 | `finance` (C#/.NET + MySQL) | ⬜ |
 | E5 | `reports` (Python + read model CQRS) | ⬜ |

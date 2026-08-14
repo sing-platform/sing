@@ -88,6 +88,12 @@ management:
       enabled: ${HEALTH_MAIL_ENABLED:false}
 
 cadi:
+  # Enderecos dos demais servicos da stack.
+  services:
+    documents:
+      base-url: ${CADI_SERVICES_DOCUMENTS_BASE_URL:http://localhost:8000}
+  events:
+    exchange: ${CADI_EVENTS_EXCHANGE:cadi.events}
   jwt:
     # Obrigatorio em qualquer ambiente real. Ver docs/adr/0002 (RS256 + JWKS).
     secret: ${JWT_SECRET:8472B4B6250646352665582F413F4536A586E3272357538767566B5970404E42}

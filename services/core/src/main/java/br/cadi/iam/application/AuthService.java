@@ -10,6 +10,7 @@ import br.cadi.iam.api.AuthRequest;
 import br.cadi.iam.api.AuthResponse;
 import br.cadi.iam.api.ChangePasswordRequest;
 import br.cadi.iam.api.RegisterRequest;
+import br.cadi.people.infra.repositories.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,20 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PersonRepository personRepository;
+
+    /**
+     * Claims que tornam o token autossuficiente para os demais servicos.
+     *
+     * <p>{@code pid} (id da pessoa) evita que cada servico precise perguntar ao
+     * core quem e o portador do token a cada requisicao. Nem todo usuario tem
+     * pessoa associada, entao a claim e opcional.</p>
+     */
+    private java.util.Map<String, Object> identityClaims(User user) {
+        return personRepository.findByUserId(user.getId())
+                .<java.util.Map<String, Object>>map(p -> java.util.Map.of("pid", p.getId()))
+                .orElseGet(java.util.Map::of);
+    }
 
     public AuthResponse register(RegisterRequest request) {
 
@@ -49,7 +64,7 @@ public class AuthService {
             });
             repository.save(user);
 
-            var jwtToken = jwtService.generateToken(user);
+            var jwtToken = jwtService.generateToken(identityClaims(user), user);
             return AuthResponse.builder()
                     .token(jwtToken)
                     .build();
@@ -73,7 +88,7 @@ public class AuthService {
 
             var user = repository.findByEmail(request.getEmail())
                     .orElseThrow();
-            var jwtToken = jwtService.generateToken(user);
+            var jwtToken = jwtService.generateToken(identityClaims(user), user);
             return AuthResponse.builder()
                     .token(jwtToken)
                     .build();

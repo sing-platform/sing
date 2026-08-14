@@ -5,7 +5,7 @@ import br.cadi.academic.api.dto.request.*;
 import br.cadi.academic.domain.entities.*;
 import br.cadi.academic.domain.enums.AttendanceStatus;
 import br.cadi.academic.infra.repositories.*;
-import br.cadi.document.application.AtestadoApprovalService;
+import br.cadi.academic.infra.client.DocumentsClient;
 import br.cadi.exception.*;
 import br.cadi.people.domain.entities.Collaborator;
 import br.cadi.people.infra.repositories.CollaboratorRepository;
@@ -35,7 +35,7 @@ public class AttendanceService {
     private final SchoolRoomRepository schoolRoomRepository;
     private final SchoolRoomScheduleSlotRepository scheduleSlotRepository;
     private final AuditLogService auditLogService;
-    private final AtestadoApprovalService atestadoApprovalService;
+    private final DocumentsClient documentsClient;
 
     @Transactional(readOnly = true)
     public LectureCallResponse startCall(Long schoolroomId, LocalDate date) {
@@ -169,8 +169,10 @@ public class AttendanceService {
         Long justifyingDocId = null;
 
         if (requestedStatus == AttendanceStatus.ABSENT) {
-            justifyingDocId = atestadoApprovalService.findCoveringApprovedAtestado(
-                    attendance.getStudent().getId(), lectureDate);
+            // Consulta o servico de documentos. Se ele estiver fora, devolve null e
+            // a falta fica ABSENT — o evento AtestadoApproved corrige depois.
+            justifyingDocId = documentsClient.findCoveringApprovedAtestado(
+                    attendance.getStudent().getId(), lectureDate, currentBearerToken());
             if (justifyingDocId != null) {
                 finalStatus = AttendanceStatus.JUSTIFIED;
             }
@@ -180,6 +182,24 @@ public class AttendanceService {
         attendance.setJustifiedByDocumentId(
                 finalStatus == AttendanceStatus.JUSTIFIED ? justifyingDocId : null
         );
+    }
+
+    /**
+     * Repassa o token de quem fez a requisicao para o servico de documentos.
+     *
+     * <p>Propagar a credencial do usuario, em vez de usar um token de servico,
+     * mantem a autorizacao no dominio de quem e dono do dado: o documents
+     * decide o que esse usuario pode ver.</p>
+     */
+    private String currentBearerToken() {
+        var attrs = org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
+        if (attrs instanceof org.springframework.web.context.request.ServletRequestAttributes sra) {
+            String header = sra.getRequest().getHeader("Authorization");
+            if (header != null) {
+                return header;
+            }
+        }
+        return "";
     }
 
     @Transactional

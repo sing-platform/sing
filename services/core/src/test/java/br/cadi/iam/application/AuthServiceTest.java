@@ -58,6 +58,9 @@ class AuthServiceTest {
     private JwtService jwtService;
     @Mock
     private AuthenticationManager authenticationManager;
+    /** Usado para resolver a claim {@code pid} do token. */
+    @Mock
+    private br.cadi.people.infra.repositories.PersonRepository personRepository;
 
     private AuthService authService;
 
@@ -69,7 +72,8 @@ class AuthServiceTest {
                 roleRepository,
                 passwordEncoder,
                 jwtService,
-                authenticationManager
+                authenticationManager,
+                personRepository
         );
     }
 

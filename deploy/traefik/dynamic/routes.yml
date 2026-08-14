@@ -11,20 +11,32 @@
 
 http:
   routers:
+    # Rota de fallback: fica por ultimo de proposito, para que qualquer servico
+    # extraido do monolito possa reivindicar seu prefixo com priority maior.
     core:
       rule: "PathPrefix(`/api`) || PathPrefix(`/swagger-ui`) || PathPrefix(`/v3/api-docs`) || PathPrefix(`/actuator`)"
       entryPoints: [web]
       service: core
+      priority: 1
 
-    # E2..E5 entram aqui conforme os servicos forem criados. Exemplo:
-    # documents:
-    #   rule: "PathPrefix(`/api/documents`)"
-    #   entryPoints: [web]
-    #   service: documents
-    #   priority: 100        # mais especifico que o router do core
+    documents:
+      rule: "PathPrefix(`/api/documents`)"
+      entryPoints: [web]
+      service: documents
+      # Precisa ganhar do router do core, que tambem casa com esta URL.
+      # Sem priority explicita o Traefik usa o tamanho da regra — e a do core,
+      # por ser mais longa, vencia (104 contra 100).
+      priority: 200
+
+    # E3..E5 entram aqui conforme os servicos forem criados.
 
   services:
     core:
       loadBalancer:
         servers:
           - url: "http://core:8080"
+
+    documents:
+      loadBalancer:
+        servers:
+          - url: "http://documents:8000"

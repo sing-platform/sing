@@ -36,18 +36,29 @@ public class JwtService {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("role", userDetails.getAuthorities()
+        return generateToken(new HashMap<>(), userDetails);
+    }
+
+    /**
+     * Alem de {@code role}, inclui {@code uid} (id do usuario) quando disponivel.
+     *
+     * <p>Numa arquitetura distribuida o token precisa ser autossuficiente: sem
+     * {@code uid}/{@code pid} cada servico teria de consultar o core a cada
+     * requisicao so para saber quem e o portador. O {@code pid} (id da pessoa)
+     * e injetado por quem monta o login, via {@code extraClaims}.</p>
+     */
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>(extraClaims);
+        claims.put("role", userDetails.getAuthorities()
                 .stream()
                 .findFirst()
                 .map(GrantedAuthority::getAuthority)
                 .orElse(null));
-        return generateToken(extraClaims, userDetails);
-    }
-
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        if (userDetails instanceof br.cadi.iam.domain.User user) {
+            claims.put("uid", user.getId());
+        }
         return Jwts.builder()
-                .claims(extraClaims)
+                .claims(claims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))

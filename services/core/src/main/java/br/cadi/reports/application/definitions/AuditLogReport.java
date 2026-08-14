@@ -59,7 +59,7 @@ public class AuditLogReport extends AbstractReport implements ReportDefinition {
                 ReportFilterSpec.selectOf("tableName", "Tabela", java.util.List.of(
                         "person", "student", "guardian", "collaborator",
                         "schoolroom", "lecture", "attendance", "enrollment",
-                        "descriptive_report", "user_documents", "mural_post"
+                        "descriptive_report", "mural_post"
                 )),
                 ReportFilterSpec.optionalNumber("changedBy", "ID do usuário")
         );
