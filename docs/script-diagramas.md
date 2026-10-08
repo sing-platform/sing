@@ -1,4 +1,4 @@
-# Script para geração dos diagramas — SGS-CADI Microserviços
+# Script para geração dos diagramas — SING Microserviços
 
 > **Como usar:** cole o conteúdo inteiro deste arquivo (da linha `---` em diante) numa
 > conversa nova com o Claude. Ele contém todo o contexto necessário — schema real,
@@ -18,13 +18,12 @@ direção de setas e legendas devem estar corretos.
 
 ## O sistema
 
-**SGS-CADI** é um sistema de gestão para uma instituição educacional socioassistencial
-(contraturno escolar). Atende quatro domínios: **acadêmico** (oficinas, turmas, matrículas,
+**SING** é uma plataforma whitelabel de gestão escolar: uma mesma instalação atende várias escolas, cada uma com sua marca, vocabulário, módulos e regras. A base de código atual atende uma instituição socioassistencial (contraturno escolar) e cobre quatro domínios: **acadêmico** (oficinas, turmas, matrículas,
 frequência), **administrativo** (pessoas, documentos), **financeiro** (patrocinadores,
 lançamentos) e **psicossocial** (prontuários). Trata dados de **menores de idade**, o que
 torna controle de acesso e rastreabilidade requisitos, não detalhes.
 
-O sistema nasceu como monolito Spring Boot e está sendo decomposto em **microserviços
+A base de código atual é um monolito Spring Boot, e o SING está sendo decomposto em **microserviços
 poliglotas** (linguagens e bancos heterogêneos). Os diagramas devem retratar a
 **arquitetura alvo completa**, não o estado intermediário atual.
 
@@ -32,15 +31,15 @@ poliglotas** (linguagens e bancos heterogêneos). Os diagramas devem retratar a
 
 | Serviço | Linguagem | Banco | Responsabilidade |
 |---|---|---|---|
-| **cadi-identity** | Java 21 / Spring Boot | PostgreSQL | Usuários, papéis, emissão de JWT (RS256 + JWKS) |
-| **cadi-core** | Java 21 / Spring Boot | PostgreSQL | Pessoas, turmas, matrículas, frequência, pareceres, psicossocial |
-| **cadi-documents** | Python 3.12 / FastAPI | PostgreSQL + MinIO (S3) | Upload de documentos, atestados e fluxo de aprovação |
-| **cadi-communication** | Node 20 / NestJS | **MongoDB** | Notificações e mural de avisos |
-| **cadi-finance** | C# / .NET 8 | **MySQL** | Patrocinadores, lançamentos, documentos fiscais |
-| **cadi-reports** | Python 3.12 / FastAPI | PostgreSQL (read model) | Relatórios via CQRS, alimentado por eventos |
+| **sing-identity** | Java 21 / Spring Boot | PostgreSQL | Usuários, papéis, emissão de JWT (RS256 + JWKS) |
+| **sing-core** | Java 21 / Spring Boot | PostgreSQL | Pessoas, turmas, matrículas, frequência, pareceres, psicossocial |
+| **sing-documents** | Python 3.12 / FastAPI | PostgreSQL + MinIO (S3) | Upload de documentos, atestados e fluxo de aprovação |
+| **sing-communication** | Node 20 / NestJS | **MongoDB** | Notificações e mural de avisos |
+| **sing-finance** | C# / .NET 8 | **MySQL** | Patrocinadores, lançamentos, documentos fiscais |
+| **sing-reports** | Python 3.12 / FastAPI | PostgreSQL (read model) | Relatórios via CQRS, alimentado por eventos |
 
 **Infraestrutura:** Traefik (API gateway, roteamento por path), RabbitMQ (exchange *topic*
-`cadi.events`), MinIO (storage S3), Keycloak (opcional, IdP), Jaeger + Prometheus
+`sing.events`), MinIO (storage S3), Keycloak (opcional, IdP), Jaeger + Prometheus
 (observabilidade). Tudo em Docker Compose.
 
 ## Princípios arquiteturais (devem transparecer nos diagramas)
@@ -74,7 +73,7 @@ documents), `sponsor.student_id` → student (finance → core), `mural_post.aut
 users (communication → identity).
 
 
-### cadi-identity — PostgreSQL
+### sing-identity — PostgreSQL
 ```
 TABELA role
     id                         BIGINT                 PK IDENTITY DEFAULT AS IDENTITY PRIMARY KEY
@@ -103,7 +102,7 @@ TABELA users
     UNIQUE: (email)
 ```
 
-### cadi-core — PostgreSQL
+### sing-core — PostgreSQL
 ```
 TABELA address
     id                         BIGINT                 PK IDENTITY DEFAULT AS IDENTITY PRIMARY KEY
@@ -383,7 +382,7 @@ TABELA audit_log
 TABELA(alembic) user_documents
 ```
 
-### cadi-documents — PostgreSQL + MinIO
+### sing-documents — PostgreSQL + MinIO
 ```
 TABELA user_documents
     id                         BIGINT                 PK IDENTITY DEFAULT AS IDENTITY PRIMARY KEY
@@ -409,7 +408,7 @@ TABELA user_documents
     FK: reviewed_by_user_id -> users.id
 ```
 
-### cadi-communication — MongoDB
+### sing-communication — MongoDB
 ```
 TABELA notification
     id                         BIGINT                 PK IDENTITY DEFAULT AS IDENTITY PRIMARY KEY
@@ -493,7 +492,7 @@ TABELA message_outbox
     deactivated_at             TIMESTAMP(3)
 ```
 
-### cadi-finance — MySQL
+### sing-finance — MySQL
 ```
 TABELA financial_transaction
     id                         BIGINT                 PK IDENTITY DEFAULT AS IDENTITY PRIMARY KEY
@@ -566,7 +565,7 @@ TABELA financial_entry
 ```
 
 
-### cadi-reports — PostgreSQL (read model, CQRS)
+### sing-reports — PostgreSQL (read model, CQRS)
 
 Não existe ainda; projete-o. É um **modelo de leitura desnormalizado**, alimentado por
 eventos dos demais serviços, com tabelas por relatório (ex.: `rm_frequencia_turma`,
@@ -608,7 +607,7 @@ DocumentStatus    : PENDING, APPROVED, REJECTED
 - Uma chamada por turma por dia; após lançada, fecha (`lecture.closed`) e só
   **SECRETARY/ADMIN/MANAGER** podem reabrir.
 - Professor só acessa as **próprias turmas**; gestão acessa todas.
-- Ao gravar `ABSENT`, o core consulta o `cadi-documents`: havendo atestado **APPROVED**
+- Ao gravar `ABSENT`, o core consulta o `sing-documents`: havendo atestado **APPROVED**
   cobrindo a data, a falta nasce `JUSTIFIED` com `justified_by_document_id` preenchido.
 
 **Atestado**
@@ -647,7 +646,7 @@ DocumentStatus    : PENDING, APPROVED, REJECTED
 
 Atores de sistema: **Serviço de E-mail (SMTP)**, **RabbitMQ**, **MinIO**.
 
-# EVENTOS (RabbitMQ — exchange topic `cadi.events`)
+# EVENTOS (RabbitMQ — exchange topic `sing.events`)
 
 | Evento | Routing key | Produtor | Consumidores | Efeito |
 |---|---|---|---|---|
@@ -696,7 +695,7 @@ com as referências lógicas entre serviços tracejadas. Este é o panorâmico.
 **herança JOINED**: `pessoa` é a raiz e `aluno`/`responsavel`/`colaborador` compartilham
 a mesma PK (`person_id`), com relacionamento 1:1 identificante.
 
-1.7. **cadi-communication em MongoDB** — **não** use `erDiagram`. Modele como
+1.7. **sing-communication em MongoDB** — **não** use `erDiagram`. Modele como
 **coleções com documentos aninhados**, mostrando JSON de exemplo comentado. O ponto a
 demonstrar: `mural_post` tinha a audiência em **duas tabelas auxiliares**
 (`mural_post_audience` por papel e `mural_post_audience_schoolroom` por turma) e no

@@ -1,4 +1,4 @@
-name: sgs-cadi-ms
+name: sgs-sing-ms
 
 # Infra base da stack poliglota (E1).
 # Servicos de aplicacao entram nas entregas seguintes:
@@ -11,7 +11,7 @@ services:
   # ------------------------------------------------------------- gateway ----
   traefik:
     image: traefik:v3.3
-    container_name: cadi-traefik
+    container_name: sing-traefik
     restart: unless-stopped
     command:
       - --api.dashboard=true
@@ -27,34 +27,34 @@ services:
       - "${TRAEFIK_DASHBOARD_PORT:-8081}:8080"
     volumes:
       - ./traefik/dynamic:/etc/traefik/dynamic:ro
-    networks: [cadi]
+    networks: [sing]
 
   # ------------------------------------------------------------ core ---------
   postgres-core:
     image: postgres:16-alpine
-    container_name: cadi-postgres-core
+    container_name: sing-postgres-core
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${CORE_DB_NAME:-cadi_core}
-      POSTGRES_USER: ${CORE_DB_USER:-cadi}
-      POSTGRES_PASSWORD: ${CORE_DB_PASSWORD:-cadi}
+      POSTGRES_DB: ${CORE_DB_NAME:-sing_core}
+      POSTGRES_USER: ${CORE_DB_USER:-sing}
+      POSTGRES_PASSWORD: ${CORE_DB_PASSWORD:-sing}
     ports:
       - "${CORE_DB_PORT:-5432}:5432"
     volumes:
       - pgdata-core:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${CORE_DB_USER:-cadi} -d ${CORE_DB_NAME:-cadi_core}"]
+      test: ["CMD-SHELL", "pg_isready -U ${CORE_DB_USER:-sing} -d ${CORE_DB_NAME:-sing_core}"]
       interval: 5s
       timeout: 5s
       retries: 20
       start_period: 30s
-    networks: [cadi]
+    networks: [sing]
 
   core:
     build:
       context: ../services/core
       dockerfile: Dockerfile
-    container_name: cadi-core
+    container_name: sing-core
     restart: unless-stopped
     depends_on:
       postgres-core:
@@ -62,20 +62,20 @@ services:
       rabbitmq:
         condition: service_healthy
     environment:
-      DB_URL: jdbc:postgresql://postgres-core:5432/${CORE_DB_NAME:-cadi_core}
-      DB_USER: ${CORE_DB_USER:-cadi}
-      DB_PASSWORD: ${CORE_DB_PASSWORD:-cadi}
+      DB_URL: jdbc:postgresql://postgres-core:5432/${CORE_DB_NAME:-sing_core}
+      DB_USER: ${CORE_DB_USER:-sing}
+      DB_PASSWORD: ${CORE_DB_PASSWORD:-sing}
       RABBITMQ_HOST: rabbitmq
-      RABBITMQ_USER: ${RABBITMQ_USER:-cadi}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-cadi}
+      RABBITMQ_USER: ${RABBITMQ_USER:-sing}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sing}
       # O compose ja espera o broker ficar saudavel, entao os listeners podem
       # subir junto com a aplicacao (o RabbitListenerInitializer segue como
       # rede de seguranca se o broker cair depois).
       RABBITMQ_LISTENER_AUTO_STARTUP: "true"
-      CADI_EVENTS_EXCHANGE: ${EVENTS_EXCHANGE:-cadi.events}
-      CADI_SERVICES_DOCUMENTS_BASE_URL: http://documents:8000
+      SING_EVENTS_EXCHANGE: ${EVENTS_EXCHANGE:-sing.events}
+      SING_SERVICES_DOCUMENTS_BASE_URL: http://documents:8000
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
-      CADI_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
+      SING_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-INFO}
     # Roteamento declarado em traefik/dynamic/routes.yml (file provider).
     healthcheck:
@@ -84,36 +84,36 @@ services:
       timeout: 5s
       retries: 10
       start_period: 90s
-    networks: [cadi]
+    networks: [sing]
 
   # ------------------------------------------------------- documents --------
   # Servico em Python (FastAPI) com banco proprio: nenhum servico le a tabela
   # do outro. Substitui o modulo `document` do core.
   postgres-documents:
     image: postgres:16-alpine
-    container_name: cadi-postgres-documents
+    container_name: sing-postgres-documents
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DOCS_DB_NAME:-cadi_documents}
-      POSTGRES_USER: ${DOCS_DB_USER:-cadi}
-      POSTGRES_PASSWORD: ${DOCS_DB_PASSWORD:-cadi}
+      POSTGRES_DB: ${DOCS_DB_NAME:-sing_documents}
+      POSTGRES_USER: ${DOCS_DB_USER:-sing}
+      POSTGRES_PASSWORD: ${DOCS_DB_PASSWORD:-sing}
     ports:
       - "${DOCS_DB_PORT:-5433}:5432"
     volumes:
       - pgdata-documents:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DOCS_DB_USER:-cadi} -d ${DOCS_DB_NAME:-cadi_documents}"]
+      test: ["CMD-SHELL", "pg_isready -U ${DOCS_DB_USER:-sing} -d ${DOCS_DB_NAME:-sing_documents}"]
       interval: 5s
       timeout: 5s
       retries: 20
       start_period: 30s
-    networks: [cadi]
+    networks: [sing]
 
   documents:
     build:
       context: ../services/documents
       dockerfile: Dockerfile
-    container_name: cadi-documents
+    container_name: sing-documents
     restart: unless-stopped
     depends_on:
       postgres-documents:
@@ -121,17 +121,17 @@ services:
       minio:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+psycopg://${DOCS_DB_USER:-cadi}:${DOCS_DB_PASSWORD:-cadi}@postgres-documents:5432/${DOCS_DB_NAME:-cadi_documents}
+      DATABASE_URL: postgresql+psycopg://${DOCS_DB_USER:-sing}:${DOCS_DB_PASSWORD:-sing}@postgres-documents:5432/${DOCS_DB_NAME:-sing_documents}
       S3_ENDPOINT: http://minio:9000
-      S3_ACCESS_KEY: ${MINIO_USER:-cadiadmin}
+      S3_ACCESS_KEY: ${MINIO_USER:-singadmin}
       S3_SECRET_KEY: ${MINIO_PASSWORD:?defina MINIO_PASSWORD no .env}
-      S3_BUCKET: ${DOCS_BUCKET:-cadi-documents}
+      S3_BUCKET: ${DOCS_BUCKET:-sing-documents}
       # Mesmo segredo do core: a assinatura ainda e HS256 (ver app/security.py).
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
       RABBITMQ_HOST: rabbitmq
-      RABBITMQ_USER: ${RABBITMQ_USER:-cadi}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-cadi}
-      RABBITMQ_EXCHANGE: ${EVENTS_EXCHANGE:-cadi.events}
+      RABBITMQ_USER: ${RABBITMQ_USER:-sing}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sing}
+      RABBITMQ_EXCHANGE: ${EVENTS_EXCHANGE:-sing.events}
       CORE_BASE_URL: http://core:8080
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8000/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"]
@@ -139,16 +139,16 @@ services:
       timeout: 5s
       retries: 10
       start_period: 40s
-    networks: [cadi]
+    networks: [sing]
 
   # -------------------------------------------------------- mensageria ------
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
-    container_name: cadi-rabbitmq
+    container_name: sing-rabbitmq
     restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-cadi}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-cadi}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-sing}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-sing}
     ports:
       - "${RABBITMQ_PORT:-5672}:5672"
       - "${RABBITMQ_UI_PORT:-15672}:15672"
@@ -162,17 +162,17 @@ services:
       # O broker leva ~60s para subir (feature flags + mnesia). Sem start_period
       # o Docker conta as falhas do boot como reais e o depends_on desiste antes.
       start_period: 90s
-    networks: [cadi]
+    networks: [sing]
 
   # ------------------------------------------------------------ storage -----
   # MinIO substitui o Azure Blob. Usado pelo servico documents (E2).
   minio:
     image: minio/minio:latest
-    container_name: cadi-minio
+    container_name: sing-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_USER:-cadiadmin}
+      MINIO_ROOT_USER: ${MINIO_USER:-singadmin}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?defina MINIO_PASSWORD no .env}
     ports:
       - "${MINIO_PORT:-9000}:9000"
@@ -185,14 +185,14 @@ services:
       timeout: 5s
       retries: 15
       start_period: 30s
-    networks: [cadi]
+    networks: [sing]
 
   # ----------------------------------------------------------- identity -----
   # Keycloak emite JWT RS256 e publica o JWKS: nenhum servico precisa da chave
   # privada, entao nenhum deles consegue forjar token. Ver docs/adr/0002.
   keycloak:
     image: quay.io/keycloak/keycloak:25.0
-    container_name: cadi-keycloak
+    container_name: sing-keycloak
     restart: unless-stopped
     command: start-dev --http-port=8080
     environment:
@@ -204,12 +204,12 @@ services:
       - "${KEYCLOAK_PORT:-8180}:8080"
     volumes:
       - keycloak-data:/opt/keycloak/data
-    networks: [cadi]
+    networks: [sing]
 
   # ----------------------------------------------- observabilidade (opt) ----
   jaeger:
     image: jaegertracing/all-in-one:1.60
-    container_name: cadi-jaeger
+    container_name: sing-jaeger
     restart: unless-stopped
     profiles: [observability]
     environment:
@@ -218,18 +218,18 @@ services:
       - "${JAEGER_UI_PORT:-16686}:16686"   # UI
       - "4317:4317"                        # OTLP gRPC
       - "4318:4318"                        # OTLP HTTP
-    networks: [cadi]
+    networks: [sing]
 
   prometheus:
     image: prom/prometheus:v2.54.1
-    container_name: cadi-prometheus
+    container_name: sing-prometheus
     restart: unless-stopped
     profiles: [observability]
     volumes:
       - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "${PROMETHEUS_PORT:-9090}:9090"
-    networks: [cadi]
+    networks: [sing]
 
 volumes:
   pgdata-core:
@@ -239,5 +239,5 @@ volumes:
   keycloak-data:
 
 networks:
-  cadi:
+  sing:
     driver: bridge

@@ -1,5 +1,5 @@
 -- ============================================================================
--- SGS-CADI core — schema inicial (PostgreSQL)
+-- SING core — schema inicial (PostgreSQL)
 --
 -- Squash das migrations V1..V10 do monolito original (dialetos h2 + sqlserver).
 -- O banco nasce vazio neste repositorio, entao nao ha historico a preservar.

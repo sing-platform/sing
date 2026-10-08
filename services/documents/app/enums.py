@@ -1,6 +1,6 @@
 """Enums do dominio de documentos.
 
-Os valores sao identicos aos do monolito (br.cadi.document.domain.enums):
+Os valores sao identicos aos do monolito (br.sing.document.domain.enums):
 sao serializados em JSON e gravados no banco como string, entao mudar um
 valor aqui quebra o contrato com o core e com o frontend.
 """

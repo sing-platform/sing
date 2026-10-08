@@ -11,11 +11,11 @@
         <relativePath/>
     </parent>
 
-    <groupId>br.cadi</groupId>
-    <artifactId>sgs-cadi-backend</artifactId>
+    <groupId>br.sing</groupId>
+    <artifactId>sing-core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sgs-cadi-backend</name>
-    <description>Backend SGS-CADI - API Java Spring Boot</description>
+    <name>sing-core</name>
+    <description>Backend SING - API Java Spring Boot</description>
 
     <properties>
         <java.version>21</java.version>

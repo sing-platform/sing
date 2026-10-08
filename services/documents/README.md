@@ -1,4 +1,4 @@
-# cadi-documents
+# sing-documents
 
 Serviço de documentos: upload, download, atestados e fluxo de aprovação.
 **Python 3.12 / FastAPI · PostgreSQL próprio · MinIO (S3)**
@@ -11,7 +11,7 @@ externo e a única ponte com o domínio acadêmico estava isolada numa classe.
 
 | Antes (core Java) | Agora |
 |---|---|
-| Tabela `user_documents` no banco do core | Banco próprio (`cadi_documents`) |
+| Tabela `user_documents` no banco do core | Banco próprio (`sing_documents`) |
 | Azure Blob Storage | MinIO / S3 |
 | Detecção de MIME com Apache Tika | `python-magic` (libmagic) |
 | Aprovar atestado **escrevia** em `attendance` | Publica evento `AtestadoApproved` |
@@ -53,7 +53,7 @@ Prefixo `/api/documents` — o mesmo do monolito, então o frontend não muda.
 estiver fora, o acesso é **negado** — em verificação de permissão o padrão seguro
 é negar.
 
-**Envia ao core** (assíncrono, exchange `cadi.events`):
+**Envia ao core** (assíncrono, exchange `sing.events`):
 
 | Evento | Efeito no core |
 |---|---|

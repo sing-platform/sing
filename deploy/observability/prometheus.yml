@@ -8,7 +8,7 @@ scrape_configs:
       - targets: ["localhost:9090"]
 
   # O core expoe metricas via Spring Boot Actuator + Micrometer.
-  - job_name: cadi-core
+  - job_name: sing-core
     metrics_path: /actuator/prometheus
     static_configs:
       - targets: ["core:8080"]

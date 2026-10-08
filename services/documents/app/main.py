@@ -1,4 +1,4 @@
-"""cadi-documents — servico de documentos (upload, atestados, aprovacao).
+"""sing-documents — servico de documentos (upload, atestados, aprovacao).
 
 Extraido do modulo `document` do monolito. Foi o primeiro candidato porque ja
 usava IDs em vez de relacionamento ORM com as outras tabelas, o storage ja era
@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="CADI Documents",
+    title="SING Documents",
     description="Documentos, atestados e fluxo de aprovacao.",
     version="1.0.0",
     lifespan=lifespan,

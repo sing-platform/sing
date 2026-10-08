@@ -1,7 +1,7 @@
 # Plano — whitelabel de gestão escolar
 
 > **Status:** proposta · 2026-10-07
-> **Base:** leitura deste repositório, do vault Obsidian (`cadi-microservicos/`, `sing/`, `cadi/`) e pesquisa de mercado na web.
+> **Base:** leitura deste repositório, do vault Obsidian (`sing-microservicos/`, `sing/`) e pesquisa de mercado na web.
 > Fatos de código foram conferidos no código. Números de mercado vêm de pesquisa web de 07/10/2026, em boa parte de fontes secundárias, e não foram conferidos na origem.
 
 ## 1. Resumo
@@ -10,7 +10,7 @@ O sistema hoje atende uma instituição só e não tem nenhuma noção de tenant
 
 1. **Multi-tenancy antes de qualquer serviço novo.** As entregas E3–E5 (Node/MongoDB, C#/MySQL, Python CQRS) ficam congeladas para o produto. Cada linguagem e banco a mais multiplica o trabalho de isolamento, e o próprio vault já conclui "tenancy primeiro, decomposição depois — e é opcional".
 2. **Um banco, `tenant_id` em toda tabela, com duas travas:** `@TenantId` do Hibernate e Row-Level Security do PostgreSQL. A segunda cobre os 17 relatórios em SQL cru e o serviço Python, que a primeira não alcança.
-3. **Whitelabel em quatro camadas configuráveis por escola — marca, vocabulário, módulos e regras — e nada além disso.** Nenhum `if (escola == X)` no código. O CADI vira o tenant zero: tudo que hoje é regra fixa dele passa a ser configuração dele.
+3. **Whitelabel em quatro camadas configuráveis por escola — marca, vocabulário, módulos e regras — e nada além disso.** Nenhum `if (escola == X)` no código. A organização piloto (a primeira escola a usar a plataforma) vira o tenant zero: tudo que hoje é regra fixa no código passa a ser configuração dela.
 4. **Entrar no mercado pelo nicho que o modelo atual já atende** (projetos sociais, contraturno, cursos livres), e só depois construir escola seriada (ano letivo, disciplina, nota, boletim), que é onde a concorrência é mais forte e o esforço é maior.
 5. **A gestão também leva marca**, em dois sentidos: o back-office da escola usa a marca da escola, e um nível "parceiro" permite que redes, consultorias e sistemas de ensino revendam o produto com a marca deles.
 
@@ -30,16 +30,16 @@ Esforço até o primeiro produto vendável (fases 0 a 3): **145–230 dev-dias**
 | Auditoria nunca grava | pointcut `..repository.*Repository` em `AuditAspect.java:31`; pacotes reais são `infra/repositories` | sem trilha de auditoria hoje |
 | Qualquer usuário logado emite declaração de qualquer aluno | `DeclarationController.java:40` (`isAuthenticated()` + `studentId` por parâmetro) | falha de autorização já existente |
 | Seed roda em qualquer ambiente | `DataInicializer.java:35` sem `@Profile`, cria admin com senha conhecida | bloqueia produção |
-| Marca fixa no código | `DeclarationService.java:141-153` (nome, endereço, telefone, logo), e-mails, OpenAPI, exchanges `cadi.*` | precisa virar dado da organização |
+| Marca fixa no código | `DeclarationService.java:141-153` (nome, endereço, telefone, logo), e-mails, OpenAPI, exchanges `sing.*` | precisa virar dado da organização |
 | Papéis fixos | 72 `@PreAuthorize` com papel literal, um papel por usuário | sem permissão configurável por escola |
 | Modelo acadêmico é de oficina e contraturno | `EnrollmentRules.java:20` (máximo de 2 matrículas), "escola principal" obrigatória | não há ano letivo, série, disciplina, nota, boletim |
 | Financeiro é razão de ONG | `Sponsor`, `SponsorBillingJob`; `OVERDUE` nunca é atribuído | não há mensalidade, boleto, bolsa |
 | Pessoa por herança | `Person` com `JOINED`, 1:1 obrigatório com `User`, CPF único | professor que também é responsável não pode existir |
 | Testes não exercitam o PostgreSQL | H2 com Flyway desligado em `application-test.yml` | a migration de `tenant_id` não teria rede de segurança |
 | Sem CI, sem `contracts/`, sem OpenTelemetry, sem frontend neste repo | conferido no repo | README descreve mais do que existe |
-| Auditoria de 16/09 com 90 achados (20 críticos), nenhum corrigido | vault `cadi-microservicos/auditoria/` | parte é pré-requisito de vender |
+| Auditoria de 16/09 com 90 achados (20 críticos), nenhum corrigido | vault `sing-microservicos/auditoria/` | parte é pré-requisito de vender |
 
-Duas correções em relação às notas do vault: o dinheiro em `FinancialEntry` e `Sponsor` já é `BigDecimal`/`DECIMAL(12,2)`; só a entidade morta `FinancialTransaction` usa `REAL`. E o frontend existe, mas no repositório antigo (`SGS-CADI/frontend`: React 18, Vite, Tailwind 4, shadcn), com a URL da API fixada em tempo de build.
+Duas correções em relação às notas do vault: o dinheiro em `FinancialEntry` e `Sponsor` já é `BigDecimal`/`DECIMAL(12,2)`; só a entidade morta `FinancialTransaction` usa `REAL`. E o frontend existe, mas no repositório do monolito (pasta `frontend`: React 18, Vite, Tailwind 4, shadcn), com a URL da API fixada em tempo de build.
 
 ## 3. Decisões que o plano assume
 
@@ -71,7 +71,7 @@ A marca resolve em cascata: organização, senão parceiro, senão plataforma. O
 
 ### 4.2 Isolamento de dados
 
-- Coluna `tenant_id` (UUID) em toda tabela de negócio, preenchida no backfill com a organização CADI.
+- Coluna `tenant_id` (UUID) em toda tabela de negócio, preenchida no backfill com a organização piloto.
 - `@TenantId` filtra JPQL e Criteria e preenche a coluna no insert.
 - RLS com `FORCE ROW LEVEL SECURITY` e política `tenant_id = current_setting('app.tenant_id')`. A aplicação conecta com um papel sem `BYPASSRLS`; as migrations usam outro papel.
 - A variável de sessão é definida num ponto único, no `DataSource`, e por isso vale igual para JPA e para o `NamedParameterJdbcTemplate` dos relatórios. Sem contexto de tenant a política não casa com nenhuma linha: o erro é não ver nada, nunca ver demais.
@@ -84,7 +84,7 @@ Tudo que varia entre escolas cai em uma destas camadas. Se um pedido não cabe e
 
 | Camada | O que a escola configura | O que está fixo hoje |
 |---|---|---|
-| **Marca** | nome, logo, cores, domínio, endereço e contato, assinatura da secretaria, remetente de e-mail, ícone do app | `DeclarationService` (cabeçalho e rodapé do PDF), e-mails de convocação e mural, título do OpenAPI, `static/imgs/logo-cadi*.png` |
+| **Marca** | nome, logo, cores, domínio, endereço e contato, assinatura da secretaria, remetente de e-mail, ícone do app | `DeclarationService` (cabeçalho e rodapé do PDF), e-mails de convocação e mural, título do OpenAPI, `static/imgs/logo*.png` |
 | **Vocabulário** | como chama oficina/curso/disciplina, aluno/educando/atendido, padrinho/patrocinador | textos em telas, na view `V2` e nos relatórios |
 | **Módulos** | psicossocial, apadrinhamento, financeiro, lista de espera, pareceres, notas | tudo sempre ligado |
 | **Regras** | limite de matrículas ativas, exigência de escola de origem, janela de chamada, frequência mínima, cortes de turno | `EnrollmentRules.java:20` (2), `AttendanceService.java:277` (35 dias), `StudentsAtRiskReport.java:86` (padrão de 75%), `ShiftResolver.java:14` (12h/18h) |
@@ -110,13 +110,13 @@ Um único build. Ao carregar, o app chama `GET /api/public/tenant` (resolvido pe
 
 ### 4.6 Eventos e contratos
 
-Envelope `{eventId, eventType, version, occurredAt, tenantId, correlationId, aggregateId, payload}`, com JSON Schema versionado em `contracts/` e teste de contrato. Outbox transacional no core e no `documents`. Exchanges deixam de se chamar `cadi.*`.
+Envelope `{eventId, eventType, version, occurredAt, tenantId, correlationId, aggregateId, payload}`, com JSON Schema versionado em `contracts/` e teste de contrato. Outbox transacional no core e no `documents`. Exchanges deixam de se chamar `sing.*`.
 
 ## 5. Fases
 
 | Fase | Entrega | Destrava | Dev-dias |
 |---|---|---|---|
-| 0 | Rede de segurança | refatorar sem quebrar o CADI | 15–25 |
+| 0 | Rede de segurança | refatorar sem quebrar o comportamento atual | 15–25 |
 | 1 | Saneamento | operar em produção com segurança | 40–65 |
 | 2 | Multi-tenancy | segunda organização na mesma instância | 40–60 |
 | 3 | Whitelabel | **vender para projeto social e contraturno** | 50–80 |
@@ -128,11 +128,11 @@ As fases 0 a 2 partem das estimativas medidas no vault (Fase 0 do vault: 37–62
 
 ### Fase 0 — Rede de segurança
 
-- Trazer o frontend de `SGS-CADI/frontend` para este repo, preservando histórico.
+- Trazer o frontend do monolito (pasta `frontend` do repositório antigo) para este repo, preservando histórico.
 - CI em todo PR: build e testes do core, do `documents` e do frontend.
 - Testcontainers com PostgreSQL, para que as migrations e o SQL dos relatórios rodem em teste.
 - Consertar os testes que não rodam (`src/test/.../AttendanceController.java` sem sufixo `Test`; `ReportsIntegrationTest` espera 18 slugs para 17 relatórios) e criar testes para o `documents`, que não tem nenhum.
-- Testes de caracterização do CADI: saída dos 17 relatórios e do PDF de declaração sobre uma massa fixa.
+- Testes de caracterização do comportamento atual: saída dos 17 relatórios e do PDF de declaração sobre uma massa fixa.
 - `CLAUDE.md` do repo com as decisões da seção 3; README alinhado ao que existe.
 
 **Pronto quando:** nenhum PR entra sem CI verde e uma migration quebrada falha no CI.
@@ -157,27 +157,27 @@ As fases 0 a 2 partem das estimativas medidas no vault (Fase 0 do vault: 37–62
 - Traefik com roteamento por host em subdomínio curinga e TLS.
 - Provisionamento idempotente de organização (cria organização, unidade, papéis-modelo e administrador), usado igualmente por seed, testes, demonstração e onboarding. Substitui o `DataInicializer`.
 - Suíte de isolamento como portão do CI (seção 6).
-- Migração dos dados de produção do CADI para o tenant zero.
+- Migração dos dados de produção atuais para o tenant zero.
 
-**Pronto quando:** duas organizações convivem na mesma instância, a suíte de isolamento passa em todos os endpoints e nos 17 relatórios, e os testes de caracterização do CADI seguem verdes.
+**Pronto quando:** duas organizações convivem na mesma instância, a suíte de isolamento passa em todos os endpoints e nos 17 relatórios, e os testes de caracterização do comportamento atual seguem verdes.
 
 ### Fase 3 — Whitelabel
 
 - Configuração por organização nas quatro camadas (seção 4.3) e `GET /api/public/tenant`.
 - Frontend com configuração em runtime, tema por tokens, vocabulário, menu por módulos, manifesto PWA por organização.
 - PDFs e e-mails por template com os dados da organização; remetente por organização.
-- Regras lidas da configuração, com os valores atuais do CADI como configuração do CADI.
+- Regras lidas da configuração, com os valores atuais como configuração da organização piloto.
 - Permissões e papéis por organização (seção 4.4).
 - Console da plataforma.
 - Conformidade mínima para tratar dado de menor: consentimento do responsável registrado, cifragem de coluna para saúde e psicossocial, auditoria de leitura desses dados, contrato de operador.
-- Renomear o que carrega "cadi" (pacote, artifact, exchanges, chave de sessão do frontend) para um codinome neutro.
+- Renomear o que carrega o nome do sistema antigo (pacote, artifact, exchanges, chave de sessão do frontend) para um codinome neutro.
 
-**Pronto quando:** uma segunda organização com outra marca, outro vocabulário e outras regras entra no ar sem deploy e sem mudança de código, e a busca por "CADI" em `src/main` retorna zero.
+**Pronto quando:** uma segunda organização com outra marca, outro vocabulário e outras regras entra no ar sem deploy e sem mudança de código, e a busca pelo nome do sistema antigo em `src/main` retorna zero.
 
 ### Fase 4 — Cobrança recorrente
 
 - Plano de pagamento por matrícula gerando parcelas; descontos, bolsas, multa e juros; responsável financeiro distinto do responsável legal.
-- `Sponsor` vira um tipo de pagador, e o apadrinhamento continua funcionando para o CADI.
+- `Sponsor` vira um tipo de pagador, e o apadrinhamento continua funcionando para a organização piloto.
 - Porta `PaymentProvider` com um adaptador de PSP, subconta por organização e split (Pix e boleto), webhooks idempotentes e baixa automática.
 - Régua de cobrança por e-mail e inadimplência real (`OVERDUE` passa a ser atribuído).
 - Portal do responsável: segunda via e histórico.
@@ -209,8 +209,8 @@ A fase tem um corte intermediário vendável: ano letivo + etapas + parecer já 
 ## 6. Ideias para o desenvolvimento
 
 1. **Suíte de isolamento gerada do OpenAPI.** Cria duas organizações, percorre todos os endpoints e todos os relatórios com o token de uma e falha se aparecer qualquer dado da outra. Endpoint novo entra na suíte sozinho.
-2. **Testes de arquitetura como regra executável:** toda entidade tem tenant; toda tabela de negócio tem política RLS (consulta a `pg_policies`); nenhum literal "CADI" em `src/main`; limites de módulo via Spring Modulith.
-3. **"CADI idêntico como tenant zero" como critério de aceite** de cada fase, sustentado pelos testes de caracterização da Fase 0. É o que impede a refatoração de quebrar o único cliente real.
+2. **Testes de arquitetura como regra executável:** toda entidade tem tenant; toda tabela de negócio tem política RLS (consulta a `pg_policies`); nenhum literal com o nome do sistema antigo em `src/main`; limites de módulo via Spring Modulith.
+3. **tenant zero idêntico ao comportamento atual como critério de aceite** de cada fase, sustentado pelos testes de caracterização da Fase 0. É o que impede a refatoração de quebrar o único cliente real.
 4. **Cliente TypeScript gerado do OpenAPI,** eliminando a divergência entre `axios` e `fetch` e os contratos mantidos à mão.
 5. **Organização de demonstração** com dados sintéticos, recriada toda noite pelo mesmo provisionamento. Serve a vendas e a testes de ponta a ponta.
 6. **Observabilidade por tenant:** `tenant_id` nos logs e nas métricas, limite de requisições por organização no gateway. Mostra custo por cliente e vizinho barulhento.
@@ -224,7 +224,7 @@ A fase tem um corte intermediário vendável: ano letivo + etapas + parecer já 
 
 | Marco | Segmento | Por que nesta ordem |
 |---|---|---|
-| Após Fase 3 | Projetos sociais e contraturno gratuito | o modelo atual (oficina, lista de espera, psicossocial, padrinhos) já é este; o CADI é o caso de referência; a pesquisa não encontrou software comercial específico para OSC com chamada e relatório a financiador |
+| Após Fase 3 | Projetos sociais e contraturno gratuito | o modelo atual (oficina, lista de espera, psicossocial, padrinhos) já é este; a organização piloto é o caso de referência; a pesquisa não encontrou software comercial específico para OSC com chamada e relatório a financiador |
 | Após Fase 4 | Cursos livres e contraturno pago (esporte, música, reforço, idiomas) | mesmo modelo acadêmico, faltando só cobrar mensalidade |
 | Fase 5, corte intermediário | Educação infantil pequena | avalia por parecer, que já existe; setor sob pressão financeira (matrículas privadas em queda em 2025) |
 | Fim da Fase 5 | Fundamental e médio com menos de 200 alunos | cerca de 28 mil das 41,7 mil escolas privadas; incumbentes miram 200+ ou 300+ alunos |
@@ -261,7 +261,7 @@ Ressalva sobre o primeiro marco: projeto social paga pouco. Ele vale como refer�
 | Risco | Mitigação |
 |---|---|
 | Vazamento entre escolas, com dado de menor e psicossocial | duas travas (4.2) e suíte de isolamento como portão do CI |
-| Refatoração quebra o CADI | testes de caracterização e "tenant zero idêntico" em cada fase |
+| Refatoração quebra o comportamento atual | testes de caracterização e "tenant zero idêntico" em cada fase |
 | Virar fábrica de software sob medida | regra das quatro camadas (4.3) |
 | Construir escola seriada sem cliente | sequência de mercado (7.1): só entra depois de vender ao nicho atual |
 | Time pequeno com duas linguagens | congelar novos serviços (D1, D2); reavaliar o `documents` se o custo aparecer |
@@ -271,7 +271,7 @@ Ressalva sobre o primeiro marco: projeto social paga pouco. Ele vale como refer�
 ## 9. Em aberto
 
 1. **Este repositório é a base do produto?** E o requisito acadêmico das entregas E3–E5 ainda existe? Se existir, o plano propõe mantê-lo numa branch separada.
-2. **Onde o CADI roda em produção hoje?** As notas indicam o monolito antigo em SQL Server no Azure. Isso define a migração para o tenant zero na Fase 2.
+2. **Onde o sistema atual roda em produção hoje?** As notas indicam o monolito antigo em SQL Server no Azure. Isso define a migração para o tenant zero na Fase 2.
 3. **Primeiro segmento:** confirmar a entrada por projeto social e contraturno, ou ir direto para escola seriada, o que antecipa a Fase 5 e adia a primeira venda.
 4. **Tamanho e dedicação do time,** que convertem dev-dias em calendário.
 5. **Nome do produto** e relação com o SING, que nas notas é uma plataforma mais ampla (escola + apadrinhamento + acolhimento) pensada para incubadora.

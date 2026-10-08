@@ -1,9 +1,9 @@
-# SGS-CADI — Microserviços Poliglotas
+# SING — Plataforma whitelabel de gestão escolar
 
-Refatoração do [SGS-CADI](https://github.com/JoaoVictorCarvalho07/sgs-cadi) (monolito Spring Boot)
-para uma arquitetura de **microserviços poliglotas** — linguagens e bancos de dados heterogêneos.
+Uma mesma plataforma atende várias escolas, cada uma com sua marca, vocabulário, módulos e regras,
+implementada como **microserviços poliglotas** — linguagens e bancos de dados heterogêneos.
 
-Projeto acadêmico. O planejamento completo está no vault Obsidian, módulo `cadi-microservicos/`.
+A documentação está em `docs/docs/`.
 
 ## Arquitetura alvo
 

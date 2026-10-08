@@ -55,7 +55,7 @@ E_NAO_E = {
 PROBLEMAS = [
     "Escolas pequenas, cursos livres e projetos sociais controlam matrícula, chamada e cobrança em planilhas e papel, com retrabalho, erros e informação espalhada.",
     "Pelo levantamento de mercado da equipe (outubro de 2026), os sistemas de gestão escolar mais conhecidos miram instituições com 200 alunos ou mais, têm preço sob consulta e só levam a marca da escola como módulo adicional.",
-    "O sistema atual (SGS-CADI) atende uma única instituição: nome, logo, termos e regras estão fixos no código, e cada novo cliente exigiria outra instalação e ajustes de programação.",
+    "O sistema atual atende uma única instituição: nome, logo, termos e regras estão fixos no código, e cada novo cliente exigiria outra instalação e ajustes de programação.",
     "Dados de crianças e adolescentes, inclusive de saúde, circulam sem registro de consentimento, sem trilha de auditoria confiável e sem garantia de separação entre instituições.",
 ]
 

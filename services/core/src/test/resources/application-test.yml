@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:cadidb-test;DB_CLOSE_DELAY=-1;MODE=LEGACY;NON_KEYWORDS=USER,ROLE
+    url: jdbc:h2:mem:singdb-test;DB_CLOSE_DELAY=-1;MODE=LEGACY;NON_KEYWORDS=USER,ROLE
     driver-class-name: org.h2.Driver
     username: sa
     password: ""
@@ -33,7 +33,7 @@ spring:
     port: 25
     test-connection: false
 
-cadi:
+sing:
   jwt:
     # Chave HMAC-SHA256 fixa para testes (32 bytes hex, 64 chars)
     secret: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
@@ -48,4 +48,4 @@ logging:
   level:
     org.springframework: WARN
     org.hibernate: WARN
-    br.cadi: INFO
+    br.sing: INFO

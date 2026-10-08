@@ -1,4 +1,4 @@
-# Build multi-stage do cadi-core.
+# Build multi-stage do sing-core.
 # Java/Maven sao arch-neutral: builda igual em x86_64 e arm64.
 
 # ---------- build ----------
@@ -17,7 +17,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 RUN useradd -r -u 1001 spring && chown spring /app
-COPY --from=build /src/target/sgs-cadi-backend-*.jar /app/app.jar
+COPY --from=build /src/target/sing-core-*.jar /app/app.jar
 USER spring
 
 EXPOSE 8080

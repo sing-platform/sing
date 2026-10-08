@@ -66,7 +66,7 @@ docker compose logs -f postgres-core
 Acessar o banco do core:
 
 ```bash
-docker compose exec postgres-core psql -U cadi -d cadi_core -c '\dt'
+docker compose exec postgres-core psql -U sing -d sing_core -c '\dt'
 ```
 
 ## Notas

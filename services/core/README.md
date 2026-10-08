@@ -1,4 +1,4 @@
-# Backend SGS-CADI
+# Backend SING
 
 ## Banco de dados e Flyway após squash de migrations
 
@@ -6,7 +6,7 @@ As migrations incrementais antigas (V1–V7) foram arquivadas em `src/main/resou
 
 Foi introduzido um **único script** `V1__criar_schema_inicial.sql` por dialeto (estado consolidado do schema). Quem já tinha aplicado as versões antigas precisa **recriar o banco** ou limpar o histórico Flyway antes de subir a aplicação:
 
-- **H2 (arquivo, perfil `dev`)**: apague os arquivos do banco no caminho configurado em `application-dev.yml` (ex.: `./data/cadidb.*`) ou use outro nome de banco na URL JDBC.
+- **H2 (arquivo, perfil `dev`)**: apague os arquivos do banco no caminho configurado em `application-dev.yml` (ex.: `./data/singdb.*`) ou use outro nome de banco na URL JDBC.
 - **SQL Server**: em ambiente de desenvolvimento aceitável, use `flyway clean` (destrutivo) ou recrie o schema/database e rode `migrate` de novo.
 
 Sem esse reset, o Flyway pode falhar ou o Hibernate (`ddl-auto: validate`) pode divergir do schema existente.

@@ -6,13 +6,13 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     # ---- banco proprio (database-per-service) ----
-    database_url: str = "postgresql+psycopg://cadi:cadi@localhost:5433/cadi_documents"
+    database_url: str = "postgresql+psycopg://sing:sing@localhost:5433/sing_documents"
 
     # ---- storage S3/MinIO ----
     s3_endpoint: str = "http://localhost:9000"
-    s3_access_key: str = "cadiadmin"
+    s3_access_key: str = "singadmin"
     s3_secret_key: str = ""
-    s3_bucket: str = "cadi-documents"
+    s3_bucket: str = "sing-documents"
     s3_region: str = "us-east-1"
 
     # ---- autenticacao ----
@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     rabbitmq_port: int = 5672
     rabbitmq_user: str = "guest"
     rabbitmq_password: str = "guest"
-    rabbitmq_exchange: str = "cadi.events"
+    rabbitmq_exchange: str = "sing.events"
 
     # ---- integracao com o core ----
     core_base_url: str = "http://localhost:8080"

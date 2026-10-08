@@ -1,13 +1,13 @@
 spring:
   application:
-    name: cadi-core
+    name: sing-core
 
   # ---------------------------------------------------------------- banco ----
   # PostgreSQL unico (dev, teste e producao). Sem bifurcacao de dialeto.
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/cadi_core}
-    username: ${DB_USER:cadi}
-    password: ${DB_PASSWORD:cadi}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sing_core}
+    username: ${DB_USER:sing}
+    password: ${DB_PASSWORD:sing}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: ${DB_POOL_MAX:10}
@@ -87,22 +87,22 @@ management:
     mail:
       enabled: ${HEALTH_MAIL_ENABLED:false}
 
-cadi:
+sing:
   # Enderecos dos demais servicos da stack.
   services:
     documents:
-      base-url: ${CADI_SERVICES_DOCUMENTS_BASE_URL:http://localhost:8000}
+      base-url: ${SING_SERVICES_DOCUMENTS_BASE_URL:http://localhost:8000}
   events:
-    exchange: ${CADI_EVENTS_EXCHANGE:cadi.events}
+    exchange: ${SING_EVENTS_EXCHANGE:sing.events}
   jwt:
     # Obrigatorio em qualquer ambiente real. Ver docs/adr/0002 (RS256 + JWKS).
     secret: ${JWT_SECRET:8472B4B6250646352665582F413F4536A586E3272357538767566B5970404E42}
     expiration: ${JWT_EXPIRATION:86400000}
   cors:
-    allowed-origin-patterns: ${CADI_CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,http://localhost}
+    allowed-origin-patterns: ${SING_CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:5173,http://localhost}
   storage:
     connection-string: ${AZURE_STORAGE_CONNECTION_STRING:}
-    container-name: ${AZURE_STORAGE_CONTAINER_NAME:cadistorage}
+    container-name: ${AZURE_STORAGE_CONTAINER_NAME:singstorage}
 
 springdoc:
   swagger-ui:
@@ -111,4 +111,4 @@ springdoc:
 logging:
   level:
     root: ${LOG_LEVEL_ROOT:INFO}
-    br.cadi: ${LOG_LEVEL_CADI:INFO}
+    br.sing: ${LOG_LEVEL_SING:INFO}

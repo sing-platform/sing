@@ -1,4 +1,4 @@
-# Análise: herança × composição no SGS-CADI / SING
+# Análise: herança × composição no SING
 
 > Levantamento de todas as hierarquias do código, com veredito e plano de refatoração.
 > Todos os números foram **medidos no código**, não estimados.
