@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="1120" viewBox="0 0 1060 1120" font-family="Arial, Helvetica, sans-serif">
+<rect width="1060" height="1120" fill="#ffffff"/>
+<rect x="170.0" y="62.0" width="720.0" height="1018.0" fill="#ffffff" stroke="#111827" stroke-width="1.6"/>
+<text x="182.0" y="84.0" font-size="15" text-anchor="start" fill="#222222" font-weight="bold">SING</text>
+<rect x="179" y="115" width="252" height="794" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="189.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Estrutura e regras</text>
+<rect x="629" y="115" width="252" height="934" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="639.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Avaliação e vida escolar</text>
+<polyline points="112.0,310.0 150.0,310.0 189.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,310.0 150.0,310.0 189.0,310.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,310.0 150.0,310.0 189.0,450.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,730.0 150.0,730.0 189.0,590.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,730.0 150.0,730.0 189.0,730.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,730.0 150.0,730.0 189.0,870.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,870.0 150.0,870.0 189.0,870.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,240.0 910.0,240.0 871.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,240.0 910.0,240.0 871.0,310.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,390.0 910.0,390.0 871.0,450.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,510.0 910.0,510.0 871.0,450.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,730.0 910.0,730.0 871.0,590.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,730.0 910.0,730.0 871.0,730.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,730.0 910.0,730.0 871.0,870.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<text x="530.0" y="34.0" font-size="19" text-anchor="middle" fill="#222222" font-weight="bold">Casos de uso — Módulo escolar (Sprints 5 a 7)</text>
+<ellipse cx="305" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="167.0" font-size="12.5" text-anchor="middle" fill="#222222">Manter ano letivo e períodos de</text>
+<text x="305.0" y="182.0" font-size="12.5" text-anchor="middle" fill="#222222">avaliação</text>
+<ellipse cx="305" cy="310" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="314.5" font-size="12.5" text-anchor="middle" fill="#222222">Manter séries e matriz curricular</text>
+<ellipse cx="305" cy="450" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="454.5" font-size="12.5" text-anchor="middle" fill="#222222">Configurar regras de avaliação</text>
+<ellipse cx="305" cy="590" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="594.5" font-size="12.5" text-anchor="middle" fill="#222222">Manter calendário escolar</text>
+<ellipse cx="305" cy="730" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="727.0" font-size="12.5" text-anchor="middle" fill="#222222">Alocar professores às disciplinas</text>
+<text x="305.0" y="742.0" font-size="12.5" text-anchor="middle" fill="#222222">da turma</text>
+<ellipse cx="305" cy="870" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="867.0" font-size="12.5" text-anchor="middle" fill="#222222">Exportar dados para o</text>
+<text x="305.0" y="882.0" font-size="12.5" text-anchor="middle" fill="#222222">Educacenso</text>
+<ellipse cx="755" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="174.5" font-size="12.5" text-anchor="middle" fill="#222222">Lançar avaliações e notas</text>
+<ellipse cx="755" cy="310" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="314.5" font-size="12.5" text-anchor="middle" fill="#222222">Registrar ocorrências</text>
+<ellipse cx="755" cy="450" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="454.5" font-size="12.5" text-anchor="middle" fill="#222222">Emitir boletim</text>
+<ellipse cx="755" cy="590" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="594.5" font-size="12.5" text-anchor="middle" fill="#222222">Fechar período letivo</text>
+<ellipse cx="755" cy="730" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="727.0" font-size="12.5" text-anchor="middle" fill="#222222">Registrar resultado final e emitir</text>
+<text x="755.0" y="742.0" font-size="12.5" text-anchor="middle" fill="#222222">histórico escolar</text>
+<ellipse cx="755" cy="870" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="874.5" font-size="12.5" text-anchor="middle" fill="#222222">Realizar rematrícula</text>
+<ellipse cx="755" cy="1010" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="1014.5" font-size="12.5" text-anchor="middle" fill="#222222">Matricular aluno em turma</text>
+<circle cx="92" cy="288" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 297 V321 M77 305 H107 M92 321 L80 338 M92 321 L104 338" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="354.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Administrador da</text>
+<text x="92.0" y="369.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">escola</text>
+<circle cx="92" cy="708" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 717 V741 M77 725 H107 M92 741 L80 758 M92 741 L104 758" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="774.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Secretaria</text>
+<circle cx="92" cy="848" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 857 V881 M77 865 H107 M92 881 L80 898 M92 881 L104 898" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="914.0" font-size="12" text-anchor="middle" fill="#444444">«sistema»</text>
+<text x="92.0" y="929.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Sistema Educacenso</text>
+<text x="92.0" y="944.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">(INEP)</text>
+<circle cx="968" cy="218.0" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 227.0 V251.0 M953 235.0 H983 M968 251.0 L956 268.0 M968 251.0 L980 268.0" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="284.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Professor</text>
+<circle cx="968" cy="368" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 377 V401 M953 385 H983 M968 401 L956 418 M968 401 L980 418" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="434.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Responsável</text>
+<circle cx="968" cy="488" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 497 V521 M953 505 H983 M968 521 L956 538 M968 521 L980 538" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="554.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Aluno</text>
+<circle cx="968" cy="708" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 717 V741 M953 725 H983 M968 741 L956 758 M968 741 L980 758" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="774.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Secretaria</text>
+<polyline points="755.0,475.0 755.0,565.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="749.5,554.0 755.0,565.0 760.5,554.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="790.3" y="522.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«extend»</text>
+<text x="764.0" y="546.0" font-size="11.5" text-anchor="start" fill="#374151" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">[emissão em lote ao fechar]</text>
+<polyline points="755.0,705.0 755.0,615.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="760.5,626.0 755.0,615.0 749.5,626.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="791.8" y="664.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+<polyline points="755.0,895.0 755.0,985.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="749.5,974.0 755.0,985.0 760.5,974.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="791.8" y="944.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+</svg>

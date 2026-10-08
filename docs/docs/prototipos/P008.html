@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Instituto Aurora – Matrículas</title>
+<link rel="stylesheet" href="sing.css">
+<style>body{height:720px}
+.tbl td,.tbl th{padding-left:10px;padding-right:10px}
+.tbl td{padding-top:7px;padding-bottom:7px;font-size:13.5px}
+.op .sel-al{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.op .av{width:36px;height:36px;border-radius:50%;background:var(--brand-soft);color:var(--brand-dark);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.op .sel-al b{display:block;line-height:1.25}
+.op .sel-al small{color:var(--muted);font-size:12.5px}
+.mat{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:6px;padding:6px 10px;font-size:13.5px;margin-bottom:10px}
+.mat small{color:var(--muted);display:block;font-size:12px}
+.ocg{display:grid;grid-template-columns:1fr 1fr;gap:8px 24px}
+.oc .t{display:flex;justify-content:space-between;font-size:13px;margin-bottom:3px}
+.oc .t b{font-weight:600}
+.oc .bar{height:6px}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="brand"><svg width="32" height="32" viewBox="0 0 40 40" aria-label="Logo Instituto Aurora"><rect width="40" height="40" rx="10" style="fill:var(--brand)"/><path d="M11 28a9 9 0 0 1 18 0z" fill="#FDE68A"/><g stroke="#FDE68A" stroke-width="2.2" stroke-linecap="round"><path d="M20 9.5v3.5M11.2 13.6l2.4 2.4M28.8 13.6l-2.4 2.4M7 21.5h3M30 21.5h3"/></g><path d="M8 30.5h24" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg><div>Instituto Aurora</div></div>
+<ul class="nav">
+<li><svg class="ic" viewBox="0 0 24 24" ><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Painel</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.9 3.1-6.5 7-6.5s7 2.6 7 6.5"/></svg>Alunos</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><circle cx="9" cy="9" r="3"/><path d="M3.5 19c0-3.2 2.4-5.2 5.5-5.2s5.5 2 5.5 5.2"/><circle cx="17" cy="8" r="2.5"/><path d="M16.5 13.6c2.6 0 4.5 1.7 4.5 4.4"/></svg>Turmas</li>
+<li class="on"><svg class="ic" viewBox="0 0 24 24" ><rect x="5" y="4.5" width="14" height="16" rx="2"/><path d="M9 4.5h6v2.5H9zM8.5 13l2.3 2.3 4.5-4.6"/></svg>Matrículas</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/></svg>Lista de espera</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><path d="M4 7l1.8 1.8L9 5.5M4 15l1.8 1.8L9 13.5M12 7h8M12 15h8"/></svg>Chamada</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><circle cx="12" cy="12" r="8"/><path d="M14.5 9.5c-.6-.8-1.5-1.2-2.5-1.2-1.5 0-2.5.8-2.5 1.9 0 2.6 5.2 1.2 5.2 3.8 0 1.1-1.1 2-2.7 2-1.1 0-2.1-.5-2.7-1.4M12 6.5v1.8M12 15.7v1.8"/></svg>Financeiro</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><path d="M5 20V11M12 20V4M19 20v-6"/></svg>Relatórios</li>
+<li><svg class="ic" viewBox="0 0 24 24" ><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>Configurações</li>
+</ul>
+<div class="foot">Tecnologia SING</div>
+</aside>
+<div class="colmain">
+<header class="top"><div class="school">Instituto Aurora<span class="unit">Unidade Centro</span></div><div class="who"><div class="avatar">MD</div><div><b>Marina Duarte</b> <span>· Secretaria</span></div></div></header>
+<main class="page">
+
+<div class="ph"><div><div class="crumb">Matrículas</div><h1>Matrículas</h1></div></div>
+<div class="row">
+  <div class="flex1">
+    <div class="toolbar"><div class="search" style="position:relative"><input type="text" placeholder="Buscar aluno" style="padding-left:34px"><span style="position:absolute;left:10px;top:10px;color:#94A3B8"><svg class="ic" viewBox="0 0 24 24" ><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.2-4.2"/></svg></span></div><select><option>Situação: Todas</option></select></div>
+    <div class="tbl-card"><table class="tbl"><thead><tr><th>Aluno</th><th>Responsável</th><th>Turmas</th><th>Situação</th></tr></thead><tbody><tr><td class="n">Ana Clara Souza</td><td>Patrícia Souza</td><td>2 de 2</td><td><span class="badge b-amber">Limite atingido</span></td></tr><tr class=sel><td class="n">Bruno Martins</td><td>Cláudia Martins</td><td>1 de 2</td><td><span class="badge b-green">Ativo</span></td></tr><tr><td class="n">Camila Nogueira</td><td>Rogério Nogueira</td><td>1 de 2</td><td><span class="badge b-green">Ativo</span></td></tr><tr><td class="n">Davi Teixeira</td><td>Renata Teixeira</td><td>0 de 2</td><td><span class="badge b-gray">Sem turma</span></td></tr><tr><td class="n">Eduarda Lima</td><td>Marcos Lima</td><td>1 de 2</td><td><span class="badge b-green">Ativo</span></td></tr><tr><td class="n">Gabriela Rocha</td><td>Sônia Rocha</td><td>1 de 2</td><td><span class="badge b-green">Ativo</span></td></tr><tr><td class="n">Heitor Carvalho</td><td>Patrícia Carvalho</td><td>0 de 2</td><td><span class="badge b-gray">Sem turma</span></td></tr><tr><td class="n">Isabela Freitas</td><td>Daniel Freitas</td><td>2 de 2</td><td><span class="badge b-amber">Limite atingido</span></td></tr></tbody></table></div>
+    <div class="card" style="margin-top:12px;padding:12px 16px">
+      <h2 style="margin-bottom:8px">Ocupação por turma</h2>
+      <div class="ocg"><div class="oc"><div class="t"><b>Violão – Nível 1</b><span>15/15</span></div><div class="bar full"><i style="width:100%"></i></div></div><div class="oc"><div class="t"><b>Coral Infantil</b><span>12/15</span></div><div class="bar"><i style="width:80%"></i></div></div><div class="oc"><div class="t"><b>Teatro – Manhã</b><span>11/16</span></div><div class="bar"><i style="width:69%"></i></div></div><div class="oc"><div class="t"><b>Reforço de Matemática</b><span>9/20</span></div><div class="bar"><i style="width:45%"></i></div></div><div class="oc"><div class="t"><b>Futsal Sub-12</b><span>14/18</span></div><div class="bar"><i style="width:78%"></i></div></div></div>
+    </div>
+  </div>
+  <div style="width:344px;flex:none">
+    <div class="card op">
+      <h2>Operação no aluno</h2>
+      <div class="sel-al"><div class="av">BM</div><div><b>Bruno Martins</b><small>Responsável: Cláudia Martins</small></div></div>
+      <div class="lbl">Matrículas atuais</div>
+      <div class="mat"><div>Reforço de Matemática<small>Sexta-feira, 14:00</small></div><span class="badge b-green">Ativa</span></div>
+      <div class="f" style="margin-bottom:10px"><label>Turma destino</label><select><option>Teatro – Manhã — 5 vagas</option></select><div class="help">Ocupação atual: 11 de 16 vagas.</div></div>
+      <div class="note warn" style="margin-bottom:12px;padding:7px 10px;font-size:13px"><svg class="ic" viewBox="0 0 24 24" ><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 7.8v.4"/></svg><span><b>Limite da escola: 2 matrículas ativas por aluno</b></span></div>
+      <div class="btn primary block">Confirmar matrícula</div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+</div>
+</body>
+</html>

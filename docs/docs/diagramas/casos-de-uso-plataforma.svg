@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="1120" viewBox="0 0 1060 1120" font-family="Arial, Helvetica, sans-serif">
+<rect width="1060" height="1120" fill="#ffffff"/>
+<rect x="170.0" y="62.0" width="720.0" height="1008.0" fill="#ffffff" stroke="#111827" stroke-width="1.6"/>
+<text x="182.0" y="84.0" font-size="15" text-anchor="start" fill="#222222" font-weight="bold">SING</text>
+<rect x="179" y="115" width="252" height="934" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="189.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Acesso e organizações</text>
+<rect x="629" y="115" width="252" height="934" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="639.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Personalização da escola</text>
+<polyline points="112.0,170.0 150.0,170.0 189.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,730.0 150.0,730.0 189.0,730.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,1010.0 150.0,1010.0 189.0,1010.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,310.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,450.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,590.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,730.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,870.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,590.0 910.0,590.0 871.0,1010.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,1010.0 910.0,1010.0 871.0,1010.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<text x="530.0" y="34.0" font-size="19" text-anchor="middle" fill="#222222" font-weight="bold">Casos de uso — Plataforma e personalização (Sprints 1 a 4)</text>
+<ellipse cx="305" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="174.5" font-size="12.5" text-anchor="middle" fill="#222222">Realizar login de usuário</text>
+<ellipse cx="305" cy="450" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="447.0" font-size="12.5" text-anchor="middle" fill="#222222">Restringir o acesso aos dados da</text>
+<text x="305.0" y="462.0" font-size="12.5" text-anchor="middle" fill="#222222">própria organização</text>
+<ellipse cx="305" cy="730" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="734.5" font-size="12.5" text-anchor="middle" fill="#222222">Provisionar organização</text>
+<ellipse cx="305" cy="1010" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="1007.0" font-size="12.5" text-anchor="middle" fill="#222222">Gerenciar organizações do</text>
+<text x="305.0" y="1022.0" font-size="12.5" text-anchor="middle" fill="#222222">parceiro</text>
+<ellipse cx="755" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="167.0" font-size="12.5" text-anchor="middle" fill="#222222">Configurar a identidade visual da</text>
+<text x="755.0" y="182.0" font-size="12.5" text-anchor="middle" fill="#222222">organização</text>
+<ellipse cx="755" cy="310" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="307.0" font-size="12.5" text-anchor="middle" fill="#222222">Configurar o vocabulário da</text>
+<text x="755.0" y="322.0" font-size="12.5" text-anchor="middle" fill="#222222">organização</text>
+<ellipse cx="755" cy="450" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="447.0" font-size="12.5" text-anchor="middle" fill="#222222">Ativar e desativar módulos da</text>
+<text x="755.0" y="462.0" font-size="12.5" text-anchor="middle" fill="#222222">organização</text>
+<ellipse cx="755" cy="590" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="587.0" font-size="12.5" text-anchor="middle" fill="#222222">Configurar regras acadêmicas da</text>
+<text x="755.0" y="602.0" font-size="12.5" text-anchor="middle" fill="#222222">organização</text>
+<ellipse cx="755" cy="730" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="734.5" font-size="12.5" text-anchor="middle" fill="#222222">Gerenciar papéis e permissões</text>
+<ellipse cx="755" cy="870" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="867.0" font-size="12.5" text-anchor="middle" fill="#222222">Exportar os dados da</text>
+<text x="755.0" y="882.0" font-size="12.5" text-anchor="middle" fill="#222222">organização</text>
+<ellipse cx="755" cy="1010" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="1014.5" font-size="12.5" text-anchor="middle" fill="#222222">Gerenciar usuários por convite</text>
+<circle cx="92" cy="148" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 157 V181 M77 165 H107 M92 181 L80 198 M92 181 L104 198" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="214.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Usuário</text>
+<circle cx="92" cy="708" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 717 V741 M77 725 H107 M92 741 L80 758 M92 741 L104 758" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="774.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Operador da</text>
+<text x="92.0" y="789.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">plataforma</text>
+<circle cx="92" cy="988" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 997 V1021 M77 1005 H107 M92 1021 L80 1038 M92 1021 L104 1038" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="1054.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Parceiro</text>
+<circle cx="968" cy="568" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 577 V601 M953 585 H983 M968 601 L956 618 M968 601 L980 618" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="634.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Administrador da</text>
+<text x="968.0" y="649.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">escola</text>
+<circle cx="968" cy="988" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 997 V1021 M953 1005 H983 M968 1021 L956 1038 M968 1021 L980 1038" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="1054.0" font-size="12" text-anchor="middle" fill="#444444">«sistema»</text>
+<text x="968.0" y="1069.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Serviço de e-mail</text>
+<text x="170.0" y="1094.0" font-size="11.5" text-anchor="start" fill="#374151">Usuário generaliza todos os atores humanos (ver diagrama geral).</text>
+<polyline points="421.0,730.0 480.0,730.0 480.0,1010.0 639.0,1010.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="628.0,1015.5 639.0,1010.0 628.0,1004.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="559.5" y="1003.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+<polyline points="639.0,870.0 520.0,870.0 520.0,450.0 421.0,450.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="432.0,444.5 421.0,450.0 432.0,455.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="556.8" y="660.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+</svg>

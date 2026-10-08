@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="898" height="972" viewBox="0 0 898 972" font-family="Arial, Helvetica, sans-serif">
+<rect width="898" height="972" fill="#ffffff"/>
+<polyline points="76.0,253.0 76.0,303.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-dasharray="6,4" stroke-linejoin="miter"/>
+<polyline points="76.0,463.5 76.0,413.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-dasharray="6,4" stroke-linejoin="miter"/>
+<polyline points="116.0,591.5 116.0,641.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-dasharray="6,4" stroke-linejoin="miter"/>
+<polyline points="312.0,132.0 370.0,132.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="312.0,182.0 346.0,182.0 346.0,504.5 370.0,504.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="606.0,132.0 664.0,132.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-dasharray="6,4" stroke-linejoin="miter"/>
+<polyline points="606.0,310.0 640.0,310.0 640.0,192.0 664.0,192.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-dasharray="6,4" stroke-linejoin="miter"/>
+<polyline points="764.0,269.5 764.0,642.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="664.0,682.5 606.0,682.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="764.0,737.5 764.0,797.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="864.0,162.0 882.0,162.0 882.0,827.5 864.0,827.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="449.0" y="34.0" font-size="20" text-anchor="middle" fill="#222222" font-weight="bold">Diagrama de classes — Contexto de tenant e identidade</text>
+<rect x="16.0" y="92.0" width="296.0" height="161.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="16.0" y="92.0" width="296.0" height="46.0" fill="#e4dcf3" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="164.0" y="112.0" font-size="12.5" text-anchor="middle" fill="#444444">«Component»</text>
+<text x="164.0" y="130.5" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">TenantResolverFilter</text>
+<text x="25.0" y="154.0" font-size="12.5" text-anchor="start" fill="#222222">- organizations: OrganizationRepository</text>
+<text x="25.0" y="170.5" font-size="12.5" text-anchor="start" fill="#222222">- jwtService: JwtService</text>
+<line x1="16.0" y1="179.0" x2="312.0" y2="179.0" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="25.0" y="195.0" font-size="12.5" text-anchor="start" fill="#222222"># doFilterInternal(request: HttpServletRequest,</text>
+<text x="41.0" y="211.5" font-size="12.5" text-anchor="start" fill="#222222">response: HttpServletResponse,</text>
+<text x="41.0" y="228.0" font-size="12.5" text-anchor="start" fill="#222222">chain: FilterChain): void</text>
+<text x="25.0" y="244.5" font-size="12.5" text-anchor="start" fill="#222222">- resolveByHost(host: String): UUID</text>
+<rect x="16.0" y="303.0" width="296.0" height="110.5" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="16.0" y="303.0" width="296.0" height="28.5" fill="#e4dcf3" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="164.0" y="324.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">TenantContext</text>
+<text x="25.0" y="347.5" font-size="12.5" text-anchor="start" fill="#222222" text-decoration="underline">- CURRENT: ThreadLocal&lt;UUID&gt;</text>
+<line x1="16.0" y1="356.0" x2="312.0" y2="356.0" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="25.0" y="372.0" font-size="12.5" text-anchor="start" fill="#222222" text-decoration="underline">+ set(tenantId: UUID): void</text>
+<text x="25.0" y="388.5" font-size="12.5" text-anchor="start" fill="#222222" text-decoration="underline">+ get(): UUID</text>
+<text x="25.0" y="405.0" font-size="12.5" text-anchor="start" fill="#222222" text-decoration="underline">+ clear(): void</text>
+<rect x="16.0" y="463.5" width="296.0" height="128.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="16.0" y="463.5" width="296.0" height="46.0" fill="#e4dcf3" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="164.0" y="483.5" font-size="12.5" text-anchor="middle" fill="#444444">«Component»</text>
+<text x="164.0" y="502.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">TenantIdentifierResolver</text>
+<line x1="16.0" y1="517.5" x2="312.0" y2="517.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="25.0" y="533.5" font-size="12.5" text-anchor="start" fill="#222222">+ resolveCurrentTenantIdentifier()</text>
+<text x="41.0" y="550.0" font-size="12.5" text-anchor="start" fill="#222222">: UUID</text>
+<text x="25.0" y="566.5" font-size="12.5" text-anchor="start" fill="#222222">+ validateExistingCurrentSessions()</text>
+<text x="41.0" y="583.0" font-size="12.5" text-anchor="start" fill="#222222">: boolean</text>
+<rect x="16.0" y="641.5" width="296.0" height="95.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="16.0" y="641.5" width="296.0" height="46.0" fill="#ececec" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="164.0" y="661.5" font-size="12.5" text-anchor="middle" fill="#444444">«interface»</text>
+<text x="164.0" y="680.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">CurrentTenantIdentifierResolver</text>
+<line x1="16.0" y1="695.5" x2="312.0" y2="695.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="25.0" y="711.5" font-size="12.5" text-anchor="start" fill="#222222">+ resolveCurrentTenantIdentifier()</text>
+<text x="41.0" y="728.0" font-size="12.5" text-anchor="start" fill="#222222">: UUID</text>
+<rect x="370.0" y="92.0" width="236.0" height="128.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="370.0" y="92.0" width="236.0" height="46.0" fill="#d9efd6" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="488.0" y="112.0" font-size="12.5" text-anchor="middle" fill="#444444">«Service»</text>
+<text x="488.0" y="130.5" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">JwtService</text>
+<text x="379.0" y="154.0" font-size="12.5" text-anchor="start" fill="#222222">- privateKey: RSAPrivateKey</text>
+<line x1="370.0" y1="162.5" x2="606.0" y2="162.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="379.0" y="178.5" font-size="12.5" text-anchor="start" fill="#222222">+ generateToken(user: User): String</text>
+<text x="379.0" y="195.0" font-size="12.5" text-anchor="start" fill="#222222">+ parse(token: String): TokenClaims</text>
+<text x="379.0" y="211.5" font-size="12.5" text-anchor="start" fill="#222222">+ publicJwks(): JwkSet</text>
+<rect x="370.0" y="270.0" width="236.0" height="144.5" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="370.0" y="270.0" width="236.0" height="46.0" fill="#d9efd6" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="488.0" y="290.0" font-size="12.5" text-anchor="middle" fill="#444444">«Service»</text>
+<text x="488.0" y="308.5" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">InvitationService</text>
+<line x1="370.0" y1="324.0" x2="606.0" y2="324.0" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="379.0" y="340.0" font-size="12.5" text-anchor="start" fill="#222222">+ invite(name: String, email: String,</text>
+<text x="395.0" y="356.5" font-size="12.5" text-anchor="start" fill="#222222">roleIds: Set&lt;Long&gt;): Invitation</text>
+<text x="379.0" y="373.0" font-size="12.5" text-anchor="start" fill="#222222">+ accept(token: String,</text>
+<text x="395.0" y="389.5" font-size="12.5" text-anchor="start" fill="#222222">password: String): User</text>
+<text x="379.0" y="406.0" font-size="12.5" text-anchor="start" fill="#222222">+ resend(userId: Long): void</text>
+<rect x="370.0" y="464.5" width="236.0" height="128.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="370.0" y="464.5" width="236.0" height="46.0" fill="#e4dcf3" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="488.0" y="484.5" font-size="12.5" text-anchor="middle" fill="#444444">«interface»</text>
+<text x="488.0" y="503.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">OrganizationRepository</text>
+<line x1="370.0" y1="518.5" x2="606.0" y2="518.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="379.0" y="534.5" font-size="12.5" text-anchor="start" fill="#222222">+ findBySlug(slug: String)</text>
+<text x="395.0" y="551.0" font-size="12.5" text-anchor="start" fill="#222222">: Optional&lt;Organization&gt;</text>
+<text x="379.0" y="567.5" font-size="12.5" text-anchor="start" fill="#222222">+ findByDomainHost(host: String)</text>
+<text x="395.0" y="584.0" font-size="12.5" text-anchor="start" fill="#222222">: Optional&lt;Organization&gt;</text>
+<rect x="370.0" y="642.5" width="236.0" height="111.5" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="370.0" y="642.5" width="236.0" height="46.0" fill="#fbe9c4" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="488.0" y="662.5" font-size="12.5" text-anchor="middle" fill="#444444">«Entity»</text>
+<text x="488.0" y="681.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">Permission</text>
+<text x="379.0" y="704.5" font-size="12.5" text-anchor="start" fill="#222222">- code: String</text>
+<text x="379.0" y="721.0" font-size="12.5" text-anchor="start" fill="#222222">- module: ModuleCode</text>
+<text x="379.0" y="737.5" font-size="12.5" text-anchor="start" fill="#222222">- description: String</text>
+<line x1="370.0" y1="746.0" x2="606.0" y2="746.0" stroke="#4a4a4a" stroke-width="1.0"/>
+<rect x="664.0" y="92.0" width="200.0" height="177.5" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="664.0" y="92.0" width="200.0" height="46.0" fill="#fbe9c4" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="764.0" y="112.0" font-size="12.5" text-anchor="middle" fill="#444444">«Entity»</text>
+<text x="764.0" y="130.5" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">User</text>
+<text x="673.0" y="154.0" font-size="12.5" text-anchor="start" fill="#222222">- id: Long</text>
+<text x="673.0" y="170.5" font-size="12.5" text-anchor="start" fill="#222222">- email: String</text>
+<text x="673.0" y="187.0" font-size="12.5" text-anchor="start" fill="#222222">- passwordHash: String</text>
+<text x="673.0" y="203.5" font-size="12.5" text-anchor="start" fill="#222222">- status: UserStatus</text>
+<text x="673.0" y="220.0" font-size="12.5" text-anchor="start" fill="#222222">- lastLoginAt: Instant</text>
+<line x1="664.0" y1="228.5" x2="864.0" y2="228.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<text x="673.0" y="244.5" font-size="12.5" text-anchor="start" fill="#222222">+ hasPermission(code: String)</text>
+<text x="689.0" y="261.0" font-size="12.5" text-anchor="start" fill="#222222">: boolean</text>
+<rect x="664.0" y="642.5" width="200.0" height="95.0" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="664.0" y="642.5" width="200.0" height="46.0" fill="#fbe9c4" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="764.0" y="662.5" font-size="12.5" text-anchor="middle" fill="#444444">«Entity»</text>
+<text x="764.0" y="681.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold">Role</text>
+<text x="673.0" y="704.5" font-size="12.5" text-anchor="start" fill="#222222">- id: Long</text>
+<text x="673.0" y="721.0" font-size="12.5" text-anchor="start" fill="#222222">- name: String</text>
+<line x1="664.0" y1="729.5" x2="864.0" y2="729.5" stroke="#4a4a4a" stroke-width="1.0"/>
+<rect x="664.0" y="797.5" width="200.0" height="144.5" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.3"/>
+<rect x="664.0" y="797.5" width="200.0" height="46.0" fill="#fbe9c4" stroke="#4a4a4a" stroke-width="1.3"/>
+<text x="764.0" y="817.5" font-size="12.5" text-anchor="middle" fill="#444444">«MappedSuperclass»</text>
+<text x="764.0" y="836.0" font-size="13.5" text-anchor="middle" fill="#222222" font-weight="bold" font-style="italic">TenantScopedEntity</text>
+<text x="673.0" y="859.5" font-size="12.5" text-anchor="start" fill="#222222"># tenantId: UUID</text>
+<text x="673.0" y="876.0" font-size="12.5" text-anchor="start" fill="#222222"># createdAt: Instant</text>
+<text x="673.0" y="892.5" font-size="12.5" text-anchor="start" fill="#222222"># createdBy: Long</text>
+<text x="673.0" y="909.0" font-size="12.5" text-anchor="start" fill="#222222"># updatedAt: Instant</text>
+<text x="673.0" y="925.5" font-size="12.5" text-anchor="start" fill="#222222"># deletedAt: Instant</text>
+<line x1="664.0" y1="934.0" x2="864.0" y2="934.0" stroke="#4a4a4a" stroke-width="1.0"/>
+<rect x="370.0" y="784.0" width="236.0" height="130.0" fill="#ffffff" stroke="#8a8a8a" stroke-width="1"/>
+<text x="380.0" y="803.0" font-size="12.5" text-anchor="start" fill="#222222" font-weight="bold">Legenda</text>
+<rect x="380.0" y="814.0" width="16.0" height="12.0" fill="#dbe9f8" stroke="#4a4a4a" stroke-width="1"/>
+<text x="404.0" y="825.0" font-size="12.5" text-anchor="start" fill="#222222">API (controladores e DTOs)</text>
+<rect x="380.0" y="834.0" width="16.0" height="12.0" fill="#d9efd6" stroke="#4a4a4a" stroke-width="1"/>
+<text x="404.0" y="845.0" font-size="12.5" text-anchor="start" fill="#222222">Aplicação (serviços)</text>
+<rect x="380.0" y="854.0" width="16.0" height="12.0" fill="#fbe9c4" stroke="#4a4a4a" stroke-width="1"/>
+<text x="404.0" y="865.0" font-size="12.5" text-anchor="start" fill="#222222">Domínio (entidades)</text>
+<rect x="380.0" y="874.0" width="16.0" height="12.0" fill="#e4dcf3" stroke="#4a4a4a" stroke-width="1"/>
+<text x="404.0" y="885.0" font-size="12.5" text-anchor="start" fill="#222222">Infraestrutura e contexto</text>
+<rect x="380.0" y="894.0" width="16.0" height="12.0" fill="#ececec" stroke="#4a4a4a" stroke-width="1"/>
+<text x="404.0" y="905.0" font-size="12.5" text-anchor="start" fill="#222222">Interface de biblioteca</text>
+<polyline points="70.5,292.0 76.0,303.0 81.5,292.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="82.0" y="281.0" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«use»</text>
+<polyline points="81.5,424.5 76.0,413.5 70.5,424.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="82.0" y="441.5" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«use»</text>
+<polygon points="116.0,641.5 108.0,626.5 124.0,626.5" fill="#ffffff" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="359.0,137.5 370.0,132.0 359.0,126.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="359.0,510.0 370.0,504.5 359.0,499.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polyline points="653.0,137.5 664.0,132.0 653.0,126.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="612.0" y="124.0" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«use»</text>
+<polyline points="653.0,197.5 664.0,192.0 653.0,186.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="612.0" y="302.0" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«create»</text>
+<polyline points="758.5,631.5 764.0,642.5 769.5,631.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="770.0" y="285.5" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">*</text>
+<text x="770.0" y="636.5" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">roles  1..*</text>
+<polyline points="617.0,677.0 606.0,682.5 617.0,688.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="658.0" y="674.5" font-size="12.5" text-anchor="end" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">*</text>
+<text x="612.0" y="674.5" font-size="12.5" text-anchor="start" fill="#222222" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">permissions  *</text>
+<polygon points="764.0,797.5 756.0,782.5 772.0,782.5" fill="#ffffff" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<polygon points="864.0,827.5 879.0,819.5 879.0,835.5" fill="#ffffff" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+</svg>

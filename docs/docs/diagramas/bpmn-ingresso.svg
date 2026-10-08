@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 950" width="1400" height="950">
+<defs><marker id="seq" markerWidth="12" markerHeight="10" refX="11.5" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L12,5 L0,10 z" fill="#1b1b1b"/></marker><marker id="msg" markerWidth="13" markerHeight="12" refX="12" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M1,1 L12,6 L1,11 z" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3" stroke-linejoin="round"/></marker></defs>
+<rect x="0" y="0" width="1400" height="950" fill="#ffffff"/>
+<text x="700.0" y="35.0" font-family="Arial, Helvetica, sans-serif" font-size="20" font-weight="bold" text-anchor="middle" fill="#1b1b1b"><tspan x="700.0" dy="0">Processo TO BE — Ingresso de aluno: do pedido de vaga à matrícula</tspan></text>
+<rect x="20" y="48" width="1360" height="176" fill="#ffffff" stroke="#1b1b1b" stroke-width="2"/>
+<rect x="20" y="48" width="28" height="176" fill="#dfe7f1" stroke="#1b1b1b" stroke-width="2"/>
+<text x="34" y="141.25" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" text-anchor="middle" fill="#1b1b1b" transform="rotate(-90 34 136.0)"><tspan x="34" dy="0">Responsável</tspan></text>
+<rect x="20" y="248" width="1360" height="566" fill="#ffffff" stroke="#1b1b1b" stroke-width="2"/>
+<rect x="20" y="248" width="28" height="566" fill="#dfe7f1" stroke="#1b1b1b" stroke-width="2"/>
+<text x="34" y="536.25" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" text-anchor="middle" fill="#1b1b1b" transform="rotate(-90 34 531.0)"><tspan x="34" dy="0">Escola</tspan></text>
+<rect x="48" y="248" width="28" height="116" fill="#eef2f7" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="62" y="310.9" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1b1b1b" transform="rotate(-90 62 306.0)"><tspan x="62" dy="0">Secretaria</tspan></text>
+<rect x="48" y="364" width="28" height="342" fill="#eef2f7" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="62" y="539.9" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1b1b1b" transform="rotate(-90 62 535.0)"><tspan x="62" dy="0">SING (sistema)</tspan></text>
+<line x1="48" y1="364" x2="1380" y2="364" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="48" y="706" width="28" height="108" fill="#eef2f7" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="62" y="764.9" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1b1b1b" transform="rotate(-90 62 760.0)"><tspan x="62" dy="0">Financeiro</tspan></text>
+<line x1="48" y1="706" x2="1380" y2="706" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="104" cy="96" r="17" fill="#e3f3e1" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="142.0" y="68.0" width="116" height="56" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="200" y="92.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="200" dy="0">Pedir vaga em</tspan><tspan x="200" dy="16">uma turma</tspan></text>
+<rect x="1076.0" y="68.0" width="128" height="56" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="1140" y="84.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="1140" dy="0">Registrar</tspan><tspan x="1140" dy="16">consentimento e</tspan><tspan x="1140" dy="16">acessar o portal</tspan></text>
+<circle cx="1300" cy="96" r="17" fill="#f9dfdf" stroke="#1b1b1b" stroke-width="4.5"/>
+<text x="1300" y="133.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1300" dy="0">Aluno matriculado</tspan></text>
+<rect x="856.0" y="150.0" width="168" height="52" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="940" y="180.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="940" dy="0">Responder à convocação</tspan></text>
+<circle cx="200" cy="298" r="17" fill="#e3f3e1" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="192.35" y="292.9" width="15.299999999999999" height="10.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<polyline points="192.35,292.9 200,298.85 207.65,292.9" fill="none" stroke="#1b1b1b" stroke-width="1.3"/>
+<text x="200" y="327.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="200" dy="0">Pedido de vaga</tspan><tspan x="200" dy="16">recebido</tspan></text>
+<rect x="248.0" y="270.0" width="116" height="56" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="306" y="294.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="306" dy="0">Cadastrar aluno</tspan><tspan x="306" dy="16">e responsável</tspan></text>
+<rect x="482.0" y="270.0" width="116" height="56" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="540" y="294.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="540" dy="0">Confirmar</tspan><tspan x="540" dy="16">matrícula</tspan></text>
+<rect x="250.0" y="416.0" width="112" height="60" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="306" y="434.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="306" dy="0">Verificar vagas</tspan><tspan x="306" dy="16">e regras da</tspan><tspan x="306" dy="16">escola</tspan></text>
+<polygon points="430,425 451,446 430,467 409,446" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="421.5" y1="437.5" x2="438.5" y2="454.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="421.5" y1="454.5" x2="438.5" y2="437.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<text x="430" y="478.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="430" dy="0">Há vaga</tspan><tspan x="430" dy="16">na turma?</tspan></text>
+<polygon points="540,523 561,544 540,565 519,544" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="529" y1="544" x2="551" y2="544" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="540" y1="533" x2="540" y2="555" stroke="#1b1b1b" stroke-width="3.4"/>
+<rect x="602.0" y="514.0" width="112" height="60" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="658" y="532.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="658" dy="0">Incluir aluno</tspan><tspan x="658" dy="16">na chamada</tspan><tspan x="658" dy="16">da turma</tspan></text>
+<polygon points="650,629 671,650 650,671 629,650" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="641.5" y1="641.5" x2="658.5" y2="658.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="641.5" y1="658.5" x2="658.5" y2="641.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<text x="650" y="601.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="650" dy="0">Módulo Financeiro</tspan><tspan x="650" dy="16">ativo?</tspan></text>
+<rect x="700.0" y="732.0" width="124" height="56" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="762" y="756.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="762" dy="0">Gerar plano de</tspan><tspan x="762" dy="16">pagamento</tspan></text>
+<polygon points="860,629 881,650 860,671 839,650" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="851.5" y1="641.5" x2="868.5" y2="658.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="851.5" y1="658.5" x2="868.5" y2="641.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<polygon points="905,523 926,544 905,565 884,544" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="894" y1="544" x2="916" y2="544" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="905" y1="533" x2="905" y2="555" stroke="#1b1b1b" stroke-width="3.4"/>
+<rect x="1068.0" y="514.0" width="124" height="60" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="1130" y="532.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="1130" dy="0">Enviar confirmação</tspan><tspan x="1130" dy="16">e acesso ao</tspan><tspan x="1130" dy="16">portal</tspan></text>
+<rect x="586.0" y="416.0" width="112" height="60" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="642" y="442.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="642" dy="0">Incluir na</tspan><tspan x="642" dy="16">lista de espera</tspan></text>
+<circle cx="743" cy="446" r="17" fill="#fffbe6" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="743" cy="446" r="13.2" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="735.35" y="440.9" width="15.299999999999999" height="10.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<polyline points="735.35,440.9 743,446.85 750.65,440.9" fill="none" stroke="#1b1b1b" stroke-width="1.3"/>
+<text x="743" y="475.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="743" dy="0">Vaga</tspan><tspan x="743" dy="16">liberada</tspan></text>
+<rect x="786.0" y="416.0" width="112" height="60" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="842" y="434.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="842" dy="0">Convocar o</tspan><tspan x="842" dy="16">primeiro</tspan><tspan x="842" dy="16">da lista</tspan></text>
+<polygon points="940,426 960,446 940,466 920,446" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<circle cx="940" cy="446" r="12.5" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<circle cx="940" cy="446" r="9.5" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<polygon points="940.00,439.80 945.90,444.08 943.64,451.02 936.36,451.02 934.10,444.08" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<circle cx="1004" cy="406" r="17" fill="#fffbe6" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="1004" cy="406" r="13.2" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="996.35" y="400.9" width="15.299999999999999" height="10.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<polyline points="996.35,400.9 1004,406.85 1011.65,400.9" fill="none" stroke="#1b1b1b" stroke-width="1.3"/>
+<circle cx="1004" cy="486" r="17" fill="#fffbe6" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="1004" cy="486" r="13.2" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="1004" cy="486" r="8.5" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="1004.0" y1="479.625" x2="1004.0" y2="477.5" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="1010.375" y1="486.0" x2="1012.5" y2="486.0" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="1004.0" y1="492.375" x2="1004.0" y2="494.5" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="997.625" y1="486.0" x2="995.5" y2="486.0" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="1004" y1="486" x2="1004" y2="480.05" stroke="#1b1b1b" stroke-width="1.5"/>
+<line x1="1004" y1="486" x2="1008.25" y2="487.7" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="1004" y="522.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1004" dy="0">Prazo de 3 dias</tspan></text>
+<text x="1004" y="434.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1004" dy="0">Resposta</tspan><tspan x="1004" dy="16">recebida</tspan></text>
+<polygon points="1080,425 1101,446 1080,467 1059,446" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="1071.5" y1="437.5" x2="1088.5" y2="454.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="1071.5" y1="454.5" x2="1088.5" y2="437.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<text x="1080" y="478.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1080" dy="0">Confirmou</tspan><tspan x="1080" dy="16">no prazo?</tspan></text>
+<rect x="1177.0" y="409.0" width="118" height="74" rx="10" ry="10" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.8"/>
+<text x="1236" y="426.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b"><tspan x="1236" dy="0">Marcar como</tspan><tspan x="1236" dy="16">‘Não respondeu’</tspan><tspan x="1236" dy="16">e convocar o</tspan><tspan x="1236" dy="16">próximo</tspan></text>
+<circle cx="1338" cy="446" r="17" fill="#f9dfdf" stroke="#1b1b1b" stroke-width="4.5"/>
+<text x="1338" y="483.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1338" dy="0">Vaga</tspan><tspan x="1338" dy="16">oferecida</tspan><tspan x="1338" dy="16">ao próximo</tspan></text>
+<path d="M121,96 L142.0,96" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M258.0,96 L1076.0,96" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M1204.0,96 L1283,96" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M217,298 L248.0,298" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M306,326.0 L306,416.0" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M362.0,446 L409,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M430,425 L430,298 L482.0,298" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="438" y="410.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="438" dy="0">Sim</tspan></text>
+<path d="M451,446 L586.0,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="458" y="441.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="458" dy="0">Não</tspan></text>
+<path d="M540,326.0 L540,523" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M561,544 L602.0,544" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M540,565 L540,650 L629,650" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M714.0,544 L884,544" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M671,650 L839,650" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="710" y="644.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="middle" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="710" dy="0">Não</tspan></text>
+<path d="M650,671 L650,760 L700.0,760" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="659" y="690.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="659" dy="0">Sim</tspan></text>
+<path d="M824.0,760 L860,760 L860,671" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M881,650 L905,650 L905,565" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M926,544 L1068.0,544" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M698.0,446 L726,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M760,446 L786.0,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M898.0,446 L920,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M940,426 L940,406 L987,406" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M940,466 L940,486 L987,486" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M1021,406 L1042,406 L1042,446 L1059,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M1021,486 L1042,486 L1042,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round"/>
+<path d="M1080,425 L1080,298 L598.0,298" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="1088" y="410.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1088" dy="0">Sim</tspan></text>
+<path d="M1101,446 L1177.0,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="1103" y="441.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"><tspan x="1103" dy="0">Não</tspan></text>
+<path d="M1295.0,446 L1321,446" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<path d="M200,124.0 L200,281" fill="none" stroke="#1b1b1b" stroke-width="1.5" stroke-dasharray="6 4" stroke-linejoin="round" marker-end="url(#msg)"/>
+<circle cx="200" cy="124.0" r="4.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.5"/>
+<path d="M1144,514.0 L1144,124.0" fill="none" stroke="#1b1b1b" stroke-width="1.5" stroke-dasharray="6 4" stroke-linejoin="round" marker-end="url(#msg)"/>
+<circle cx="1144" cy="514.0" r="4.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.5"/>
+<path d="M876,416.0 L876,202.0" fill="none" stroke="#1b1b1b" stroke-width="1.5" stroke-dasharray="6 4" stroke-linejoin="round" marker-end="url(#msg)"/>
+<circle cx="876" cy="416.0" r="4.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.5"/>
+<path d="M1004,202.0 L1004,389" fill="none" stroke="#1b1b1b" stroke-width="1.5" stroke-dasharray="6 4" stroke-linejoin="round" marker-end="url(#msg)"/>
+<circle cx="1004" cy="202.0" r="4.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="20" y="826" width="1360" height="116" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.2"/>
+<text x="34" y="850.9" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" text-anchor="start" fill="#1b1b1b"><tspan x="34" dy="0">Legenda</tspan></text>
+<circle cx="62" cy="874" r="14" fill="#e3f3e1" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="96" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="96" dy="0">Evento de início</tspan></text>
+<circle cx="294" cy="874" r="14" fill="#e3f3e1" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="286.35" y="868.9" width="15.299999999999999" height="10.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<polyline points="286.35,868.9 294,874.85 301.65,868.9" fill="none" stroke="#1b1b1b" stroke-width="1.3"/>
+<text x="328" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="328" dy="0">Início por mensagem</tspan></text>
+<circle cx="526" cy="874" r="14" fill="#fffbe6" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="526" cy="874" r="10.2" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+<rect x="518.35" y="868.9" width="15.299999999999999" height="10.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<polyline points="518.35,868.9 526,874.85 533.65,868.9" fill="none" stroke="#1b1b1b" stroke-width="1.3"/>
+<text x="560" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="560" dy="0">Mensagem (intermediário)</tspan></text>
+<circle cx="758" cy="874" r="14" fill="#fffbe6" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="758" cy="874" r="10.2" fill="none" stroke="#1b1b1b" stroke-width="1.5"/>
+<circle cx="758" cy="874" r="8.5" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="758.0" y1="867.625" x2="758.0" y2="865.5" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="764.375" y1="874.0" x2="766.5" y2="874.0" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="758.0" y1="880.375" x2="758.0" y2="882.5" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="751.625" y1="874.0" x2="749.5" y2="874.0" stroke="#1b1b1b" stroke-width="1.3"/>
+<line x1="758" y1="874" x2="758" y2="868.05" stroke="#1b1b1b" stroke-width="1.5"/>
+<line x1="758" y1="874" x2="762.25" y2="875.7" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="792" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="792" dy="0">Temporizador</tspan></text>
+<circle cx="990" cy="874" r="14" fill="#f9dfdf" stroke="#1b1b1b" stroke-width="4.5"/>
+<text x="1024" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="1024" dy="0">Evento de fim</tspan></text>
+<rect x="1202" y="861" width="40" height="26" rx="6" fill="#e4eefa" stroke="#1b1b1b" stroke-width="1.6"/>
+<text x="1256" y="878.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="1256" dy="0">Tarefa</tspan></text>
+<polygon points="62,898 78,914 62,930 46,914" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="53.5" y1="905.5" x2="70.5" y2="922.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="53.5" y1="922.5" x2="70.5" y2="905.5" stroke="#1b1b1b" stroke-width="3.4"/>
+<text x="96" y="918.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="96" dy="0">Gateway exclusivo</tspan></text>
+<polygon points="294,898 310,914 294,930 278,914" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<line x1="283" y1="914" x2="305" y2="914" stroke="#1b1b1b" stroke-width="3.4"/>
+<line x1="294" y1="903" x2="294" y2="925" stroke="#1b1b1b" stroke-width="3.4"/>
+<text x="328" y="918.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="328" dy="0">Gateway paralelo</tspan></text>
+<polygon points="526,898 542,914 526,930 510,914" fill="#fff4cf" stroke="#1b1b1b" stroke-width="1.8"/>
+<circle cx="526" cy="914" r="12.5" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<circle cx="526" cy="914" r="9.5" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<polygon points="526.00,907.80 531.90,912.08 529.64,919.02 522.36,919.02 520.10,912.08" fill="none" stroke="#1b1b1b" stroke-width="1.4"/>
+<text x="560" y="918.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="560" dy="0">Gateway baseado em evento</tspan></text>
+<path d="M784.4000000000001,914 L826.4000000000001,914" fill="none" stroke="#1b1b1b" stroke-width="1.6" stroke-linejoin="round" marker-end="url(#seq)"/>
+<text x="838.4000000000001" y="918.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="838.4000000000001" dy="0">Fluxo de sequência</tspan></text>
+<path d="M1016.4000000000001,914 L1058.4,914" fill="none" stroke="#1b1b1b" stroke-width="1.5" stroke-dasharray="6 4" stroke-linejoin="round" marker-end="url(#msg)"/>
+<circle cx="1016.4000000000001" cy="914" r="4.2" fill="#ffffff" stroke="#1b1b1b" stroke-width="1.5"/>
+<text x="1070.4" y="918.55" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" text-anchor="start" fill="#1b1b1b"><tspan x="1070.4" dy="0">Fluxo de mensagem</tspan></text>
+</svg>

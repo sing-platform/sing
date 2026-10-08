@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="1110" viewBox="0 0 1060 1110" font-family="Arial, Helvetica, sans-serif">
+<rect width="1060" height="1110" fill="#ffffff"/>
+<rect x="170.0" y="62.0" width="720.0" height="994.0" fill="#ffffff" stroke="#111827" stroke-width="1.6"/>
+<text x="182.0" y="84.0" font-size="15" text-anchor="start" fill="#222222" font-weight="bold">SING</text>
+<rect x="179" y="115" width="252" height="754" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="189.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Secretaria</text>
+<rect x="629" y="115" width="252" height="589" rx="6" fill="#FAFAFA" stroke="#9CA3AF" stroke-width="1.1" stroke-dasharray="5,4"/>
+<text x="639.0" y="132.0" font-size="12.5" text-anchor="start" fill="#374151" font-weight="bold">Sala de aula e família</text>
+<polyline points="112.0,500.0 150.0,500.0 189.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,500.0 150.0,500.0 189.0,335.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,500.0 150.0,500.0 189.0,500.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,500.0 150.0,500.0 189.0,665.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,500.0 150.0,500.0 189.0,830.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,830.0 150.0,830.0 189.0,830.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="112.0,918.0 150.0,918.0 189.0,830.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,252.5 910.0,252.5 871.0,170.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,252.5 910.0,252.5 871.0,335.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,582.5 910.0,582.5 871.0,500.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,582.5 910.0,582.5 871.0,665.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<polyline points="948.0,670.5 910.0,670.5 871.0,500.0" fill="none" stroke="#3b3b3b" stroke-width="1.2"/>
+<text x="530.0" y="34.0" font-size="19" text-anchor="middle" fill="#222222" font-weight="bold">Casos de uso — Acadêmico (Sprints 1 a 3)</text>
+<ellipse cx="305" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="174.5" font-size="12.5" text-anchor="middle" fill="#222222">Manter alunos e responsáveis</text>
+<ellipse cx="305" cy="335" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="339.5" font-size="12.5" text-anchor="middle" fill="#222222">Manter turmas e oficinas</text>
+<ellipse cx="305" cy="500" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="504.5" font-size="12.5" text-anchor="middle" fill="#222222">Emitir declaração de matrícula</text>
+<ellipse cx="305" cy="665" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="669.5" font-size="12.5" text-anchor="middle" fill="#222222">Matricular aluno em turma</text>
+<ellipse cx="305" cy="830" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="827.0" font-size="12.5" text-anchor="middle" fill="#222222">Gerenciar lista de espera e</text>
+<text x="305.0" y="842.0" font-size="12.5" text-anchor="middle" fill="#222222">convocação</text>
+<ellipse cx="305" cy="995" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="305.0" y="992.0" font-size="12.5" text-anchor="middle" fill="#222222">Gerar plano de pagamento da</text>
+<text x="305.0" y="1007.0" font-size="12.5" text-anchor="middle" fill="#222222">matrícula</text>
+<ellipse cx="755" cy="170" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="174.5" font-size="12.5" text-anchor="middle" fill="#222222">Registrar chamada</text>
+<ellipse cx="755" cy="335" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="339.5" font-size="12.5" text-anchor="middle" fill="#222222">Registrar parecer descritivo</text>
+<ellipse cx="755" cy="500" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="497.0" font-size="12.5" text-anchor="middle" fill="#222222">Consultar frequência e grade</text>
+<text x="755.0" y="512.0" font-size="12.5" text-anchor="middle" fill="#222222">horária</text>
+<ellipse cx="755" cy="665" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="662.0" font-size="12.5" text-anchor="middle" fill="#222222">Registrar consentimento do</text>
+<text x="755.0" y="677.0" font-size="12.5" text-anchor="middle" fill="#222222">responsável</text>
+<ellipse cx="755" cy="830" rx="116" ry="25" fill="#EEF2FF" stroke="#3730A3" stroke-width="1.3"/>
+<text x="755.0" y="827.0" font-size="12.5" text-anchor="middle" fill="#222222">Restringir o acesso aos dados da</text>
+<text x="755.0" y="842.0" font-size="12.5" text-anchor="middle" fill="#222222">própria organização</text>
+<circle cx="92" cy="478" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 487 V511 M77 495 H107 M92 511 L80 528 M92 511 L104 528" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="544.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Secretaria</text>
+<circle cx="92" cy="808" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 817 V841 M77 825 H107 M92 841 L80 858 M92 841 L104 858" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="874.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Responsável</text>
+<circle cx="92" cy="896" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M92 905 V929 M77 913 H107 M92 929 L80 946 M92 929 L104 946" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="92.0" y="962.0" font-size="12" text-anchor="middle" fill="#444444">«sistema»</text>
+<text x="92.0" y="977.0" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Serviço de e-mail</text>
+<circle cx="968" cy="230.5" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 239.5 V263.5 M953 247.5 H983 M968 263.5 L956 280.5 M968 263.5 L980 280.5" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="296.5" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Professor</text>
+<circle cx="968" cy="560.5" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 569.5 V593.5 M953 577.5 H983 M968 593.5 L956 610.5 M968 593.5 L980 610.5" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="626.5" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Responsável</text>
+<circle cx="968" cy="648.5" r="9" fill="#fff" stroke="#111827" stroke-width="1.5"/><path d="M968 657.5 V681.5 M953 665.5 H983 M968 681.5 L956 698.5 M968 681.5 L980 698.5" stroke="#111827" stroke-width="1.5" fill="none"/>
+<text x="968.0" y="714.5" font-size="12.5" text-anchor="middle" fill="#222222" font-weight="bold">Aluno</text>
+<text x="530.0" y="1084.0" font-size="11.5" text-anchor="middle" fill="#374151">Casos fora dos pacotes pertencem a outros módulos e aparecem aqui só pelas relações.</text>
+<polyline points="305.0,805.0 305.0,690.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="310.5,701.0 305.0,690.0 299.5,701.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="340.3" y="741.5" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«extend»</text>
+<text x="314.0" y="760.5" font-size="11.5" text-anchor="start" fill="#374151" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">[turma sem vaga]</text>
+<polyline points="421.0,170.0 580.0,170.0 580.0,790.0 685.4,790.0 685.4,810.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="679.9,799.0 685.4,810.0 690.9,799.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="632.7" y="782.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+<polyline points="397.8,650.0 520.0,650.0 520.0,892.0 685.4,892.0 685.4,850.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="690.9,861.0 685.4,850.0 679.9,861.0" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="602.7" y="882.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«include»</text>
+<polyline points="421.0,995.0 440.0,995.0 440.0,665.0 421.0,665.0" fill="none" stroke="#3b3b3b" stroke-width="1.2" stroke-dasharray="6,4"/>
+<polyline points="432.0,659.5 421.0,665.0 432.0,670.5" fill="none" stroke="#3b3b3b" stroke-width="1.3" stroke-linejoin="miter"/>
+<text x="475.3" y="922.0" font-size="12" text-anchor="middle" fill="#1f2937" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">«extend»</text>
+<text x="449.0" y="944.0" font-size="11.5" text-anchor="start" fill="#374151" stroke="#ffffff" stroke-width="3.2" stroke-linejoin="round" paint-order="stroke">[módulo Financeiro ativo]</text>
+</svg>

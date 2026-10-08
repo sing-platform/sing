@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Instituto Aurora – Entrar</title>
+<link rel="stylesheet" href="sing.css">
+<style>body{height:720px}
+body{background:#fff}
+.browser{height:48px;background:#E8EDF3;border-bottom:1px solid #D5DCE6;display:flex;align-items:center;padding:0 16px;gap:14px}
+.dots{display:flex;gap:7px}
+.dots i{width:12px;height:12px;border-radius:50%;background:#CBD5E1;display:block}
+.navb{display:flex;gap:10px;color:#64748B}
+.navb .ic{width:18px;height:18px}
+.url{width:520px;height:30px;border-radius:15px;background:#fff;border:1px solid #D5DCE6;display:flex;align-items:center;padding:0 14px;gap:8px;font-size:13.5px;color:#334155}
+.url .ic{width:14px;height:14px;color:#15803D}
+.login{display:flex;height:672px}
+.hero{width:560px;background:linear-gradient(160deg,var(--brand) 0%,var(--brand-dark) 100%);color:#fff;padding:56px 56px;position:relative;overflow:hidden}
+.hero h2{font-size:36px;line-height:1.1;margin:22px 0 10px}
+.hero p{font-size:17px;opacity:.9;max-width:380px;line-height:1.45}
+.hero .sun{position:absolute;left:0;bottom:0}
+.hero .tile{width:72px;height:72px;border-radius:18px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.formside{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.box{width:360px}
+.box h1{font-size:26px;margin-bottom:6px}
+.box .sub{color:var(--muted);margin-bottom:20px;font-size:14.5px}
+.forgot{text-align:right;margin:-4px 0 18px}
+.fine{position:absolute;bottom:20px;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="browser">
+  <div class="dots"><i></i><i></i><i></i></div>
+  <div class="navb"><svg class="ic" viewBox="0 0 24 24" style="transform:scaleX(-1)"><path d="M9 6l6 6-6 6"/></svg><svg class="ic" viewBox="0 0 24 24" ><path d="M9 6l6 6-6 6"/></svg><svg class="ic" viewBox="0 0 24 24" ><path d="M19 8a7.5 7.5 0 0 0-13-1.5M5 4v3.5h3.5M5 16a7.5 7.5 0 0 0 13 1.5M19 20v-3.5h-3.5"/></svg></div>
+  <div class="url"><svg class="ic" viewBox="0 0 24 24" ><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>institutoaurora.sing.app</span></div>
+</div>
+<div class="login">
+  <section class="hero">
+    <div class="tile"><svg width="56" height="56" viewBox="0 0 40 40" aria-label="Logo Instituto Aurora"><rect width="40" height="40" rx="10" style="fill:var(--brand)"/><path d="M11 28a9 9 0 0 1 18 0z" fill="#FDE68A"/><g stroke="#FDE68A" stroke-width="2.2" stroke-linecap="round"><path d="M20 9.5v3.5M11.2 13.6l2.4 2.4M28.8 13.6l-2.4 2.4M7 21.5h3M30 21.5h3"/></g><path d="M8 30.5h24" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+    <h2>Instituto Aurora</h2>
+    <p>Matrícula, chamada e acompanhamento da sua família em um só lugar.</p>
+    <svg class="sun" width="560" height="260" viewBox="0 0 560 260" aria-hidden="true"><path d="M130 260a150 150 0 0 1 300 0z" fill="#FDE68A" opacity=".95"/><g stroke="#FDE68A" stroke-width="10" stroke-linecap="round" opacity=".85"><path d="M280 40v42M150 70l30 30M410 70l-30 30M70 150h44M446 150h44"/></g><path d="M0 259h560" stroke="#fff" stroke-width="4" opacity=".6"/></svg>
+  </section>
+  <section class="formside">
+    <div class="box">
+      <h1>Entrar</h1>
+      <p class="sub">Acesse com a sua conta do Instituto Aurora.</p>
+      <div class="note err" style="margin-bottom:14px"><svg class="ic" viewBox="0 0 24 24" ><path d="M12 4l9 15.5H3z"/><path d="M12 10v4.5M12 17v.3"/></svg><span><b>E-mail ou senha inválidos</b></span></div>
+      <div class="f"><label>E-mail<span class="req">*</span></label><input type="email" value="marina.duarte@aurora.edu.br"></div>
+      <div class="f"><label>Senha<span class="req">*</span></label><input type="password" value="senhaerrada1"></div>
+      <div class="forgot"><span class="link">Esqueci minha senha</span></div>
+      <div class="btn primary block" style="height:42px;font-size:15px">Entrar</div>
+    </div>
+    <div class="fine">Tecnologia SING</div>
+  </section>
+</div>
+</body>
+</html>
