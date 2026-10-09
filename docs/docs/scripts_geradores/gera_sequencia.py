@@ -2,10 +2,9 @@ import os
 import sys
 from xml.sax.saxutils import escape
 
-from caminhos import DIAGRAMAS
+from caminhos import diagrama
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
-SAIDA = DIAGRAMAS
 LARGURA = 1060
 FONTE = 14
 CHAR = 6.7
@@ -650,7 +649,7 @@ def gera(codigo, dados):
         + texto(LARGURA / 2, 30, [titulo], peso="bold", tamanho=16)
         + "".join(fundo) + "".join(meio) + "".join(frente) + "</svg>"
     )
-    caminho = os.path.join(SAIDA, f"sequencia-{codigo}.svg")
+    caminho = diagrama(f"sequencia-{codigo}.svg")
     with open(caminho, "w", encoding="utf-8") as arquivo:
         arquivo.write(svg)
     return caminho, LARGURA, altura_total

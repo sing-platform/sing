@@ -16,7 +16,7 @@ from gera_sequencia import SEQ
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 BASE = RAIZ
-TEMPLATE = os.path.join(AQUI, "ESSW-template.docx")
+TEMPLATE = os.path.join(RAIZ, "ESSW-template.docx")
 SAIDA = os.path.join(BASE, f"{spec.PRODUTO} - Especificacao do Projeto.docx")
 
 W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
@@ -251,7 +251,7 @@ def s4_bpmn():
         p("Processo de ingresso de aluno na versão TO BE: do pedido de vaga à matrícula, com verificação das "
           "regras da escola, lista de espera, convocação com prazo e geração do plano de pagamento.", depois=100),
         moldura("Processo TO BE – Ingresso de aluno: do pedido de vaga à matrícula",
-                "diagramas/bpmn-ingresso.png", PAISAGEM, 26.3, 12.3),
+                "diagramas/bpmn/bpmn-ingresso.png", PAISAGEM, 26.3, 12.3),
     ]
 
 
@@ -357,15 +357,15 @@ def s9_casos_de_uso():
           "representativos, mas vale para todo caso de uso que lê ou grava dados da organização. Em seguida, um diagrama "
           "por módulo repete os casos do diagrama geral em escala legível: Plataforma e personalização, Acadêmico, e "
           "Gestão e financeiro. O último diagrama traz os 12 casos de uso do módulo escolar (Sprints 5 a 7).", depois=100),
-        moldura("Diagrama Geral de Casos de Uso", "diagramas/casos-de-uso.png", 10485, 17.9, 19.8),
+        moldura("Diagrama Geral de Casos de Uso", "diagramas/casos-de-uso/casos-de-uso.png", 10485, 17.9, 19.8),
         vazio(2, quebra_antes=True),
-        moldura("Casos de Uso – Plataforma e personalização", "diagramas/casos-de-uso-plataforma.png", 10485, 17.9, 23.0),
+        moldura("Casos de Uso – Plataforma e personalização", "diagramas/casos-de-uso/casos-de-uso-plataforma.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Casos de Uso – Acadêmico", "diagramas/casos-de-uso-academico.png", 10485, 17.9, 23.0),
+        moldura("Casos de Uso – Acadêmico", "diagramas/casos-de-uso/casos-de-uso-academico.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Casos de Uso – Gestão e financeiro", "diagramas/casos-de-uso-gestao.png", 10485, 17.9, 23.0),
+        moldura("Casos de Uso – Gestão e financeiro", "diagramas/casos-de-uso/casos-de-uso-gestao.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Casos de Uso – Módulo escolar (Sprints 5 a 7)", "diagramas/casos-de-uso-escolar.png", 10485, 17.9, 23.0),
+        moldura("Casos de Uso – Módulo escolar (Sprints 5 a 7)", "diagramas/casos-de-uso/casos-de-uso-escolar.png", 10485, 17.9, 23.0),
         p("Rastreabilidade entre casos de uso, requisitos funcionais e estórias de usuário", b=True, antes=0, depois=100,
           quebra_antes=True, manter=True),
         tbl(larguras, linhas),
@@ -419,7 +419,7 @@ def s11_atividades():
         p("Diagrama de atividades do provisionamento de uma organização até o primeiro acesso do administrador, "
           "com as responsabilidades de cada participante, as decisões e o trecho executado em paralelo.", depois=100),
         moldura("Diagrama de Atividades – Provisionar organização e primeiro acesso",
-                "diagramas/atividades-provisionar.png", 10485, 17.9, 19.4),
+                "diagramas/atividades/atividades-provisionar.png", 10485, 17.9, 19.4),
     ]
 
 
@@ -428,15 +428,15 @@ def s12_modelo():
         p("Modelo lógico relacional em notação UML: cada tabela é uma classe com o estereótipo «table», com colunas "
           "tipadas e marcações de chave primária (PK), estrangeira (FK) e única (UK). Toda tabela de negócio carrega "
           "tenant_id, que a liga à organização dona do registro.", depois=100),
-        moldura("Modelo de Dados – Plataforma, organização e acesso", "diagramas/modelo-dados-plataforma.png", 10485, 17.9, 19.2),
+        moldura("Modelo de Dados – Plataforma, organização e acesso", "diagramas/modelo-de-dados/modelo-dados-plataforma.png", 10485, 17.9, 19.2),
         vazio(2, quebra_antes=True),
-        moldura("Modelo de Dados – Pessoas, oferta, matrícula e frequência", "diagramas/modelo-dados-academico.png", 10485, 17.9, 23.0),
+        moldura("Modelo de Dados – Pessoas, oferta, matrícula e frequência", "diagramas/modelo-de-dados/modelo-dados-academico.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Modelo de Dados – Financeiro e consentimento", "diagramas/modelo-dados-financeiro.png", 10485, 17.9, 23.0),
+        moldura("Modelo de Dados – Financeiro e consentimento", "diagramas/modelo-de-dados/modelo-dados-financeiro.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Modelo de Dados – Estrutura letiva e currículo", "diagramas/modelo-dados-estrutura-letiva.png", 10485, 17.9, 23.0),
+        moldura("Modelo de Dados – Estrutura letiva e currículo", "diagramas/modelo-de-dados/modelo-dados-estrutura-letiva.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Modelo de Dados – Avaliação, resultados e ocorrências", "diagramas/modelo-dados-avaliacao.png", 10485, 17.9, 23.0),
+        moldura("Modelo de Dados – Avaliação, resultados e ocorrências", "diagramas/modelo-de-dados/modelo-dados-avaliacao.png", 10485, 17.9, 23.0),
     ]
 
 
@@ -446,11 +446,11 @@ def s13_classes():
           "identidade, organização e matrícula. A cor do cabeçalho indica a camada (api, application, domain ou infra). "
           "Tipos citados sem classe desenhada (UserStatus, ModuleCode, OrganizationStatus, WaitingStatus, Invitation e os "
           "DTOs de requisição) são enumerações ou registros auxiliares sem comportamento.", depois=100),
-        moldura("Diagrama de Classes – Contexto de tenant e identidade", "diagramas/classes-tenant.png", 10485, 17.9, 19.4),
+        moldura("Diagrama de Classes – Contexto de tenant e identidade", "diagramas/classes/classes-tenant.png", 10485, 17.9, 19.4),
         vazio(2, quebra_antes=True),
-        moldura("Diagrama de Classes – Organização e configuração", "diagramas/classes-organizacao.png", 10485, 17.9, 23.0),
+        moldura("Diagrama de Classes – Organização e configuração", "diagramas/classes/classes-organizacao.png", 10485, 17.9, 23.0),
         vazio(2, quebra_antes=True),
-        moldura("Diagrama de Classes – Matrícula (núcleo acadêmico)", "diagramas/classes-matricula.png", 10485, 17.9, 23.0),
+        moldura("Diagrama de Classes – Matrícula (núcleo acadêmico)", "diagramas/classes/classes-matricula.png", 10485, 17.9, 23.0),
     ]
 
 
@@ -461,7 +461,7 @@ def s14_sequencia():
         if indice:
             partes.append(vazio(2, quebra_antes=True))
         partes.append(moldura(f'Diagrama de Sequência do {uc["id"]} – {uc["nome"]}',
-                              f'diagramas/sequencia-{uc["id"]}.png', 10485, 17.9, 19.4 if indice == 0 else 23.0))
+                              f'diagramas/sequencia/sequencia-{uc["id"]}.png', 10485, 17.9, 19.4 if indice == 0 else 23.0))
     return partes
 
 

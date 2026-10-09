@@ -4,11 +4,10 @@ from xml.sax.saxutils import escape
 
 from PIL import ImageFont
 
-from caminhos import DIAGRAMAS
+from caminhos import diagrama
 
 FONTE = "Arial, Helvetica, sans-serif"
 PASTA = os.path.dirname(os.path.abspath(__file__))
-SAIDA = DIAGRAMAS
 FONTES_TTF = {
     (False, False): "arial.ttf",
     (True, False): "arialbd.ttf",
@@ -101,8 +100,7 @@ class Svg:
         )
 
     def salvar(self, nome):
-        os.makedirs(SAIDA, exist_ok=True)
-        caminho = os.path.join(SAIDA, nome)
+        caminho = diagrama(nome)
         with open(caminho, "w", encoding="utf-8") as arquivo:
             arquivo.write(self.renderizar())
         return caminho

@@ -1,6 +1,5 @@
-import os
 from xml.sax.saxutils import escape
-from caminhos import DIAGRAMAS
+from caminhos import diagrama
 
 W, H = 1000, 1330
 INK = "#1b1b1b"
@@ -173,6 +172,6 @@ flow([a11.B, nf.T])
 
 add("</svg>")
 
-destino = os.path.join(DIAGRAMAS, "atividades-provisionar.svg")
+destino = diagrama("atividades-provisionar.svg")
 with open(destino, "w", encoding="utf-8") as f:
     f.write("\n".join(parts))

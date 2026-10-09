@@ -1,7 +1,6 @@
 import math
-import os
 from xml.sax.saxutils import escape
-from caminhos import DIAGRAMAS
+from caminhos import diagrama
 
 W, H = 1400, 950
 INK = "#1b1b1b"
@@ -338,6 +337,6 @@ lg(4.2, 1, d_msg, "Fluxo de mensagem")
 
 add("</svg>")
 
-destino = os.path.join(DIAGRAMAS, "bpmn-ingresso.svg")
+destino = diagrama("bpmn-ingresso.svg")
 with open(destino, "w", encoding="utf-8") as f:
     f.write("\n".join(parts))
