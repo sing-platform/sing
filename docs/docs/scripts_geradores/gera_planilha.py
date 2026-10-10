@@ -33,7 +33,7 @@ def celula(linha, coluna, valor, estilo):
 
 
 def linhas():
-    uc_por_us = {uc["us"]: uc["id"] for uc in spec.UC}
+    uc_por_us = {uc["us"]: uc["id"] for uc in spec.UC if uc["us"]}
     us_por_id = {us["id"]: us for us in spec.US}
     for numero, (us_id, criterio, cenario, tipo, dados, passos) in enumerate(CT, 1):
         dado, _, entao = us_por_id[us_id]["ca"][criterio - 1]

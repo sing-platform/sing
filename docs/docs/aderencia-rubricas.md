@@ -17,7 +17,7 @@ A equipe tem 4 integrantes, então os itens que dependem da quantidade de integr
 | 7 | Estórias de usuário | Seção 7 | 16 estórias, 45 critérios DADO QUE / QUANDO / ENTÃO |
 | 8 | Requisitos não funcionais | Seção 8 | 19 RNF mensuráveis, com característica da ISO/IEC 25010 |
 | 9 | Diagrama geral de casos de uso | Seção 9 | 36 casos (um por RF) em cinco diagramas: geral, um por módulo (plataforma, acadêmico, gestão) e módulo escolar; generalização, «include» e «extend» |
-| 10 | Especificações de caso de uso | Seção 10 | 16 casos completos, com protótipo de tela |
+| 10 | Especificações de caso de uso | Seção 10 | 36 casos completos; os 16 das Sprints 1 e 2 com protótipo de tela |
 | 11 | Diagrama de atividades | Seção 11 | Raias, decisões com guarda, fork/join |
 
 ## Especificação de Software — RA2 (prazo 28/11/2026)
@@ -27,7 +27,7 @@ A equipe tem 4 integrantes, então os itens que dependem da quantidade de integr
 | 1 | Ajustes do RA1 | Depende da correção do RA1 |
 | 12 | Modelo de dados | Seção 12: 5 diagramas lógicos relacionais em UML, 42 tabelas |
 | 13 | Diagrama de classes | Seção 13: 3 diagramas em nível técnico (camadas api, application, domain, infra) |
-| 14 | Diagramas de sequência | Seção 14: 16, um por caso de uso especificado |
+| 14 | Diagramas de sequência | Seção 14: 16, um por caso de uso das Sprints 1 e 2 |
 | 15 | Casos de teste | Seção 15 e `casos-de-teste.xlsx`: 45 casos, um por critério de aceite |
 
 ## TCC 1 — documentação por sprint

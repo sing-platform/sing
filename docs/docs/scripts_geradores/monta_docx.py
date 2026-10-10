@@ -344,12 +344,8 @@ def s9_casos_de_uso():
         ["CASO DE USO", "RF", "ESTÓRIA", "NOME", "ESPECIFICAÇÃO"], larguras)], altura=400, cabecalho=True)]
     for uc in spec.UC:
         linhas.append(tr([tc(p(uc["id"], jc="center", sz=18), larguras[0]), tc(p(f'RF{uc["rf"]}', jc="center", sz=18), larguras[1]),
-                          tc(p(uc["us"], jc="center", sz=18), larguras[2]), tc(p(uc["nome"], sz=18), larguras[3]),
+                          tc(p(uc["us"] or "–", jc="center", sz=18), larguras[2]), tc(p(uc["nome"], sz=18), larguras[3]),
                           tc(p(f'Seção 10 (Sprint {sprint_rf(uc["rf"])})', sz=18), larguras[4])]))
-    for codigo, rf, nome in spec.UC_BACKLOG:
-        linhas.append(tr([tc(p(codigo, jc="center", sz=18), larguras[0]), tc(p(f"RF{rf}", jc="center", sz=18), larguras[1]),
-                          tc(p("–", jc="center", sz=18), larguras[2]), tc(p(nome, sz=18), larguras[3]),
-                          tc(p(f"Prevista para a Sprint {sprint_rf(rf)}", sz=18), larguras[4])]))
     return [
         p("O diagrama geral apresenta os 24 casos de uso das Sprints 1 a 4, um por requisito funcional e com o mesmo nome, a "
           "generalização dos atores humanos no ator “Usuário” e as relações de inclusão e extensão. A inclusão de "
@@ -374,7 +370,8 @@ def s9_casos_de_uso():
 
 def s10_especificacoes():
     rotulo, valor = 2300, 8190
-    partes = [p("Especificações, no formato reduzido, dos 16 casos de uso das Sprints 1 e 2. Nos fluxos, as "
+    partes = [p("Especificações, no formato reduzido, dos 36 casos de uso. Os 16 primeiros, das Sprints 1 e 2, trazem o "
+                "protótipo de tela; os demais recebem o protótipo na sprint em que entram. Nos fluxos, as "
                 "referências (A‑n) e (E‑n) indicam o passo em que um fluxo alternativo ou de exceção pode ocorrer.", depois=100)]
 
     def campo(nome, conteudo):
@@ -393,7 +390,8 @@ def s10_especificacoes():
         for n, (titulo, passos) in enumerate(uc["exc"], 1):
             fluxos_exc.append(p(f"E-{n} – {titulo}", b=True, sz=20, antes=80, manter=True))
             fluxos_exc += [p([(f"E-{n}.{k}  ", {"b": True}), (t, {})], sz=20, recuo=640) for k, t in enumerate(passos, 1)]
-        telas = []
+        telas = [] if uc["telas"] else [p([("Protótipo(s) de tela: ", {"b": True}),
+                                            (f'previsto para a Sprint {sprint_rf(uc["rf"])}', {})], sz=20)]
         for codigo, titulo in uc["telas"]:
             telas.append(p([("Protótipo(s) de tela: ", {"b": True}), (f"{codigo} – {titulo}", {})], sz=20))
             telas.append(MIDIA.imagem(f"prototipos/{codigo}.png", 17.6, 11.4, f"{codigo} – {titulo}"))
@@ -401,7 +399,7 @@ def s10_especificacoes():
             campo("Nome do caso de uso", p(f'{uc["id"]} – {uc["nome"]}', b=True)),
             campo("Ator(es)", p(uc["atores"], sz=20)),
             campo("Descrição", p(uc["descricao"], sz=20)),
-            campo("Rastreabilidade", p(f'RF{uc["rf"]} · {uc["us"]} · Sprint {sprint_rf(uc["rf"])}', sz=20)),
+            campo("Rastreabilidade", p(" · ".join(filter(None, [f'RF{uc["rf"]}', uc["us"], f'Sprint {sprint_rf(uc["rf"])}'])), sz=20)),
             campo("Pré-condições", itens("PC", uc["pre"])),
             campo("Pós-condições", itens("PO", uc["pos"])),
             campo("Regras de negócio", [p([(f"R-{i}  ", {"b": True}), (t, {})], sz=20, recuo=640) for i, t in enumerate(uc["regras"], 1)]),
@@ -455,9 +453,10 @@ def s13_classes():
 
 
 def s14_sequencia():
-    partes = [p("Um diagrama de sequência para cada caso de uso especificado na seção 10, com a interação entre o "
-                "ator, a interface (SPA), o controlador, o serviço e o repositório.", depois=100)]
-    for indice, uc in enumerate(spec.UC):
+    partes = [p("Um diagrama de sequência para cada caso de uso das Sprints 1 e 2 (UC001 a UC016), com a interação "
+                "entre o ator, a interface (SPA), o controlador, o serviço e o repositório. Os diagramas dos demais "
+                "casos de uso são feitos na sprint em que cada um entra.", depois=100)]
+    for indice, uc in enumerate(uc for uc in spec.UC if uc["id"] in SEQ):
         if indice:
             partes.append(vazio(2, quebra_antes=True))
         partes.append(moldura(f'Diagrama de Sequência do {uc["id"]} – {uc["nome"]}',
@@ -469,7 +468,7 @@ def s15_testes():
     larguras = [700, 1150, 800, 1900, 900, 2500, 2300, 2700, 2440]
     titulos = ["CT", "ESTÓRIA E CRITÉRIO", "CASO DE USO", "CENÁRIO", "TIPO", "PRÉ-CONDIÇÃO", "DADOS DE ENTRADA", "PASSOS", "RESULTADO ESPERADO"]
     linhas = [tr([tc(p(t, jc="center", b=True, sz=16), w, fundo=CINZA) for t, w in zip(titulos, larguras)], altura=400, cabecalho=True)]
-    uc_por_us = {uc["us"]: uc["id"] for uc in spec.UC}
+    uc_por_us = {uc["us"]: uc["id"] for uc in spec.UC if uc["us"]}
     us_por_id = {us["id"]: us for us in spec.US}
     for numero, (us_id, criterio, cenario, tipo, dados, passos) in enumerate(CT, 1):
         dado, _, entao = us_por_id[us_id]["ca"][criterio - 1]
@@ -594,7 +593,7 @@ def monta():
 
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
-    assert set(SEQ) == {uc["id"] for uc in spec.UC}
+    assert set(SEQ) == {uc["id"] for uc in spec.UC if uc["us"]}
     caminho = monta()
     print(caminho, os.path.getsize(caminho) // 1024, "KB;", len(MIDIA.itens), "imagens")
     for pendente in MIDIA.pendentes:
