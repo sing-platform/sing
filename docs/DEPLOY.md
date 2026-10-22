@@ -14,7 +14,7 @@ MinIO e Keycloak não publicam porta no host. Não há domínio ainda.
 
 ## Pipelines
 
-- **CI** (pull request e push em `main`): `mvn test` no core, `pytest` no documents, build das duas imagens. Cache de Maven e pip.
+- **CI** (pull request e push em `main`): `mvn test` no core, `pytest` no documents, build das duas imagens. O repositório recusa `uses:` de actions de terceiros na validação, então o workflow não usa `actions/checkout` nem o cache do Actions; Maven e pip baixam as dependências em cada run.
 - **CD** (push em `main`, depois do CI verde, environment `production`): build `linux/arm64` com buildx/QEMU, push para `ghcr.io/sing-platform/core` e `ghcr.io/sing-platform/documents` (tags `<sha>` e `latest`), depois SSH.
 
 O job de CD não pede TTY (`ssh -nT`, `RequestTTY=no`, sem `-t`), não encaminha agent nem X11 e não usa sudo. A chave em `authorized_keys` precisa destas restrições:
