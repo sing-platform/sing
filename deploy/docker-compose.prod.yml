@@ -1,0 +1,74 @@
+# Override de producao. Nao substitui o compose local:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# VM: Oracle ARM64 Ampere, 2 vCPU, 11 GiB, Ubuntu 24.04, Docker 29 / Compose v5.
+# 8080 e 8081 do host ja estao ocupadas.
+# Traefik so em 127.0.0.1:8084; dashboard em 127.0.0.1:8085.
+# Postgres, RabbitMQ, MinIO e Keycloak nao publicam porta no host.
+#
+# mem_limit da stack padrao (sem o profile observability): 4480 MiB.
+# Heap da JVM de core e Keycloak: -Xmx512m.
+# restart: unless-stopped ja vale na base e e repetido aqui.
+
+services:
+  traefik:
+    restart: unless-stopped
+    mem_limit: 128m
+    ports: !override
+      - "127.0.0.1:8084:80"
+      - "127.0.0.1:8085:8080"
+
+  postgres-core:
+    restart: unless-stopped
+    mem_limit: 512m
+    ports: !reset []
+
+  core:
+    image: ghcr.io/sing-platform/core:${IMAGE_TAG:-latest}
+    platform: linux/arm64
+    build: !reset null
+    restart: unless-stopped
+    mem_limit: 1024m
+    environment:
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+      # O tunel SSH chega como http://localhost:8084. 8080 no host ja esta ocupada.
+      SING_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8084}
+
+  postgres-documents:
+    restart: unless-stopped
+    mem_limit: 384m
+    ports: !reset []
+
+  documents:
+    image: ghcr.io/sing-platform/documents:${IMAGE_TAG:-latest}
+    platform: linux/arm64
+    build: !reset null
+    restart: unless-stopped
+    mem_limit: 512m
+
+  rabbitmq:
+    restart: unless-stopped
+    mem_limit: 512m
+    ports: !reset []
+
+  minio:
+    restart: unless-stopped
+    mem_limit: 384m
+    ports: !reset []
+
+  keycloak:
+    restart: unless-stopped
+    mem_limit: 1024m
+    ports: !reset []
+    environment:
+      JAVA_OPTS_APPEND: "-Xmx512m"
+
+  jaeger:
+    restart: unless-stopped
+    mem_limit: 384m
+    ports: !reset []
+
+  prometheus:
+    restart: unless-stopped
+    mem_limit: 256m
+    ports: !reset []

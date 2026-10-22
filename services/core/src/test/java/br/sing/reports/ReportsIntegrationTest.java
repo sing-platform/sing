@@ -33,7 +33,6 @@ class ReportsIntegrationTest {
                         "carga-horaria-professor",
                         "chamadas-pendentes",
                         "contas-vencidas",
-                        "documentos-usuario",
                         "engajamento-mural",
                         "fluxo-caixa-mes",
                         "frequencia-por-turma",

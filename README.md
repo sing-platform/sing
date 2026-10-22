@@ -63,4 +63,4 @@ cp .env.example .env
 docker compose up -d
 ```
 
-Detalhes em [deploy/README.md](deploy/README.md).
+Detalhes em [deploy/README.md](deploy/README.md). Produção na VM ARM: [docs/DEPLOY.md](docs/DEPLOY.md).

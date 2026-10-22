@@ -82,3 +82,8 @@ docker compose exec postgres-core psql -U sing -d sing_core -c '\dt'
   clientes em container.
 - O core roda com `ddl-auto: validate`: o schema vem das migrations Flyway em
   `services/core/src/main/resources/db/migration/postgresql`, nunca do Hibernate.
+
+## Produção
+
+A VM ARM não usa este arquivo sozinho: as portas 8080 e 8081 do host já estão
+ocupadas. Override, secrets e o túnel SSH estão em [docs/DEPLOY.md](../docs/DEPLOY.md).
