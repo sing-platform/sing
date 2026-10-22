@@ -46,9 +46,10 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
           git init
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c http.extraheader="AUTHORIZATION: bearer ${TOKEN}" fetch --depth 50 origin refs/heads/main
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 50 origin refs/heads/main
           git checkout --detach "${SOURCE_SHA}"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
       - name: Publicar imagens arm64
         env:

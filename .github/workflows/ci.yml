@@ -29,9 +29,10 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
           git init
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c http.extraheader="AUTHORIZATION: bearer ${TOKEN}" fetch --depth 1 origin "${GITHUB_REF}"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
           git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
       - name: mvn test
         run: |
           set -euo pipefail
@@ -51,9 +52,10 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
           git init
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c http.extraheader="AUTHORIZATION: bearer ${TOKEN}" fetch --depth 1 origin "${GITHUB_REF}"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
           git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
       - name: pytest
         run: |
           set -euo pipefail
@@ -76,9 +78,10 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
           git init
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c http.extraheader="AUTHORIZATION: bearer ${TOKEN}" fetch --depth 1 origin "${GITHUB_REF}"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
           git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
       - name: docker build
         run: docker build -t sing-core:ci services/core
 
@@ -94,8 +97,9 @@ jobs:
           set -euo pipefail
           export GIT_TERMINAL_PROMPT=0
           git init
-          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          git -c http.extraheader="AUTHORIZATION: bearer ${TOKEN}" fetch --depth 1 origin "${GITHUB_REF}"
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
           git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
       - name: docker build
         run: docker build -t sing-documents:ci services/documents
