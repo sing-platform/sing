@@ -38,6 +38,12 @@ jobs:
           set -euo pipefail
           sudo apt-get update
           sudo apt-get install -y openjdk-21-jdk maven
+          # O runner ja tem um JDK mais antigo no PATH. O Maven usa esse
+          # a menos que JAVA_HOME aponte para o 21 (release 21 not supported).
+          export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+          export PATH="${JAVA_HOME}/bin:${PATH}"
+          java -version
+          mvn -version
           mvn -B -f services/core/pom.xml test
 
   test-documents:
