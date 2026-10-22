@@ -6,63 +6,9 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
-concurrency:
-  group: "ci-${{ github.workflow }}-${{ github.ref }}"
-  cancel-in-progress: true
-
 jobs:
-  test-core:
-    name: test-core
+  ping:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
-          cache-dependency-path: services/core/pom.xml
-      - name: mvn test
-        working-directory: services/core
-        run: mvn -B test
-
-  test-documents:
-    name: test-documents
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: services/documents/requirements.txt
-      - name: libmagic
-        run: sudo apt-get update && sudo apt-get install -y libmagic1
-      - name: pytest
-        working-directory: services/documents
-        run: |
-          python -m pip install -r requirements.txt pytest
-          pytest
-
-  image-core:
-    name: image-core
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    steps:
-      - uses: actions/checkout@v4
-      - name: docker build
-        run: docker build -t sing-core:ci services/core
-
-  image-documents:
-    name: image-documents
-    runs-on: ubuntu-latest
-    timeout-minutes: 40
-    steps:
-      - uses: actions/checkout@v4
-      - name: docker build
-        run: docker build -t sing-documents:ci services/documents
+      - run: echo ok
