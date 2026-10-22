@@ -1,0 +1,111 @@
+# Sem `uses:`: este repositorio recusa action de terceiro na validacao
+# (startup_failure, zero jobs). Checkout, JDK e Python sao feitos no runner.
+
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  test-core:
+    name: test-core
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: checkout
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          git init
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: mvn test
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y openjdk-21-jdk maven
+          # O runner ja tem um JDK mais antigo no PATH. O Maven usa esse
+          # a menos que JAVA_HOME aponte para o 21 (release 21 not supported).
+          export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+          export PATH="${JAVA_HOME}/bin:${PATH}"
+          java -version
+          mvn -version
+          mvn -B -f services/core/pom.xml test
+
+  test-documents:
+    name: test-documents
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: checkout
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          git init
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: pytest
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y python3-pip python3-venv libmagic1
+          python3 -m venv /tmp/venv
+          /tmp/venv/bin/pip install -r services/documents/requirements.txt pytest
+          cd services/documents
+          /tmp/venv/bin/pytest
+
+  image-core:
+    name: image-core
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: checkout
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          git init
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: docker build
+        run: docker build -t sing-core:ci services/core
+
+  image-documents:
+    name: image-documents
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          git init
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+      - name: docker build
+        run: docker build -t sing-documents:ci services/documents
