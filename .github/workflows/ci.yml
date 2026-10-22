@@ -2,6 +2,7 @@ name: ci
 
 on:
   pull_request:
+    branches: [main]
   push:
     branches: [main]
 
@@ -9,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: "ci-${{ github.workflow }}-${{ github.ref }}"
   cancel-in-progress: true
 
 jobs:
@@ -48,19 +49,20 @@ jobs:
           python -m pip install -r requirements.txt pytest
           pytest
 
-  image:
-    name: image-${{ matrix.name }}
+  image-core:
+    name: image-core
     runs-on: ubuntu-latest
     timeout-minutes: 40
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: core
-            context: services/core
-          - name: documents
-            context: services/documents
     steps:
       - uses: actions/checkout@v4
       - name: docker build
-        run: docker build -t "sing-${{ matrix.name }}:ci" "${{ matrix.context }}"
+        run: docker build -t sing-core:ci services/core
+
+  image-documents:
+    name: image-documents
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: docker build
+        run: docker build -t sing-documents:ci services/documents
