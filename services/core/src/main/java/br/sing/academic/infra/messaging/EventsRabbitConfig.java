@@ -22,6 +22,10 @@ public class EventsRabbitConfig {
     public static final String ATESTADO_QUEUE = "core.atestado.events";
     public static final String ATESTADO_DLQ = "core.atestado.events.dlq";
 
+    // Fila so para conseguir ver o evento no painel do RabbitMQ.
+    public static final String MATRICULA_CRIADA_QUEUE = "matricula.criada";
+    public static final String MATRICULA_CRIADA_RK = "matricula.criada";
+
     @Value("${sing.events.exchange:" + EVENTS_EXCHANGE + "}")
     private String exchangeName;
 
@@ -50,5 +54,17 @@ public class EventsRabbitConfig {
     @Bean
     public Binding atestadoBinding(Queue atestadoQueue, TopicExchange singEventsExchange) {
         return BindingBuilder.bind(atestadoQueue).to(singEventsExchange).with("atestado.*");
+    }
+
+    @Bean
+    public Queue matriculaCriadaQueue() {
+        return QueueBuilder.durable(MATRICULA_CRIADA_QUEUE).build();
+    }
+
+    @Bean
+    public Binding matriculaCriadaBinding(Queue matriculaCriadaQueue, TopicExchange singEventsExchange) {
+        return BindingBuilder.bind(matriculaCriadaQueue)
+                .to(singEventsExchange)
+                .with(MATRICULA_CRIADA_RK);
     }
 }

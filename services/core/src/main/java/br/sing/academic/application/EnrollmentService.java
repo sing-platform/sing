@@ -7,6 +7,7 @@ import br.sing.academic.api.dto.response.EnrollmentSuggestedAction;
 import br.sing.academic.domain.entities.Enrollment;
 import br.sing.academic.domain.entities.SchoolRoom;
 import br.sing.academic.domain.enums.VacancyCause;
+import br.sing.academic.infra.messaging.MatriculaEventPublisher;
 import br.sing.academic.infra.repositories.EnrollmentRepository;
 import br.sing.academic.infra.repositories.SchoolRoomRepository;
 import br.sing.exception.BusinessException;
@@ -33,6 +34,7 @@ public class EnrollmentService {
     private final StudentRepository studentRepository;
     private final SchoolRoomRepository schoolRoomRepository;
     private final SchoolRoomVacancyService schoolRoomVacancyService;
+    private final MatriculaEventPublisher matriculaEventPublisher;
 
     @Transactional(readOnly = true)
     public EnrollmentPreviewResponse previewEnrollment(EnrollmentRequest request) {
@@ -160,7 +162,12 @@ public class EnrollmentService {
                 .status(true)
                 .build();
 
-        enrollmentRepository.save(enrollment);
+        Enrollment salva = enrollmentRepository.save(enrollment);
+        matriculaEventPublisher.publicarMatriculaCriada(
+                salva.getId(),
+                student.getId(),
+                room.getId(),
+                salva.getEnrollmentDate());
     }
 
     /**

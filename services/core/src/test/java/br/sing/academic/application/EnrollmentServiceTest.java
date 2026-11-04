@@ -7,6 +7,7 @@ import br.sing.academic.domain.entities.Enrollment;
 import br.sing.academic.domain.entities.SchoolRoom;
 import br.sing.academic.domain.entities.SchoolRoomScheduleSlot;
 import br.sing.academic.domain.entities.Workshop;
+import br.sing.academic.infra.messaging.MatriculaEventPublisher;
 import br.sing.academic.infra.repositories.EnrollmentRepository;
 import br.sing.academic.infra.repositories.SchoolRoomRepository;
 import br.sing.exception.BusinessException;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 class EnrollmentServiceTest {
@@ -45,6 +47,8 @@ class EnrollmentServiceTest {
     private SchoolRoomRepository schoolRoomRepository;
     @Mock
     private SchoolRoomVacancyService schoolRoomVacancyService;
+    @Mock
+    private MatriculaEventPublisher matriculaEventPublisher;
 
     private EnrollmentService enrollmentService;
 
@@ -60,7 +64,8 @@ class EnrollmentServiceTest {
     @BeforeEach
     void setUp() {
         enrollmentService = new EnrollmentService(
-                enrollmentRepository, studentRepository, schoolRoomRepository, schoolRoomVacancyService);
+                enrollmentRepository, studentRepository, schoolRoomRepository,
+                schoolRoomVacancyService, matriculaEventPublisher);
         w1 = Workshop.builder().id(1L).name("Oficina 1").isActive(true).build();
         w2 = Workshop.builder().id(2L).name("Oficina 2").isActive(true).build();
         w3 = Workshop.builder().id(3L).name("Oficina 3").isActive(true).build();
@@ -113,11 +118,17 @@ class EnrollmentServiceTest {
         when(enrollmentRepository.existsByStudentIdAndSchoolroomIdAndStatusTrue(50L, 20L)).thenReturn(false);
         when(enrollmentRepository.findActiveByStudentWithRoomAndWorkshop(50L)).thenReturn(List.of());
         when(enrollmentRepository.countBySchoolroomIdAndStatusTrue(20L)).thenReturn(5L);
-        when(enrollmentRepository.save(any(Enrollment.class))).thenAnswer(i -> i.getArgument(0));
+        when(enrollmentRepository.save(any(Enrollment.class))).thenAnswer(i -> {
+            Enrollment salva = i.getArgument(0);
+            salva.setId(100L);
+            return salva;
+        });
 
         enrollmentService.enrollStudent(new EnrollmentRequest(50L, List.of(20L)));
 
         verify(enrollmentRepository).save(any(Enrollment.class));
+        verify(matriculaEventPublisher).publicarMatriculaCriada(
+                eq(100L), eq(50L), eq(20L), eq(java.time.LocalDate.now()));
     }
 
     @Test
@@ -133,6 +144,7 @@ class EnrollmentServiceTest {
         assertThatThrownBy(() -> enrollmentService.enrollStudent(new EnrollmentRequest(50L, List.of(21L))))
                 .isInstanceOf(BusinessException.class)
                 .hasMessageContaining("duas turmas");
+        verify(matriculaEventPublisher, never()).publicarMatriculaCriada(any(), any(), any(), any());
     }
 
     @Test
