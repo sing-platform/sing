@@ -64,3 +64,17 @@ docker compose up -d
 ```
 
 Detalhes em [deploy/README.md](deploy/README.md).
+
+## Evento `matricula.criada`
+
+Quando uma matrícula é gravada, o core publica o evento `matricula.criada` na exchange topic `sing.events`. O JSON tem `matriculaId`, `alunoId`, `turmaId` e `data`. Se o RabbitMQ estiver fora, a matrícula continua valendo e o erro fica só no log.
+
+```bash
+cd deploy
+cp .env.example .env
+docker compose up -d
+```
+
+O painel abre em http://localhost:15672. O usuário e a senha são `RABBITMQ_USER` e `RABBITMQ_PASSWORD` do `.env`.
+
+Depois de criar uma matrícula, em **Queues** abra a fila `matricula.criada` e use **Get messages**. A fila está ligada na exchange `sing.events` com a routing key `matricula.criada`.
