@@ -9,8 +9,9 @@ Infra base da arquitetura poliglota. Nesta entrega sobem: **Traefik**, **Postgre
 cp .env.example .env
 ```
 
-Edite o `.env` — três valores **não** têm default e o compose falha sem eles:
-`JWT_SECRET`, `MINIO_PASSWORD`, `KEYCLOAK_PASSWORD`.
+Edite o `.env`. O compose falha se faltarem `JWT_SECRET`, `MINIO_PASSWORD`,
+`KEYCLOAK_PASSWORD`, `RABBITMQ_USER` ou `RABBITMQ_PASSWORD` — nenhum deles
+tem valor padrão no `docker-compose.yml` (a senha do RabbitMQ não fica no arquivo).
 
 ```bash
 openssl rand -hex 48    # use a saída como JWT_SECRET

@@ -66,8 +66,9 @@ services:
       DB_USER: ${CORE_DB_USER:-sing}
       DB_PASSWORD: ${CORE_DB_PASSWORD:-sing}
       RABBITMQ_HOST: rabbitmq
-      RABBITMQ_USER: ${RABBITMQ_USER:-sing}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sing}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER:?defina RABBITMQ_USER no .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?defina RABBITMQ_PASSWORD no .env}
       # O compose ja espera o broker ficar saudavel, entao os listeners podem
       # subir junto com a aplicacao (o RabbitListenerInitializer segue como
       # rede de seguranca se o broker cair depois).
@@ -129,8 +130,9 @@ services:
       # Mesmo segredo do core: a assinatura ainda e HS256 (ver app/security.py).
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
       RABBITMQ_HOST: rabbitmq
-      RABBITMQ_USER: ${RABBITMQ_USER:-sing}
-      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sing}
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER:?defina RABBITMQ_USER no .env}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:?defina RABBITMQ_PASSWORD no .env}
       RABBITMQ_EXCHANGE: ${EVENTS_EXCHANGE:-sing.events}
       CORE_BASE_URL: http://core:8080
     healthcheck:
@@ -143,12 +145,12 @@ services:
 
   # -------------------------------------------------------- mensageria ------
   rabbitmq:
-    image: rabbitmq:3.13-management-alpine
+    image: rabbitmq:3-management
     container_name: sing-rabbitmq
     restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-sing}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-sing}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:?defina RABBITMQ_USER no .env}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:?defina RABBITMQ_PASSWORD no .env}
     ports:
       - "${RABBITMQ_PORT:-5672}:5672"
       - "${RABBITMQ_UI_PORT:-15672}:15672"
