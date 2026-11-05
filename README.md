@@ -33,10 +33,14 @@ Internet ──▶ Traefik ──┬──▶ core        (Java)    ──▶ Po
 
 ```
 services/       um diretório por serviço, cada um com seu Dockerfile e migrations
-contracts/      contratos compartilhados (proto/ e events/) — fonte da verdade entre serviços
+contracts/      contrato fechado entre serviços; hoje só o N2 da matrícula
 deploy/         docker-compose, Traefik, observabilidade
 docs/           decisões e notas de implementação
 ```
+
+## Contrato N2
+
+O recorte fechado da matrícula criada está só em [contracts/n2-matricula.md](contracts/n2-matricula.md): envelope, filas, cobrança, isolamento do documents e falhas. A tabela de arquitetura acima descreve o alvo amplo (E1–E5). Ela não substitui esse contrato, e o contrato não troca o documents já entregue nem implementa serviço nenhum.
 
 ## Entregas
 

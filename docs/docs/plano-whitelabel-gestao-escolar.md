@@ -110,6 +110,8 @@ Um único build. Ao carregar, o app chama `GET /api/public/tenant` (resolvido pe
 
 ### 4.6 Eventos e contratos
 
+Plano futuro de whitelabel, fora do contrato N2. O evento fechado da matrícula está só em [`contracts/n2-matricula.md`](../../contracts/n2-matricula.md) e não usa este envelope.
+
 Envelope `{eventId, eventType, version, occurredAt, tenantId, correlationId, aggregateId, payload}`, com JSON Schema versionado em `contracts/` e teste de contrato. Outbox transacional no core e no `documents`. Exchanges deixam de se chamar `sing.*`.
 
 ## 5. Fases

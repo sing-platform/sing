@@ -83,6 +83,10 @@ uvicorn app.main:app --reload --port 8000
 Docs em `http://localhost:8000/docs`; health em `/actuator/health` (mesmo caminho
 do core, para o compose e o Prometheus tratarem a stack de forma uniforme).
 
+## Contrato da matrícula
+
+O comprovante de `matricula.criada` (Mongo próprio, arquivo pequeno, sem chamar o core) está só em [`contracts/n2-matricula.md`](../../contracts/n2-matricula.md). Este README continua descrevendo o serviço atual: PostgreSQL, MinIO e atestados. Esse recorte ainda não está implementado.
+
 ## Pendência conhecida
 
 A validação do JWT ainda é **HS256 com segredo compartilhado** com o core — o que
