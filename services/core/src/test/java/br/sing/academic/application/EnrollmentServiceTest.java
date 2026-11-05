@@ -4,6 +4,7 @@ import br.sing.academic.api.dto.request.EnrollmentRequest;
 import br.sing.academic.api.dto.response.EnrollmentPreviewResponse;
 import br.sing.academic.api.dto.response.EnrollmentSuggestedAction;
 import br.sing.academic.domain.entities.Enrollment;
+import br.sing.academic.domain.entities.MatriculaIntegracao;
 import br.sing.academic.domain.entities.SchoolRoom;
 import br.sing.academic.domain.entities.SchoolRoomScheduleSlot;
 import br.sing.academic.domain.entities.Workshop;
@@ -29,6 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,6 +47,8 @@ class EnrollmentServiceTest {
     private SchoolRoomRepository schoolRoomRepository;
     @Mock
     private SchoolRoomVacancyService schoolRoomVacancyService;
+    @Mock
+    private MatriculaIntegracaoService matriculaIntegracaoService;
 
     private EnrollmentService enrollmentService;
 
@@ -60,7 +64,17 @@ class EnrollmentServiceTest {
     @BeforeEach
     void setUp() {
         enrollmentService = new EnrollmentService(
-                enrollmentRepository, studentRepository, schoolRoomRepository, schoolRoomVacancyService);
+                enrollmentRepository, studentRepository, schoolRoomRepository, schoolRoomVacancyService,
+                matriculaIntegracaoService);
+        lenient().when(matriculaIntegracaoService.registrar(any())).thenAnswer(invocation -> {
+            Enrollment gravada = invocation.getArgument(0);
+            return MatriculaIntegracao.builder()
+                    .matriculaId(gravada.getId() == null ? 1L : gravada.getId())
+                    .eventId("11111111-1111-4111-8111-111111111111")
+                    .publicacao("pendente")
+                    .cobranca("pendente")
+                    .build();
+        });
         w1 = Workshop.builder().id(1L).name("Oficina 1").isActive(true).build();
         w2 = Workshop.builder().id(2L).name("Oficina 2").isActive(true).build();
         w3 = Workshop.builder().id(3L).name("Oficina 3").isActive(true).build();
@@ -150,6 +164,9 @@ class EnrollmentServiceTest {
 
         assertThat(eA.getStatus()).isFalse();
         ArgumentCaptor<Enrollment> captor = ArgumentCaptor.forClass(Enrollment.class);
+        verify(matriculaIntegracaoService, times(1)).registrar(captor.capture());
+        assertThat(captor.getValue().getStatus()).isTrue();
+        assertThat(captor.getValue().getSchoolroom()).isEqualTo(roomB);
         verify(enrollmentRepository, atLeastOnce()).save(captor.capture());
         assertThat(captor.getAllValues().stream().anyMatch(e -> Boolean.TRUE.equals(e.getStatus()) && e.getSchoolroom().equals(roomB)))
                 .isTrue();
@@ -212,6 +229,7 @@ class EnrollmentServiceTest {
         enrollmentService.enrollStudent(new EnrollmentRequest(50L, List.of(20L, 21L)));
 
         verify(enrollmentRepository, times(2)).save(any(Enrollment.class));
+        verify(matriculaIntegracaoService, times(2)).registrar(any(Enrollment.class));
     }
 
     @Test

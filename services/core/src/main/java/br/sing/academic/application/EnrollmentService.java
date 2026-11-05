@@ -4,7 +4,10 @@ import br.sing.academic.api.dto.request.EnrollmentRequest;
 import br.sing.academic.api.dto.response.EnrollmentPreviewIssue;
 import br.sing.academic.api.dto.response.EnrollmentPreviewResponse;
 import br.sing.academic.api.dto.response.EnrollmentSuggestedAction;
+import br.sing.academic.api.dto.response.MatriculaItemResponse;
+import br.sing.academic.api.dto.response.MatriculasCriadasResponse;
 import br.sing.academic.domain.entities.Enrollment;
+import br.sing.academic.domain.entities.MatriculaIntegracao;
 import br.sing.academic.domain.entities.SchoolRoom;
 import br.sing.academic.domain.enums.VacancyCause;
 import br.sing.academic.infra.repositories.EnrollmentRepository;
@@ -33,6 +36,7 @@ public class EnrollmentService {
     private final StudentRepository studentRepository;
     private final SchoolRoomRepository schoolRoomRepository;
     private final SchoolRoomVacancyService schoolRoomVacancyService;
+    private final MatriculaIntegracaoService matriculaIntegracaoService;
 
     @Transactional(readOnly = true)
     public EnrollmentPreviewResponse previewEnrollment(EnrollmentRequest request) {
@@ -112,7 +116,7 @@ public class EnrollmentService {
     }
 
     @Transactional
-    public void enrollStudent(EnrollmentRequest request) {
+    public MatriculasCriadasResponse enrollStudent(EnrollmentRequest request) {
         List<Long> roomIds = request.schoolRoomIds();
         if (new HashSet<>(roomIds).size() != roomIds.size()) {
             throw new BusinessException(
@@ -123,12 +127,14 @@ public class EnrollmentService {
         if (roomIds.size() >= 2) {
             assertBatchPlanValid(request.studentId(), roomIds);
         }
+        List<MatriculaItemResponse> criadas = new ArrayList<>();
         for (Long roomId : roomIds) {
-            persistSingleEnrollment(request.studentId(), roomId);
+            criadas.add(persistSingleEnrollment(request.studentId(), roomId));
         }
+        return new MatriculasCriadasResponse(criadas);
     }
 
-    private void persistSingleEnrollment(Long studentId, Long schoolRoomId) {
+    private MatriculaItemResponse persistSingleEnrollment(Long studentId, Long schoolRoomId) {
         validateSingleEnrollmentPlan(studentId, schoolRoomId);
 
         var student = studentRepository.findById(studentId)
@@ -161,6 +167,12 @@ public class EnrollmentService {
                 .build();
 
         enrollmentRepository.save(enrollment);
+        MatriculaIntegracao pendencia = matriculaIntegracaoService.registrar(enrollment);
+        return new MatriculaItemResponse(
+                pendencia.getMatriculaId(),
+                pendencia.getEventId(),
+                pendencia.getPublicacao(),
+                pendencia.getCobranca());
     }
 
     /**
