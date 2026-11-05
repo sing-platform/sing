@@ -94,7 +94,7 @@ Entrega é pelo menos uma vez. Cada consumidor deduplica de forma persistente pe
 
 ## Finance — `POST /cobrancas` (proposto)
 
-Este caminho não existe no repositório. O financeiro de hoje está no core, em `/api/v1/finance/entries`, `/api/v1/finance/sponsors` e `/api/v1/finance/fiscal-documents`, com valor em `BigDecimal` e sem `matriculaId` único. Esses recursos continuam como estão. A tabela do README que aponta finance para C# e MySQL é a entrega E4, ainda aberta, e não é decidida aqui.
+Este caminho não existe no repositório. O financeiro de hoje está no core, em `/api/v1/finance/entries`, `/api/v1/finance/sponsors` e `/api/v1/finance/fiscal-documents`, com valor em `BigDecimal` e sem `matriculaId` único. Esses recursos continuam como estão. O serviço finance deste contrato é .NET com MySQL, idempotente por `matriculaId` (entrega E4, ainda sem código aqui). Este card não implementa o finance; o core só chama o HTTP abaixo.
 
 Contrato HTTP que o core chama depois do commit:
 
