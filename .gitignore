@@ -23,7 +23,17 @@ dist/
 # ---- .NET (services/finance) ----
 bin/
 obj/
+.vs/
+artifacts/
+TestResults/
+project.lock.json
 *.user
+*.userosscache
+*.rsuser
+*.sln.docstates
+*.nupkg
+*.snupkg
+*.DotSettings.user
 
 # ---- Segredos e ambiente ----
 .env
