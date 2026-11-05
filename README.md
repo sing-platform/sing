@@ -40,7 +40,7 @@ docs/           decisões e notas de implementação
 
 ## Contrato N2
 
-O recorte fechado da matrícula criada está só em [contracts/n2-matricula.md](contracts/n2-matricula.md): envelope, filas, cobrança, isolamento do documents e falhas. A tabela de arquitetura acima descreve o alvo amplo (E1–E5). Ela não substitui esse contrato, e o contrato não troca o documents já entregue nem implementa serviço nenhum.
+O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance deste contrato é .NET com MySQL e não está implementado aqui.
 
 ## Entregas
 
