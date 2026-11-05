@@ -85,7 +85,11 @@ do core, para o compose e o Prometheus tratarem a stack de forma uniforme).
 
 ## Contrato da matrícula
 
-O comprovante de `matricula.criada` (Mongo próprio, arquivo pequeno, sem chamar o core) está só em [`contracts/n2-matricula.md`](../../contracts/n2-matricula.md). Este README continua descrevendo o serviço atual: PostgreSQL, MinIO e atestados. Esse recorte ainda não está implementado.
+O comprovante de `matricula.criada` fica no mesmo processo, num Mongo separado (`sing_documents_comprovantes`). A fila é `documents.matricula.criada`. O PDF sai do payload do evento: este recorte não chama o core. O contrato está em [`contracts/n2-matricula.md`](../../contracts/n2-matricula.md).
+
+```bash
+python -m unittest tests.test_comprovante
+```
 
 ## Pendência conhecida
 
