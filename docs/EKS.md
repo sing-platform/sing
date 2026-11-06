@@ -130,6 +130,7 @@ kubectl wait --for=condition=ready pod -l app=communication -n sing --timeout=18
 O core demora porque roda o Flyway e a carga inicial. Três pods `core` têm que
 ficar `Running`. Os bancos (`postgres-core`, `postgres-documents`,
 `mongo-documents`, `mongo-communication`), o `rabbitmq` e o `minio` também.
+O MinIO usa `bitnamilegacy/minio:2024`: a imagem `minio/minio` saiu do Docker Hub.
 
 Os volumes são `emptyDir`. No Learner Lab o driver de disco (EBS CSI) em geral
 não está instalado, e um PVC ficaria `Pending` para sempre. Se o pod do banco
@@ -194,13 +195,15 @@ TOKEN=$(curl -s -X POST "http://${ELB}/api/v1/auth/authenticate" \
   -d '{"email":"admin@sing.local","password":"SING@123"}' \
   | python3 -c 'import json,sys; print(json.load(sys.stdin)["token"])')
 
-ALUNO=$(curl -s "http://${ELB}/api/v1/students?size=1" \
+# A listagem /api/v1/students com filtro vazio quebra no PostgreSQL
+# (o banco não infere o tipo do parâmetro nulo). A turma devolve o aluno.
+SALA=$(curl -s "http://${ELB}/api/v1/schoolrooms" \
   -H "Authorization: Bearer $TOKEN" \
-  | python3 -c 'import json,sys; print(json.load(sys.stdin)["content"][0]["id"])')
+  | python3 -c 'import json,sys; rooms=json.load(sys.stdin); print(next(r["id"] for r in rooms if r["activeEnrollmentCount"]>0))')
 
-SALA=$(curl -s "http://${ELB}/api/v1/students/${ALUNO}/enrollments?size=5" \
+ALUNO=$(curl -s "http://${ELB}/api/v1/schoolrooms/${SALA}/enrollments?size=1" \
   -H "Authorization: Bearer $TOKEN" \
-  | python3 -c 'import json,sys; print(json.load(sys.stdin)["content"][0]["schoolRoomId"])')
+  | python3 -c 'import json,sys; print(json.load(sys.stdin)["content"][0]["studentId"])')
 
 curl -s -o /dev/null -w "delete %{http_code}\n" \
   -X DELETE "http://${ELB}/api/v1/enrollments/student/${ALUNO}/room/${SALA}" \
