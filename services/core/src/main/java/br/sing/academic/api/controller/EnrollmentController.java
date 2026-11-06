@@ -2,7 +2,10 @@ package br.sing.academic.api.controller;
 
 import br.sing.academic.api.dto.request.EnrollmentRequest;
 import br.sing.academic.api.dto.response.EnrollmentPreviewResponse;
+import br.sing.academic.api.dto.response.IntegracaoMatriculaResponse;
+import br.sing.academic.api.dto.response.MatriculasCriadasResponse;
 import br.sing.academic.application.EnrollmentService;
+import br.sing.academic.application.MatriculaIntegracaoService;
 import br.sing.exception.ApiError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class EnrollmentController {
 
     private final EnrollmentService enrollmentService;
+    private final MatriculaIntegracaoService matriculaIntegracaoService;
 
     @PostMapping("/preview")
     @PreAuthorize("hasAnyRole('ADMIN', 'SECRETARY')")
@@ -50,10 +54,11 @@ public class EnrollmentController {
     @Operation(
             summary = "Matricular aluno em uma ou duas turmas",
             description = "Corpo: `studentId` e `schoolRoomIds` (lista com 1 ou 2 IDs). "
-                    + "Com duas turmas, o backend valida tudo antes de gravar (sem matrícula parcial)."
+                    + "Com duas turmas, o backend valida tudo antes de gravar (sem matrícula parcial). "
+                    + "A resposta traz o id e o eventId de cada matrícula criada, com publicação e cobrança pendentes."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Aluno matriculado com sucesso"),
+            @ApiResponse(responseCode = "201", description = "Matrícula gravada; publicação e cobrança ficam pendentes"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos",
                     content = @Content(schema = @Schema(implementation = ApiError.class))),
             @ApiResponse(responseCode = "401", description = "Não autenticado",
@@ -65,12 +70,25 @@ public class EnrollmentController {
             @ApiResponse(responseCode = "422", description = "Regra de negócio violada (ex.: turma sem vaga ou matrícula já existente)",
                     content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
-    public ResponseEntity<String> enroll(@RequestBody @Valid EnrollmentRequest request) {
-        enrollmentService.enrollStudent(request);
-        String body = request.schoolRoomIds().size() == 1
-                ? "Aluno matriculado com sucesso!"
-                : "Matrículas concluídas com sucesso!";
-        return ResponseEntity.status(HttpStatus.CREATED).body(body);
+    public ResponseEntity<MatriculasCriadasResponse> enroll(@RequestBody @Valid EnrollmentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentService.enrollStudent(request));
+    }
+
+    @GetMapping("/{matriculaId}/integracoes")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SECRETARY')")
+    @Operation(
+            summary = "Consultar andamento da publicação e da cobrança",
+            description = "Status possíveis: pendente, concluida, esgotada. Cobrança também pode ser conflito."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Andamento da matrícula"),
+            @ApiResponse(responseCode = "404", description = "Matrícula sem pendência de integração",
+                    content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    public IntegracaoMatriculaResponse integracoes(
+            @Parameter(description = "ID da matrícula", example = "9001", required = true)
+            @PathVariable Long matriculaId) {
+        return matriculaIntegracaoService.consultar(matriculaId);
     }
 
     @DeleteMapping("/student/{studentId}/room/{roomId}")

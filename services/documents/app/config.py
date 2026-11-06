@@ -29,9 +29,16 @@ class Settings(BaseSettings):
     rabbitmq_password: str = "guest"
     rabbitmq_exchange: str = "sing.events"
 
-    # ---- integracao com o core ----
+    # ---- integracao com o core (so o fluxo de atestado; o comprovante nao usa) ----
     core_base_url: str = "http://localhost:8080"
     core_timeout_seconds: float = 5.0
+
+    # ---- comprovante da matricula (Mongo proprio, separado do communication) ----
+    mongo_comprovantes_uri: str = (
+        "mongodb://documents:documents@localhost:27017/"
+        "sing_documents_comprovantes?authSource=admin"
+    )
+    documents_comprovante_max_bytes: int = 1_048_576
 
     # ---- regras de upload (identicas as do monolito) ----
     max_file_size_mb: int = 10
