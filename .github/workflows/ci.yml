@@ -19,7 +19,7 @@ concurrency:
 jobs:
   test-core:
     name: test-core
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
       - name: checkout
@@ -48,7 +48,7 @@ jobs:
 
   test-documents:
     name: test-documents
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: checkout
@@ -74,7 +74,7 @@ jobs:
 
   image-core:
     name: image-core
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
       - name: checkout
@@ -93,7 +93,7 @@ jobs:
 
   image-documents:
     name: image-documents
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: checkout
