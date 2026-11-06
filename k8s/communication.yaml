@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: communication
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: communication
+  template:
+    metadata:
+      labels:
+        app: communication
+    spec:
+      containers:
+        - name: communication
+          image: ghcr.io/sing-platform/communication:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: sing-config
+            - secretRef:
+                name: sing-secrets
+          env:
+            - name: PORT
+              value: "3000"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 3000
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 3000
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: communication
+spec:
+  selector:
+    app: communication
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
