@@ -653,17 +653,17 @@ Atores de sistema: **Serviço de E-mail (SMTP)**, **RabbitMQ**, **MinIO**.
 | `AtestadoApproved` | `atestado.approved` | documents | core, reports | Faltas do período viram JUSTIFIED |
 | `AtestadoRevoked` | `atestado.revoked` | documents | core, reports | Justificativas revertidas para ABSENT |
 | `SchoolRoomVacancyOpened` | `schoolroom.vacancy` | core | communication | Notifica fila de espera |
-| `StudentEnrolled` | `student.enrolled` | core | reports, communication | Atualiza projeção |
+| `matricula.criada` | `matricula.criada` | core | documents, communication | Contrato único em [`contracts/n2-matricula.md`](../contracts/n2-matricula.md). Não usar `student.enrolled`. |
 | `AttendanceRegistered` | `attendance.registered` | core | reports | Atualiza projeção de frequência |
 | `PaymentOverdue` | `payment.overdue` | finance | communication | Dispara cobrança |
 
-**Envelope padrão de todo evento:**
+O exemplo abaixo é o envelope que o documents já publica para atestado. Não vale para `matricula.criada`; esse evento está só em [`contracts/n2-matricula.md`](../contracts/n2-matricula.md).
+
 ```json
 { "eventId": "uuid", "eventType": "AtestadoApproved", "version": 1,
   "occurredAt": "ISO-8601", "aggregateId": "123", "payload": { } }
 ```
-Entrega é *at-least-once* → **consumidores são idempotentes** e cada fila tem
-*dead letter queue*.
+Entrega de atestado é *at-least-once*: o consumidor é idempotente e a fila `core.atestado.events` tem *dead letter*. Filas e deduplicação de `matricula.criada` ficam só no contrato N2.
 
 ---
 
