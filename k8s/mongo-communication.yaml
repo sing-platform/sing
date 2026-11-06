@@ -46,6 +46,7 @@ spec:
                 configMapKeyRef:
                   name: sing-config
                   key: MONGO_COMMUNICATION_DB
+          args: ["--wiredTigerCacheSizeGB", "0.25"]
           volumeMounts:
             - name: data
               mountPath: /data/db
@@ -54,16 +55,18 @@ spec:
               cpu: 50m
               memory: 128Mi
             limits:
-              cpu: 200m
-              memory: 320Mi
+              cpu: 300m
+              memory: 512Mi
           startupProbe:
             exec:
               command:
                 - sh
                 - -c
                 - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
+            initialDelaySeconds: 25
             periodSeconds: 5
-            failureThreshold: 20
+            timeoutSeconds: 10
+            failureThreshold: 12
           readinessProbe:
             exec:
               command:
@@ -71,6 +74,7 @@ spec:
                 - -c
                 - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
             periodSeconds: 10
+            timeoutSeconds: 10
           livenessProbe:
             exec:
               command:
@@ -78,6 +82,7 @@ spec:
                 - -c
                 - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
             periodSeconds: 20
+            timeoutSeconds: 10
       volumes:
         - name: data
           emptyDir:

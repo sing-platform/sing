@@ -30,8 +30,10 @@ spec:
     spec:
       containers:
         - name: minio
-          image: minio/minio:latest
-          args: ["server", "/data", "--console-address", ":9001"]
+          # minio/minio saiu do Docker Hub (pull access denied). Esta imagem
+          # da Bitnami sobe o mesmo servidor nas portas 9000 e 9001.
+          image: bitnamilegacy/minio:2024
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9000
             - containerPort: 9001
@@ -48,7 +50,7 @@ spec:
                   key: MINIO_ROOT_PASSWORD
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /bitnami/minio/data
           resources:
             requests:
               cpu: 50m

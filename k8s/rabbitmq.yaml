@@ -45,33 +45,36 @@ spec:
                 secretKeyRef:
                   name: sing-secrets
                   key: RABBITMQ_PASSWORD
-            # O cluster é pequeno. Sem isso o broker tenta usar a RAM do nó inteiro.
-            - name: RABBITMQ_VM_MEMORY_HIGH_WATERMARK
-              value: 256MiB
           volumeMounts:
             - name: data
               mountPath: /var/lib/rabbitmq
+          # RABBITMQ_VM_MEMORY_HIGH_WATERMARK faz o 3.13 recusar o boot.
+          # O management usa ~200Mi. Com limite de 384Mi o alarme de memória
+          # (40% do cgroup) bloqueia quem publica. 768Mi deixa folga.
           resources:
             requests:
               cpu: 50m
-              memory: 192Mi
+              memory: 256Mi
             limits:
-              cpu: 300m
-              memory: 384Mi
+              cpu: 500m
+              memory: 768Mi
           # O boot leva cerca de um minuto (mnesia). Sem startupProbe o liveness mata o pod.
           startupProbe:
             exec:
               command: ["rabbitmq-diagnostics", "-q", "ping"]
             periodSeconds: 10
+            timeoutSeconds: 10
             failureThreshold: 18
           readinessProbe:
             exec:
               command: ["rabbitmq-diagnostics", "-q", "ping"]
             periodSeconds: 10
+            timeoutSeconds: 10
           livenessProbe:
             exec:
               command: ["rabbitmq-diagnostics", "-q", "ping"]
             periodSeconds: 20
+            timeoutSeconds: 10
       volumes:
         - name: data
           emptyDir:

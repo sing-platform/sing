@@ -46,18 +46,19 @@ spec:
               memory: 640Mi
           startupProbe:
             httpGet:
-              path: /actuator/health/readiness
+              # /actuator/health é público. /readiness responde 401 no SecurityConfig.
+              path: /actuator/health
               port: 8080
             periodSeconds: 10
             failureThreshold: 36
           readinessProbe:
             httpGet:
-              path: /actuator/health/readiness
+              path: /actuator/health
               port: 8080
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /actuator/health/liveness
+              path: /actuator/health
               port: 8080
             periodSeconds: 20
 ---
