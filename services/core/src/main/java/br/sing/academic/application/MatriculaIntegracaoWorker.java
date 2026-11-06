@@ -2,6 +2,7 @@ package br.sing.academic.application;
 
 import br.sing.academic.domain.entities.MatriculaIntegracao;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class MatriculaIntegracaoWorker {
     private final N2Properties props;
     private final String replicaId;
 
+    @Autowired
     public MatriculaIntegracaoWorker(
             MatriculaPendenciaGateway gateway,
             MatriculaEventoPublisher publisher,
