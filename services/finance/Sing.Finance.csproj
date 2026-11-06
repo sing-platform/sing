@@ -8,4 +8,10 @@
     <AssemblyName>Sing.Finance</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="tests/**" />
+    <Content Remove="tests/**" />
+    <None Remove="tests/**" />
+  </ItemGroup>
+
 </Project>
