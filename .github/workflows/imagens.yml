@@ -1,0 +1,35 @@
+# Publica as imagens amd64 no GHCR. Disparo manual, para nao rodar em todo push.
+# Checkout, login e build sao comandos no runner.
+
+name: imagens
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publicar:
+    name: publicar
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - name: checkout
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          export GIT_TERMINAL_PROMPT=0
+          git init
+          git remote add origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --depth 1 origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+
+      - name: build e push
+        env:
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ github.token }}
+        run: bash scripts/build-push.sh

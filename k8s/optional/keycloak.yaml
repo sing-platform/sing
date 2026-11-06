@@ -1,0 +1,72 @@
+# Keycloak NÃO entra no kustomize.
+#
+# O fluxo da matrícula (POST /api/v1/enrollments, comprovante, notificação)
+# autentica com JWT HS256 e a variável JWT_SECRET. Nenhum serviço chama o
+# Keycloak hoje. Subir ele em 2 nós t3.medium compete com as 3 réplicas do core.
+#
+# Se quiser mesmo assim:
+#   kubectl apply -f k8s/optional/keycloak.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+  namespace: sing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:25.0
+          args: ["start-dev", "--http-port=8080"]
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              value: admin
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: KEYCLOAK_PASSWORD
+            - name: KC_DB
+              value: dev-file
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: JAVA_OPTS_APPEND
+              value: "-Xms128m -Xmx384m"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+            failureThreshold: 30
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+  namespace: sing
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080

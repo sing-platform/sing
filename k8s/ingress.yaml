@@ -1,0 +1,57 @@
+# Mesmos prefixos do Traefik (deploy/traefik/dynamic/routes.yml).
+# O NGINX escolhe o path mais longo, então /api/documents e /api/v1/comunicacao
+# ganham de /api, que cai no core.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sing
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-body-size: "12m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /api/documents
+            pathType: Prefix
+            backend:
+              service:
+                name: documents
+                port:
+                  number: 8000
+          - path: /api/v1/comunicacao
+            pathType: Prefix
+            backend:
+              service:
+                name: communication
+                port:
+                  number: 3000
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: core
+                port:
+                  number: 8080
+          - path: /swagger-ui
+            pathType: Prefix
+            backend:
+              service:
+                name: core
+                port:
+                  number: 8080
+          - path: /v3/api-docs
+            pathType: Prefix
+            backend:
+              service:
+                name: core
+                port:
+                  number: 8080
+          - path: /actuator
+            pathType: Prefix
+            backend:
+              service:
+                name: core
+                port:
+                  number: 8080

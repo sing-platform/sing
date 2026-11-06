@@ -1,0 +1,17 @@
+namespace: sing
+resources:
+  - namespace.yaml
+  - secrets.example.yaml
+  - configmap.yaml
+  - postgres-core.yaml
+  - postgres-documents.yaml
+  - mongo-documents.yaml
+  - mongo-communication.yaml
+  - rabbitmq.yaml
+  - minio.yaml
+  - core.yaml
+  - documents.yaml
+  - communication.yaml
+  - ingress.yaml
+# finance.yaml fica de fora: o Matheus ainda não tem a imagem.
+# k8s/optional/keycloak.yaml também: o fluxo da matrícula não usa Keycloak.
