@@ -83,6 +83,14 @@ uvicorn app.main:app --reload --port 8000
 Docs em `http://localhost:8000/docs`; health em `/actuator/health` (mesmo caminho
 do core, para o compose e o Prometheus tratarem a stack de forma uniforme).
 
+## Contrato da matrícula
+
+O comprovante de `matricula.criada` fica no mesmo processo, num Mongo separado (`sing_documents_comprovantes`). A fila é `documents.matricula.criada`. O PDF sai do payload do evento: este recorte não chama o core. O contrato está em [`contracts/n2-matricula.md`](../../contracts/n2-matricula.md).
+
+```bash
+python -m unittest tests.test_comprovante
+```
+
 ## Pendência conhecida
 
 A validação do JWT ainda é **HS256 com segredo compartilhado** com o core — o que

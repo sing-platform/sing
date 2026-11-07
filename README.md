@@ -33,10 +33,14 @@ Internet ──▶ Traefik ──┬──▶ core        (Java)    ──▶ Po
 
 ```
 services/       um diretório por serviço, cada um com seu Dockerfile e migrations
-contracts/      contratos compartilhados (proto/ e events/) — fonte da verdade entre serviços
+contracts/      contrato fechado entre serviços; hoje só o N2 da matrícula
 deploy/         docker-compose, Traefik, observabilidade
 docs/           decisões e notas de implementação
 ```
+
+## Contrato N2
+
+O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance deste contrato é .NET com MySQL e não está implementado aqui.
 
 ## Entregas
 

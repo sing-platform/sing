@@ -94,6 +94,15 @@ sing:
       base-url: ${SING_SERVICES_DOCUMENTS_BASE_URL:http://localhost:8000}
   events:
     exchange: ${SING_EVENTS_EXCHANGE:sing.events}
+  # Matrícula criada (contrato N2). O finance em .NET não sobe neste compose.
+  n2:
+    cobranca-valor-centavos: ${N2_COBRANCA_VALOR_CENTAVOS:15000}
+    cobranca-prazo-dias: ${N2_COBRANCA_PRAZO_DIAS:10}
+    retry-intervalo: ${N2_RETRY_INTERVALO:30s}
+    retry-limite: ${N2_RETRY_LIMITE:10}
+    claim-segundos: ${N2_CLAIM_SEGUNDOS:60}
+    finance-base-url: ${N2_FINANCE_BASE_URL:http://localhost:8082}
+    varredura-ms: ${N2_VARREDURA_MS:5000}
   jwt:
     # Obrigatorio em qualquer ambiente real. Ver docs/adr/0002 (RS256 + JWKS).
     secret: ${JWT_SECRET:8472B4B6250646352665582F413F4536A586E3272357538767566B5970404E42}

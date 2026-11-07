@@ -11,6 +11,7 @@ from fastapi import FastAPI
 from sqlalchemy import text
 
 from . import storage
+from .consumidor_matricula import ConsumidorMatricula, mongo_comprovantes_ok
 from .database import engine
 from .routers import documents
 
@@ -26,7 +27,12 @@ async def lifespan(app: FastAPI):
     except Exception:
         # nao impede o servico de subir: leitura de metadados segue funcionando
         log.warning("storage indisponivel no boot", exc_info=True)
-    yield
+    consumidor = ConsumidorMatricula()
+    consumidor.start()
+    try:
+        yield
+    finally:
+        consumidor.parar()
 
 
 app = FastAPI(
@@ -43,7 +49,7 @@ app.include_router(documents.router)
 def health():
     """Mesmo caminho do Actuator do core, para o compose e o Prometheus
     tratarem todos os servicos da stack de forma uniforme."""
-    checks = {"db": "DOWN", "storage": "DOWN"}
+    checks = {"db": "DOWN", "storage": "DOWN", "comprovantes": "DOWN"}
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
@@ -55,6 +61,8 @@ def health():
         checks["storage"] = "UP"
     except Exception:
         log.warning("health: storage inacessivel", exc_info=True)
+    checks["comprovantes"] = "UP" if mongo_comprovantes_ok() else "DOWN"
 
-    overall = "UP" if all(v == "UP" for v in checks.values()) else "DOWN"
+    # O comprovante e outro banco. Atestados seguem no ar se o Mongo desse recorte cair.
+    overall = "UP" if checks["db"] == "UP" and checks["storage"] == "UP" else "DOWN"
     return {"status": overall, "components": checks}

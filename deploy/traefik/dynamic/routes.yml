@@ -28,7 +28,11 @@ http:
       # por ser mais longa, vencia (104 contra 100).
       priority: 200
 
-    # E3..E5 entram aqui conforme os servicos forem criados.
+    communication:
+      rule: "PathPrefix(`/api/v1/comunicacao`)"
+      entryPoints: [web]
+      service: communication
+      priority: 200
 
   services:
     core:
@@ -40,3 +44,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://documents:8000"
+
+    communication:
+      loadBalancer:
+        servers:
+          - url: "http://communication:3000"

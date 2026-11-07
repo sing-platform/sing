@@ -39,6 +39,7 @@ docker compose --profile observability up -d
 | RabbitMQ | http://localhost:15672 |
 | MinIO console | http://localhost:9001 |
 | Keycloak | http://localhost:8180 |
+| Notificação da matrícula | http://localhost:8080/api/v1/comunicacao/notificacoes/{eventId} |
 | Jaeger | http://localhost:16686 |
 | Prometheus | http://localhost:9090 |
 
@@ -53,6 +54,19 @@ docker compose logs -f core
 O health deve retornar `{"status":"UP"}`. RabbitMQ e mail estão fora do health check por
 padrão (`HEALTH_RABBIT_ENABLED` / `HEALTH_MAIL_ENABLED`), então um broker indisponível
 não derruba o status do serviço.
+
+## Matrícula criada (N2)
+
+O compose sobe o Mongo do comprovante, o Mongo da comunicação e o serviço Nest.
+O finance em .NET não entra aqui: sem ele a cobrança fica `pendente` e o core tenta de novo.
+
+Testes do fluxo, na raiz do repositório:
+
+```bash
+(cd services/core && mvn -B test -Dtest=MatriculaEnvelopeTest,MatriculaIntegracaoWorkerTest,CobrancaClientTest,EnrollmentServiceTest,EnrollmentControllerWebMvcTest)
+(cd services/documents && python -m unittest tests.test_comprovante)
+(cd services/communication && npm test)
+```
 
 ## Operação
 
