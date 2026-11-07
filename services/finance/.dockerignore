@@ -1,0 +1,10 @@
+**/bin/
+**/obj/
+**/.vs/
+**/tests/
+**/*.user
+**/.git/
+README.md
+.editorconfig
+global.json
+*.sln

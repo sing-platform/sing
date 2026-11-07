@@ -2,11 +2,11 @@ namespace Sing.Finance.Domain;
 
 public enum SponsorFrequency
 {
-    Monthly,
-    Bimonthly,
-    Quarterly,
-    Semiannual,
-    Annual
+    MONTHLY,
+    BIMONTHLY,
+    QUARTERLY,
+    SEMIANNUAL,
+    ANNUAL
 }
 
 public static class SponsorFrequencyExtensions
@@ -15,11 +15,11 @@ public static class SponsorFrequencyExtensions
     {
         var months = frequency switch
         {
-            SponsorFrequency.Monthly => 1,
-            SponsorFrequency.Bimonthly => 2,
-            SponsorFrequency.Quarterly => 3,
-            SponsorFrequency.Semiannual => 6,
-            SponsorFrequency.Annual => 12,
+            SponsorFrequency.MONTHLY => 1,
+            SponsorFrequency.BIMONTHLY => 2,
+            SponsorFrequency.QUARTERLY => 3,
+            SponsorFrequency.SEMIANNUAL => 6,
+            SponsorFrequency.ANNUAL => 12,
             _ => throw new ArgumentOutOfRangeException(nameof(frequency))
         };
 

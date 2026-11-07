@@ -26,6 +26,59 @@ public sealed class Sponsor : AuditableEntity
         long? createdBy,
         DateTime createdAt)
     {
+        Validate(studentId, name, amount);
+
+        return new Sponsor
+        {
+            StudentId = studentId,
+            Name = name.Trim(),
+            Email = email,
+            Phone = phone,
+            Amount = amount,
+            Frequency = frequency,
+            StartDate = startDate,
+            CreatedBy = createdBy,
+            CreatedAt = createdAt
+        };
+    }
+
+    public void Update(
+        long studentId,
+        string name,
+        string? email,
+        string? phone,
+        decimal amount,
+        SponsorFrequency frequency,
+        DateOnly startDate,
+        bool active,
+        long? userId,
+        DateTime at)
+    {
+        Validate(studentId, name, amount);
+        StudentId = studentId;
+        Name = name.Trim();
+        Email = email;
+        Phone = phone;
+        Amount = amount;
+        Frequency = frequency;
+        StartDate = startDate;
+
+        if (active)
+        {
+            IsActive = true;
+            DeactivatedBy = null;
+            DeactivatedAt = null;
+        }
+        else
+        {
+            Deactivate(userId, at);
+        }
+    }
+
+    public void MarkGenerated(DateOnly dueDate) => LastGeneratedDate = dueDate;
+
+    private static void Validate(long studentId, string name, decimal amount)
+    {
         if (studentId <= 0)
         {
             throw new ArgumentException("Aluno é obrigatório.");
@@ -40,18 +93,5 @@ public sealed class Sponsor : AuditableEntity
         {
             throw new ArgumentException("Valor mínimo é 0,01.");
         }
-
-        return new Sponsor
-        {
-            StudentId = studentId,
-            Name = name.Trim(),
-            Email = email,
-            Phone = phone,
-            Amount = amount,
-            Frequency = frequency,
-            StartDate = startDate,
-            CreatedBy = createdBy,
-            CreatedAt = createdAt
-        };
     }
 }

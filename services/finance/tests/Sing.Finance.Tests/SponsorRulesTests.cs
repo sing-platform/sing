@@ -8,11 +8,11 @@ public class SponsorRulesTests
     private static readonly DateTime CreatedAt = new(2026, 1, 15, 10, 0, 0, DateTimeKind.Utc);
 
     [Theory]
-    [InlineData(SponsorFrequency.Monthly, 2026, 2, 15)]
-    [InlineData(SponsorFrequency.Bimonthly, 2026, 3, 15)]
-    [InlineData(SponsorFrequency.Quarterly, 2026, 4, 15)]
-    [InlineData(SponsorFrequency.Semiannual, 2026, 7, 15)]
-    [InlineData(SponsorFrequency.Annual, 2027, 1, 15)]
+    [InlineData(SponsorFrequency.MONTHLY, 2026, 2, 15)]
+    [InlineData(SponsorFrequency.BIMONTHLY, 2026, 3, 15)]
+    [InlineData(SponsorFrequency.QUARTERLY, 2026, 4, 15)]
+    [InlineData(SponsorFrequency.SEMIANNUAL, 2026, 7, 15)]
+    [InlineData(SponsorFrequency.ANNUAL, 2027, 1, 15)]
     public void NextDueDate_soma_os_meses_da_frequencia(
         SponsorFrequency frequency, int year, int month, int day)
     {
@@ -30,7 +30,7 @@ public class SponsorRulesTests
             email: "maria@sing.local",
             phone: null,
             amount: 50.00m,
-            frequency: SponsorFrequency.Monthly,
+            frequency: SponsorFrequency.MONTHLY,
             startDate: new DateOnly(2026, 1, 1),
             createdBy: 3,
             createdAt: CreatedAt);
@@ -53,7 +53,7 @@ public class SponsorRulesTests
             email: null,
             phone: null,
             amount,
-            SponsorFrequency.Monthly,
+            SponsorFrequency.MONTHLY,
             new DateOnly(2026, 1, 1),
             createdBy: null,
             CreatedAt));
@@ -65,7 +65,7 @@ public class SponsorRulesTests
     public void Deactivate_marca_inativo_com_quem_e_quando()
     {
         var sponsor = Sponsor.Create(
-            10, "Maria", null, null, 50m, SponsorFrequency.Monthly,
+            10, "Maria", null, null, 50m, SponsorFrequency.MONTHLY,
             new DateOnly(2026, 1, 1), createdBy: 3, CreatedAt);
         var at = CreatedAt.AddDays(2);
 

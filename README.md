@@ -40,7 +40,7 @@ docs/           decisões e notas de implementação
 
 ## Contrato N2
 
-O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance deste contrato é .NET com MySQL e não está implementado aqui.
+O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance (.NET + MySQL) atende `POST /cobrancas` e os recursos em `/api/v1/finance/*`.
 
 ## Entregas
 
@@ -49,7 +49,7 @@ O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](cont
 | **E1** | Infra base (compose, Traefik, Keycloak, OTel) + core migrado para PostgreSQL | ✅ concluída |
 | **E2** | [`documents`](services/documents) (Python + PostgreSQL + MinIO), evento `AtestadoApproved` | ✅ concluída |
 | E3 | `communication` (Node/TS + MongoDB) | ⬜ |
-| E4 | `finance` (C#/.NET + MySQL) | ⬜ |
+| **E4** | [`finance`](services/finance) (C#/.NET + MySQL), `POST /cobrancas` | ✅ concluída |
 | E5 | `reports` (Python + read model CQRS) | ⬜ |
 
 ## Princípios

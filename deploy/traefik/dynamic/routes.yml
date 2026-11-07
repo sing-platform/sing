@@ -34,6 +34,12 @@ http:
       service: communication
       priority: 200
 
+    finance:
+      rule: "PathPrefix(`/api/v1/finance`) || PathPrefix(`/cobrancas`)"
+      entryPoints: [web]
+      service: finance
+      priority: 200
+
   services:
     core:
       loadBalancer:
@@ -49,3 +55,8 @@ http:
       loadBalancer:
         servers:
           - url: "http://communication:3000"
+
+    finance:
+      loadBalancer:
+        servers:
+          - url: "http://finance:8080"
