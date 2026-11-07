@@ -10,12 +10,14 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddFinanceJwt(builder.Configuration);
+builder.Services.AddFinanceSwagger();
 builder.Services.AddFinance(builder.Configuration);
 
 var app = builder.Build();
 
 await app.Services.EnsureFinanceSchemaAsync();
 
+app.UseFinanceSwagger();
 app.UseAuthentication();
 app.UseAuthorization();
 

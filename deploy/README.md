@@ -33,6 +33,7 @@ docker compose --profile observability up -d
 | Serviço | URL |
 |---|---|
 | API (via Traefik) | http://localhost:8080/api |
+| Swagger finance | http://localhost:8080/finance/swagger |
 | Swagger | http://localhost:8080/swagger-ui.html |
 | Health | http://localhost:8080/actuator/health |
 | Dashboard Traefik | http://localhost:8081 |

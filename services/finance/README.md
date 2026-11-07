@@ -14,6 +14,7 @@ Extraído do módulo `br.sing.finance` do core.
 | `/api/v1/finance/entries` | JWT | Lançamentos + resumo + baixa |
 | `/api/v1/finance/fiscal-documents` | JWT | Notas e recibos |
 | `GET /actuator/health` | não | Ops |
+| `/finance/swagger` | não | Swagger UI |
 
 ## Integração
 

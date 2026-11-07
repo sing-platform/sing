@@ -35,7 +35,7 @@ http:
       priority: 200
 
     finance:
-      rule: "PathPrefix(`/api/v1/finance`) || PathPrefix(`/cobrancas`)"
+      rule: "PathPrefix(`/api/v1/finance`) || PathPrefix(`/cobrancas`) || PathPrefix(`/finance/swagger`)"
       entryPoints: [web]
       service: finance
       priority: 200
