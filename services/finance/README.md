@@ -9,7 +9,7 @@ Extraído do módulo `br.sing.finance` do core.
 
 | Prefixo | Auth | Papel |
 |---|---|---|
-| `POST /cobrancas` | não (rede interna) | Contrato N2 — core cria cobrança por `matriculaId` |
+| `POST /cobrancas` | não (só rede Docker) | Contrato N2 — core → `http://finance:8080`; **não** passa pelo Traefik |
 | `/api/v1/finance/sponsors` | JWT `ROLE_ADMIN` / `ROLE_MANAGER` | Padrinhos |
 | `/api/v1/finance/entries` | JWT | Lançamentos + resumo + baixa |
 | `/api/v1/finance/fiscal-documents` | JWT | Notas e recibos |
@@ -21,6 +21,15 @@ Extraído do módulo `br.sing.finance` do core.
 - **Core (HTTP):** ao cadastrar padrinho, confirma o aluno em `GET /api/v1/students/{id}` com o mesmo Bearer. Se o core estiver fora, o cadastro é negado.
 - **RabbitMQ:** lançamentos `PENDING` vencidos viram `OVERDUE` e publicam `PaymentOverdue` (`payment.overdue`) via outbox.
 - **Job diário:** gera recebíveis de padrinho ativos (mesma regra do monolito).
+
+## Schema
+
+Na subida o serviço aplica migrations EF (`Database.MigrateAsync`). Volume MySQL
+criado só com `EnsureCreated` antigo pode precisar ser recriado uma vez:
+
+```bash
+docker compose down && docker volume rm deploy_mysqldata-finance
+```
 
 ## Rodar local
 

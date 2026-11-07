@@ -28,6 +28,11 @@ public sealed class Cobranca : AuditableEntity
             throw new ArgumentException("valorCentavos deve ser positivo.");
         }
 
+        if (vencimento.Year is < 2000 or > 2100)
+        {
+            throw new ArgumentException("vencimento inválido.");
+        }
+
         return new Cobranca
         {
             MatriculaId = matriculaId,

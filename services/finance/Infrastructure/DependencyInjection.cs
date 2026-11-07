@@ -45,6 +45,6 @@ public static class DependencyInjection
     {
         using var scope = services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<FinanceDbContext>();
-        await db.Database.EnsureCreatedAsync();
+        await db.Database.MigrateAsync();
     }
 }

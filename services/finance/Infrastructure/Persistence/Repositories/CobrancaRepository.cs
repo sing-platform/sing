@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using Sing.Finance.Application.Contracts;
 using Sing.Finance.Domain;
 
@@ -16,5 +17,30 @@ public sealed class CobrancaRepository : ICobrancaRepository
     public async Task AddAsync(Cobranca cobranca, CancellationToken ct) =>
         await _db.Cobrancas.AddAsync(cobranca, ct);
 
-    public Task SaveChangesAsync(CancellationToken ct) => _db.SaveChangesAsync(ct);
+    public async Task SaveChangesAsync(CancellationToken ct)
+    {
+        try
+        {
+            await _db.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException ex) when (IsUniqueViolation(ex))
+        {
+            throw new CobrancaConflictException(ex);
+        }
+    }
+
+    public void DiscardChanges() => _db.ChangeTracker.Clear();
+
+    private static bool IsUniqueViolation(DbUpdateException ex)
+    {
+        for (var inner = ex.InnerException; inner is not null; inner = inner.InnerException)
+        {
+            if (inner is MySqlException mysql && mysql.Number == 1062)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

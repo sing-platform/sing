@@ -20,12 +20,7 @@ public sealed class CobrancaService
             var existing = await _cobrancas.GetByMatriculaIdAsync(request.MatriculaId, ct);
             if (existing is not null)
             {
-                if (existing.Matches(request.ValorCentavos, request.Vencimento))
-                {
-                    return Result<CobrancaResponse>.Ok(new CobrancaResponse(existing.Id, existing.Status), 200);
-                }
-
-                return Result<CobrancaResponse>.Fail("Cobrança divergente para a matrícula", 409);
+                return ResolveExisting(existing, request);
             }
 
             var cobranca = Cobranca.Create(
@@ -35,12 +30,37 @@ public sealed class CobrancaService
                 DateTime.UtcNow);
 
             await _cobrancas.AddAsync(cobranca, ct);
-            await _cobrancas.SaveChangesAsync(ct);
+            try
+            {
+                await _cobrancas.SaveChangesAsync(ct);
+            }
+            catch (CobrancaConflictException)
+            {
+                _cobrancas.DiscardChanges();
+                var raced = await _cobrancas.GetByMatriculaIdAsync(request.MatriculaId, ct);
+                if (raced is null)
+                {
+                    throw;
+                }
+
+                return ResolveExisting(raced, request);
+            }
+
             return Result<CobrancaResponse>.Ok(new CobrancaResponse(cobranca.Id, cobranca.Status), 201);
         }
         catch (ArgumentException ex)
         {
             return Result<CobrancaResponse>.Fail(ex.Message, 400);
         }
+    }
+
+    private static Result<CobrancaResponse> ResolveExisting(Cobranca existing, CobrancaCreateRequest request)
+    {
+        if (existing.Matches(request.ValorCentavos, request.Vencimento))
+        {
+            return Result<CobrancaResponse>.Ok(new CobrancaResponse(existing.Id, existing.Status), 200);
+        }
+
+        return Result<CobrancaResponse>.Fail("Cobrança divergente para a matrícula", 409);
     }
 }

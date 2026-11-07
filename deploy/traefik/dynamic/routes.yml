@@ -34,8 +34,10 @@ http:
       service: communication
       priority: 200
 
+    # /cobrancas fica só na rede Docker (core → http://finance:8080).
+    # Não expor no entryPoint web: o contrato N2 é rede interna, sem JWT.
     finance:
-      rule: "PathPrefix(`/api/v1/finance`) || PathPrefix(`/cobrancas`) || PathPrefix(`/finance/swagger`)"
+      rule: "PathPrefix(`/api/v1/finance`) || PathPrefix(`/finance/swagger`)"
       entryPoints: [web]
       service: finance
       priority: 200

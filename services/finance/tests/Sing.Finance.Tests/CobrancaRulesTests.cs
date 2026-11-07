@@ -26,4 +26,13 @@ public class CobrancaRulesTests
         Assert.Throws<ArgumentException>(() =>
             Cobranca.Create(matriculaId, valor, new DateOnly(2026, 11, 15), DateTime.UtcNow));
     }
+
+    [Theory]
+    [InlineData(1999, 12, 31)]
+    [InlineData(2101, 1, 1)]
+    public void Create_recusa_vencimento_fora_da_faixa(int year, int month, int day)
+    {
+        Assert.Throws<ArgumentException>(() =>
+            Cobranca.Create(1, 15000, new DateOnly(year, month, day), DateTime.UtcNow));
+    }
 }

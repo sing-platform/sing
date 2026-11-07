@@ -29,7 +29,8 @@ public static class SwaggerSetup
                     Rotas `/api/v1/finance/*` exigem JWT HS256 emitido pelo **core**
                     (`ROLE_ADMIN` ou `ROLE_MANAGER`). Use **Authorize** e cole o token.
 
-                    `POST /cobrancas` e o health **não** pedem token (rede interna / ops).
+                    `POST /cobrancas` não pede JWT e **não** é exposto no Traefik —
+                    só rede Docker (`finance:8080`). Health fica aberto para ops.
                     """
             });
 
