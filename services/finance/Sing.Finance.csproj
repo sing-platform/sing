@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Sing.Finance</RootNamespace>
     <AssemblyName>Sing.Finance</AssemblyName>
-    <RollForward>LatestMajor</RollForward>
+    <RollForward>LatestPatch</RollForward>
   </PropertyGroup>
 
   <ItemGroup>

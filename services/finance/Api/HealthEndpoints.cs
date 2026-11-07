@@ -12,8 +12,10 @@ public static class HealthEndpoints
                 var checks = new Dictionary<string, string> { ["db"] = "DOWN" };
                 try
                 {
-                    await db.Database.ExecuteSqlRawAsync("SELECT 1");
-                    checks["db"] = "UP";
+                    if (await db.Database.CanConnectAsync())
+                    {
+                        checks["db"] = "UP";
+                    }
                 }
                 catch
                 {

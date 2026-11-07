@@ -15,7 +15,10 @@ builder.Services.AddFinance(builder.Configuration);
 
 var app = builder.Build();
 
-await app.Services.EnsureFinanceSchemaAsync();
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.Services.EnsureFinanceSchemaAsync();
+}
 
 app.UseFinanceSwagger();
 app.UseAuthentication();
@@ -28,3 +31,5 @@ app.MapFinancialEntryEndpoints();
 app.MapFiscalDocumentEndpoints();
 
 app.Run();
+
+public partial class Program;

@@ -50,3 +50,6 @@ Health: `http://localhost:8080/actuator/health` (via Traefik) ou porta direta `5
 ```bash
 dotnet test Sing.Finance.sln
 ```
+
+Inclui regras de domínio, serviços (cobrança, padrinhos, lançamentos, documentos)
+e smoke HTTP de todos os endpoints (`WebApplicationFactory` + EF InMemory + JWT de teste).
