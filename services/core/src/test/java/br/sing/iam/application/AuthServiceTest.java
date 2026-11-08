@@ -30,7 +30,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,7 +103,7 @@ class AuthServiceTest {
         when(roleRepository.findByName("ROLE_STUDENT")).thenReturn(Optional.of(studentRole()));
         when(passwordEncoder.encode("senha123")).thenReturn("$encoded$");
         when(userRepository.findByEmail("joao@sing.local")).thenReturn(Optional.empty());
-        when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
+        when(jwtService.generateToken(anyMap(), any(User.class))).thenReturn("jwt-token");
 
         AuthResponse response = authService.register(request);
 
@@ -156,7 +158,7 @@ class AuthServiceTest {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(null);
         when(userRepository.findByEmail("joao@sing.local")).thenReturn(Optional.of(user));
-        when(jwtService.generateToken(user)).thenReturn("jwt-token");
+        when(jwtService.generateToken(anyMap(), eq(user))).thenReturn("jwt-token");
 
         AuthResponse response = authService.authenticate(request);
 
