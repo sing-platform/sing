@@ -23,8 +23,11 @@ data:
   MINIO_USER: singadmin
   LOG_LEVEL_ROOT: INFO
   SING_CORS_ALLOWED_ORIGIN_PATTERNS: http://localhost:8080,http://localhost:5173
-  # O Service finance ainda não existe. A cobrança fica pendente e o core tenta de novo.
   N2_FINANCE_BASE_URL: http://finance:8080
+  SING_SERVICES_FINANCE_BASE_URL: http://finance:8080
+  SING_SERVICES_COMMUNICATION_BASE_URL: http://communication:3000
+  FINANCE_DB_NAME: sing_finance
+  FINANCE_DB_USER: sing
   N2_COBRANCA_VALOR_CENTAVOS: "15000"
   N2_COBRANCA_PRAZO_DIAS: "10"
   N2_RETRY_INTERVALO: 30s
