@@ -83,6 +83,8 @@ services:
       N2_RETRY_INTERVALO: ${N2_RETRY_INTERVALO:-30s}
       N2_RETRY_LIMITE: ${N2_RETRY_LIMITE:-10}
       N2_CLAIM_SEGUNDOS: ${N2_CLAIM_SEGUNDOS:-60}
+      SING_SERVICES_FINANCE_BASE_URL: http://finance:8080
+      SING_SERVICES_COMMUNICATION_BASE_URL: http://communication:3000
     # Roteamento declarado em traefik/dynamic/routes.yml (file provider).
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep -q UP || exit 1"]
@@ -216,6 +218,8 @@ services:
       RABBITMQ_USER: ${RABBITMQ_USER:-sing}
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-sing}
       RABBITMQ_EXCHANGE: ${EVENTS_EXCHANGE:-sing.events}
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      CORE_BASE_URL: http://core:8080
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/actuator/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 15s
