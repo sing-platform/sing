@@ -1,35 +1,42 @@
 package br.sing.reports.application.definitions;
 
+import br.sing.people.domain.entities.Student;
+import br.sing.people.infra.repositories.StudentRepository;
 import br.sing.reports.application.ReportDefinition;
+import br.sing.reports.domain.ReportColumn;
+import br.sing.reports.domain.ReportColumnType;
 import br.sing.reports.domain.ReportFilterSpec;
 import br.sing.reports.domain.ReportResult;
-import br.sing.reports.infra.jdbc.ReportJdbcRepository;
+import br.sing.reports.infra.remote.FinanceClient;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
-public class ActiveSponsorsReport extends AbstractReport implements ReportDefinition {
+public class ActiveSponsorsReport extends RemoteReport implements ReportDefinition {
 
-    private static final String SQL = """
-            SELECT
-                s.id,
-                s.name AS sponsor_name,
-                p.name AS student_name,
-                s.amount,
-                s.frequency,
-                s.start_date,
-                s.last_generated_date
-            FROM sponsor s
-            INNER JOIN student st ON st.person_id = s.student_id
-            INNER JOIN person p ON p.id = st.person_id
-            WHERE s.is_active = TRUE
-            ORDER BY s.name
-            """;
+    private static final List<ReportColumn> COLUMNS = List.of(
+            column("id", ReportColumnType.NUMBER),
+            column("sponsor_name", ReportColumnType.STRING),
+            column("student_name", ReportColumnType.STRING),
+            column("amount", ReportColumnType.NUMBER),
+            column("frequency", ReportColumnType.STRING),
+            column("start_date", ReportColumnType.DATE),
+            column("last_generated_date", ReportColumnType.DATE)
+    );
 
-    public ActiveSponsorsReport(ReportJdbcRepository jdbc) {
-        super(jdbc);
+    private final FinanceClient financeClient;
+    private final StudentRepository studentRepository;
+
+    public ActiveSponsorsReport(FinanceClient financeClient, StudentRepository studentRepository) {
+        this.financeClient = financeClient;
+        this.studentRepository = studentRepository;
     }
 
     @Override
@@ -59,6 +66,34 @@ public class ActiveSponsorsReport extends AbstractReport implements ReportDefini
 
     @Override
     public ReportResult execute(Map<String, Object> filterValues) {
-        return jdbc.queryAutoColumns(SQL, params(filterValues));
+        List<FinanceClient.Sponsor> sponsors = financeClient.listSponsors().stream()
+                .filter(FinanceClient.Sponsor::ativo)
+                .filter(s -> s.studentId() != null)
+                .toList();
+
+        Set<Long> studentIds = sponsors.stream().map(FinanceClient.Sponsor::studentId).collect(Collectors.toSet());
+        Map<Long, String> studentNames = new HashMap<>();
+        for (Student student : studentRepository.findAllById(studentIds)) {
+            studentNames.put(student.getId(), student.getName());
+        }
+
+        List<FinanceClient.Sponsor> linked = sponsors.stream()
+                .filter(s -> studentNames.containsKey(s.studentId()))
+                .sorted(Comparator.comparing(FinanceClient.Sponsor::name, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        List<List<Object>> rows = new ArrayList<>(linked.size());
+        for (FinanceClient.Sponsor s : linked) {
+            List<Object> row = new ArrayList<>(COLUMNS.size());
+            row.add(s.id());
+            row.add(s.name());
+            row.add(studentNames.get(s.studentId()));
+            row.add(s.amount());
+            row.add(s.frequency());
+            row.add(s.startDate());
+            row.add(s.lastGeneratedDate());
+            rows.add(row);
+        }
+        return result(COLUMNS, rows);
     }
 }
