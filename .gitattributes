@@ -1,0 +1,3 @@
+# Checkout no Windows (core.autocrlf=true) nao pode trocar LF por CRLF
+# nestes scripts. Shebang com CR quebra o exec no container.
+*.sh text eol=lf

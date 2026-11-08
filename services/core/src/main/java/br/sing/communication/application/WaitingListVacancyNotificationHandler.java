@@ -13,7 +13,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 public class WaitingListVacancyNotificationHandler {
 
     private final StudentPreRegisterRepository studentPreRegisterRepository;
-    private final NotificationService notificationService;
+    private final WaitingListVacancyPublisher vacancyPublisher;
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void onSchoolRoomVacancyOpened(SchoolRoomVacancyOpened event) {
@@ -26,7 +26,7 @@ public class WaitingListVacancyNotificationHandler {
                 continue;
             }
 
-            notificationService.createWaitingListVacancyIfAbsent(
+            vacancyPublisher.publishIfApplicable(
                     event.workshopId(),
                     event.workshopName(),
                     shift,

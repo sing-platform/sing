@@ -12,6 +12,7 @@ resources:
   - core.yaml
   - documents.yaml
   - communication.yaml
+  - mysql-finance.yaml
+  - finance.yaml
   - ingress.yaml
-# finance.yaml fica de fora: o Matheus ainda não tem a imagem.
-# k8s/optional/keycloak.yaml também: o fluxo da matrícula não usa Keycloak.
+# k8s/optional/keycloak.yaml fica de fora: o fluxo da matrícula não usa Keycloak.

@@ -25,7 +25,7 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("SING API")
                         .version("1.0")
-                        .description("API do SING — sistema de gestão acadêmica, administrativa, financeira e psicossocial."))
+                        .description("API do SING — sistema de gestão acadêmica, administrativa e psicossocial."))
                 .addSecurityItem(new SecurityRequirement()
                         .addList(securitySchemeName))
                 .components(new Components()

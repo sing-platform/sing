@@ -16,7 +16,8 @@ COPY alembic.ini .
 COPY alembic ./alembic
 COPY app ./app
 COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# CRLF no checkout Windows deixa o shebang como /bin/sh\r e o exec falha.
+RUN sed -i 's/\r$//' entrypoint.sh && chmod +x entrypoint.sh
 
 RUN useradd -r -u 1001 appuser && chown -R appuser /app
 USER appuser

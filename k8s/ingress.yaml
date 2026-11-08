@@ -1,6 +1,7 @@
 # Mesmos prefixos do Traefik (deploy/traefik/dynamic/routes.yml).
-# O NGINX escolhe o path mais longo, então /api/documents e /api/v1/comunicacao
-# ganham de /api, que cai no core.
+# O NGINX escolhe o path mais longo, então /api/documents, /api/v1/comunicacao,
+# /api/v1/mural, /api/v1/notifications e /api/v1/finance ganham de /api, que cai no core.
+# A UI de docs fica fora do prefixo da API para não colidir com /{document_id}.
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -20,6 +21,20 @@ spec:
                 name: documents
                 port:
                   number: 8000
+          - path: /documents/docs
+            pathType: Prefix
+            backend:
+              service:
+                name: documents
+                port:
+                  number: 8000
+          - path: /documents/openapi.json
+            pathType: Prefix
+            backend:
+              service:
+                name: documents
+                port:
+                  number: 8000
           - path: /api/v1/comunicacao
             pathType: Prefix
             backend:
@@ -27,6 +42,48 @@ spec:
                 name: communication
                 port:
                   number: 3000
+          - path: /api/v1/mural
+            pathType: Prefix
+            backend:
+              service:
+                name: communication
+                port:
+                  number: 3000
+          - path: /api/v1/notifications
+            pathType: Prefix
+            backend:
+              service:
+                name: communication
+                port:
+                  number: 3000
+          - path: /comunicacao/docs
+            pathType: Prefix
+            backend:
+              service:
+                name: communication
+                port:
+                  number: 3000
+          - path: /comunicacao/openapi.json
+            pathType: Prefix
+            backend:
+              service:
+                name: communication
+                port:
+                  number: 3000
+          - path: /api/v1/finance
+            pathType: Prefix
+            backend:
+              service:
+                name: finance
+                port:
+                  number: 8080
+          - path: /finance/swagger
+            pathType: Prefix
+            backend:
+              service:
+                name: finance
+                port:
+                  number: 8080
           - path: /api
             pathType: Prefix
             backend:

@@ -2,7 +2,7 @@ package br.sing.people.application;
 
 import br.sing.academic.domain.entities.Workshop;
 import br.sing.academic.infra.repositories.WorkshopRepository;
-import br.sing.communication.application.NotificationService;
+import br.sing.communication.application.WaitingListVacancyPublisher;
 import br.sing.communication.application.ResilientMessagingService;
 import br.sing.iam.infra.UserRepository;
 import br.sing.people.api.dto.request.StudentPreRegisterCreateRequest;
@@ -39,7 +39,7 @@ class StudentPreRegisterServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private NotificationService notificationService;
+    private WaitingListVacancyPublisher vacancyPublisher;
 
     private StudentPreRegisterService service;
 
@@ -53,7 +53,7 @@ class StudentPreRegisterServiceTest {
                 vacancyQueryService,
                 messagingService,
                 userRepository,
-                notificationService
+                vacancyPublisher
         );
         workshop = Workshop.builder().id(1L).name("Oficina Teste").isActive(true).build();
     }
@@ -84,7 +84,7 @@ class StudentPreRegisterServiceTest {
 
         service.create(request);
 
-        verify(notificationService).createWaitingListVacancyIfAbsent(
+        verify(vacancyPublisher).publishIfApplicable(
                 eq(1L),
                 eq("Oficina Teste"),
                 eq(Shift.MORNING),
@@ -118,7 +118,7 @@ class StudentPreRegisterServiceTest {
 
         service.create(request);
 
-        verify(notificationService, never()).createWaitingListVacancyIfAbsent(
+        verify(vacancyPublisher, never()).publishIfApplicable(
                 any(), any(), any(), any(Long.class), any(Long.class)
         );
     }
@@ -149,7 +149,7 @@ class StudentPreRegisterServiceTest {
         verify(studentPreRegisterRepository).save(captor.capture());
         assertThat(captor.getValue().getName()).isEqualTo("Ana Lima");
         assertThat(response.name()).isEqualTo("Ana Lima");
-        verify(notificationService).createWaitingListVacancyIfAbsent(
+        verify(vacancyPublisher).publishIfApplicable(
                 eq(1L),
                 eq("Oficina Teste"),
                 eq(Shift.EVENING),

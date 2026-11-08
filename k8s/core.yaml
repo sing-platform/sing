@@ -37,6 +37,11 @@ spec:
             # Heap menor que o do Dockerfile: 3 réplicas num cluster de 2 nós.
             - name: JAVA_OPTS
               value: "-Xms128m -Xmx320m"
+            # Nome real do pod. O header X-Pod e GET /api/v1/instancia leem isto.
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
           resources:
             requests:
               cpu: 100m

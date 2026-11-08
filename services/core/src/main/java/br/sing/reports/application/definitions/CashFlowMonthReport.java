@@ -1,34 +1,36 @@
 package br.sing.reports.application.definitions;
 
 import br.sing.reports.application.ReportDefinition;
+import br.sing.reports.domain.ReportColumn;
+import br.sing.reports.domain.ReportColumnType;
 import br.sing.reports.domain.ReportFilterSpec;
 import br.sing.reports.domain.ReportResult;
-import br.sing.reports.infra.jdbc.ReportJdbcRepository;
+import br.sing.reports.infra.remote.FinanceClient;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class CashFlowMonthReport extends AbstractReport implements ReportDefinition {
+public class CashFlowMonthReport extends RemoteReport implements ReportDefinition {
 
-    private static final String SQL = """
-            SELECT
-                due_date,
-                direction,
-                status,
-                category,
-                amount,
-                description
-            FROM financial_entry
-            WHERE is_active = TRUE
-              AND due_date BETWEEN :startDate AND :endDate
-            ORDER BY due_date, id
-            """;
+    private static final List<ReportColumn> COLUMNS = List.of(
+            column("due_date", ReportColumnType.DATE),
+            column("direction", ReportColumnType.STRING),
+            column("status", ReportColumnType.STRING),
+            column("category", ReportColumnType.STRING),
+            column("amount", ReportColumnType.NUMBER),
+            column("description", ReportColumnType.STRING)
+    );
 
-    public CashFlowMonthReport(ReportJdbcRepository jdbc) {
-        super(jdbc);
+    private final FinanceClient financeClient;
+
+    public CashFlowMonthReport(FinanceClient financeClient) {
+        this.financeClient = financeClient;
     }
 
     @Override
@@ -62,9 +64,27 @@ public class CashFlowMonthReport extends AbstractReport implements ReportDefinit
         YearMonth ym = (monthValue == null || String.valueOf(monthValue).isBlank())
                 ? YearMonth.now()
                 : YearMonth.parse(String.valueOf(monthValue));
-        Map<String, Object> params = params(filterValues);
-        params.put("startDate", ym.atDay(1));
-        params.put("endDate", ym.atEndOfMonth());
-        return jdbc.queryAutoColumns(SQL, params);
+        LocalDate start = ym.atDay(1);
+        LocalDate end = ym.atEndOfMonth();
+
+        List<FinanceClient.Entry> entries = financeClient.listEntries(ym.toString()).stream()
+                .filter(FinanceClient.Entry::ativo)
+                .filter(e -> e.dueDate() != null && !e.dueDate().isBefore(start) && !e.dueDate().isAfter(end))
+                .sorted(Comparator.comparing(FinanceClient.Entry::dueDate)
+                        .thenComparing(FinanceClient.Entry::id, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        List<List<Object>> rows = new ArrayList<>(entries.size());
+        for (FinanceClient.Entry e : entries) {
+            List<Object> row = new ArrayList<>(COLUMNS.size());
+            row.add(e.dueDate());
+            row.add(e.direction());
+            row.add(e.status());
+            row.add(e.category());
+            row.add(e.amount());
+            row.add(e.description());
+            rows.add(row);
+        }
+        return result(COLUMNS, rows);
     }
 }

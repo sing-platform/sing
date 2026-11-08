@@ -16,9 +16,7 @@ public class AttendanceByRoomReport extends AbstractReport implements ReportDefi
             WITH RECURSIVE dates(dt) AS (
                 SELECT CAST(:start AS DATE)
                 UNION ALL
-                -- dt + 1 (nao INTERVAL): em PostgreSQL date+interval devolve
-                -- timestamp e o CTE recursivo exige o mesmo tipo dos dois lados.
-                SELECT dt + 1 FROM dates WHERE dt < :end
+                SELECT CAST(dt + 1 AS DATE) FROM dates WHERE dt < :end
             ),
             expected AS (
                 SELECT sr.id AS schoolroom_id, COUNT(*) AS expected_lectures

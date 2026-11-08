@@ -92,9 +92,13 @@ sing:
   services:
     documents:
       base-url: ${SING_SERVICES_DOCUMENTS_BASE_URL:http://localhost:8000}
+    finance:
+      base-url: ${SING_SERVICES_FINANCE_BASE_URL:http://localhost:8082}
+    communication:
+      base-url: ${SING_SERVICES_COMMUNICATION_BASE_URL:http://localhost:3000}
   events:
     exchange: ${SING_EVENTS_EXCHANGE:sing.events}
-  # Matrícula criada (contrato N2). O finance em .NET não sobe neste compose.
+  # Matrícula criada (contrato N2).
   n2:
     cobranca-valor-centavos: ${N2_COBRANCA_VALOR_CENTAVOS:15000}
     cobranca-prazo-dias: ${N2_COBRANCA_PRAZO_DIAS:10}

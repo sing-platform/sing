@@ -1,8 +1,8 @@
 package br.sing.people.application;
 
 import br.sing.academic.infra.repositories.WorkshopRepository;
-import br.sing.communication.application.NotificationService;
 import br.sing.communication.application.ResilientMessagingService;
+import br.sing.communication.application.WaitingListVacancyPublisher;
 import br.sing.communication.domain.EmailMessageEvent;
 import br.sing.config.RabbitMQConfig;
 import br.sing.exception.BusinessException;
@@ -34,7 +34,7 @@ public class StudentPreRegisterService {
     private final WaitingListVacancyQueryService vacancyQueryService;
     private final ResilientMessagingService messagingService;
     private final UserRepository userRepository;
-    private final NotificationService notificationService;
+    private final WaitingListVacancyPublisher vacancyPublisher;
 
     @Transactional
     public StudentPreRegisterResponse create(StudentPreRegisterCreateRequest request) {
@@ -59,7 +59,7 @@ public class StudentPreRegisterService {
             return;
         }
         long waiting = studentPreRegisterRepository.countByWorkshop_IdAndShift(workshop.getId(), shift);
-        notificationService.createWaitingListVacancyIfAbsent(
+        vacancyPublisher.publishIfApplicable(
                 workshop.getId(),
                 workshop.getName(),
                 shift,
