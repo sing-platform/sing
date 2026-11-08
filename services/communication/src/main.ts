@@ -8,10 +8,12 @@ async function bootstrap(): Promise<void> {
   const config = new DocumentBuilder()
     .setTitle("SING Communication")
     .setDescription(
-      "Notificacao da matricula. Esta UI e publica. " +
-        "GET /api/v1/comunicacao/notificacoes/{eventId} continua sem JWT.",
+      "Mural institucional, notificacoes in-app e notificacao da matricula. Esta UI e publica. " +
+        "As rotas do mural (/api/v1/mural) e das notificacoes (/api/v1/notifications) exigem JWT do core. " +
+        "GET /api/v1/comunicacao/notificacoes/{eventId} (matricula) continua sem JWT.",
     )
-    .setVersion("0.1.0")
+    .setVersion("0.2.0")
+    .addBearerAuth()
     .addServer("/", "Gateway (Traefik ou Ingress)")
     .build();
   const document = SwaggerModule.createDocument(app, config);

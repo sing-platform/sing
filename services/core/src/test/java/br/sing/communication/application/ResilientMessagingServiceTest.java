@@ -158,6 +158,26 @@ class ResilientMessagingServiceTest {
     }
 
     @Test
+    void processOutboxReenviaNotificacaoSolicitadaComoEnvelopeTipado() throws Exception {
+        NotificacaoSolicitadaEnvelope envelope = new NotificacaoSolicitadaEnvelope(
+                "6f1c2a4e-1b2c-4d5e-8f90-123456789abc", "notificacao.solicitada", 1, "2026-11-08T17:00:00Z",
+                new NotificacaoSolicitadaEnvelope.Payload("WAITING_LIST_VACANCY", "t", "m", "/a", "WAITING_LIST:4:MORNING",
+                        List.of(1L, 2L)));
+        MessageOutbox pending = MessageOutbox.builder()
+                .id(5L)
+                .exchange("sing.events")
+                .routingKey("notificacao.solicitada")
+                .payload(objectMapper.writeValueAsString(envelope))
+                .processed(false)
+                .build();
+        when(outboxRepository.findByProcessedFalse()).thenReturn(List.of(pending));
+
+        service.processOutbox();
+
+        verify(rabbitTemplate).convertAndSend("sing.events", "notificacao.solicitada", envelope);
+    }
+
+    @Test
     void processOutboxUsaObjectComoFallbackQuandoRoutingKeyDesconhecida() throws Exception {
         // payload é string JSON simples; classe alvo cai em Object
         MessageOutbox pending = MessageOutbox.builder()

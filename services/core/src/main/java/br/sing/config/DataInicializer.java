@@ -2,10 +2,6 @@ package br.sing.config;
 
 import br.sing.academic.domain.entities.*;
 import br.sing.academic.infra.repositories.*;
-import br.sing.communication.domain.MuralPost;
-import br.sing.communication.domain.MuralPostView;
-import br.sing.communication.infra.repositories.MuralPostRepository;
-import br.sing.communication.infra.repositories.MuralPostViewRepository;
 import br.sing.iam.domain.RolesEnum;
 import br.sing.iam.domain.Role;
 import br.sing.iam.domain.User;
@@ -49,8 +45,6 @@ public class DataInicializer implements ApplicationRunner {
     private final SchoolRoomRepository schoolRoomRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final LectureRepository lectureRepository;
-    private final MuralPostRepository muralPostRepository;
-    private final MuralPostViewRepository muralPostViewRepository;
     private final PatientAssignmentRepository patientAssignmentRepository;
 
     private Address adminAddress;
@@ -64,7 +58,6 @@ public class DataInicializer implements ApplicationRunner {
         criarEnderecos();
         popularPessoasSeed();
         popularAcademicoSeed();
-        popularMuralSeed();
         popularVinculosPsicologoSeed();
     }
 
@@ -359,77 +352,6 @@ public class DataInicializer implements ApplicationRunner {
         if (!lectureRepository.existsBySchoolroomIdAndDateTime(schoolRoom.getId(), dateTime)) {
             lectureRepository.save(Lecture.builder()
                     .schoolroom(schoolRoom).dateTime(dateTime).topic(topic).build());
-        }
-    }
-
-    private void popularMuralSeed() {
-        if (muralPostRepository.count() > 0) {
-            return;
-        }
-
-        User adminUser = userRepository.findByEmail("admin@sing.local").orElse(null);
-        User teacherUser = userRepository.findByEmail("teacher@sing.local").orElse(null);
-        User secretaryUser = userRepository.findByEmail("secretary@sing.local").orElse(null);
-
-        if (adminUser != null) {
-            Set<String> rolesPost1 = Set.of(
-                    RolesEnum.ROLE_STUDENT.name(),
-                    RolesEnum.ROLE_PARENT.name(),
-                    RolesEnum.ROLE_PROFESSOR.name());
-            MuralPost p1 = muralPostRepository.save(MuralPost.builder()
-                    .title("Boas-vindas ao portal da Escola Modelo!")
-                    .content("Seja bem-vindo ao novo portal da Escola Modelo. Aqui você encontrará todas as informações sobre suas atividades, horários e comunicados institucionais.")
-                    .author(adminUser)
-                    .createdAt(LocalDateTime.now().minusDays(10))
-                    .audienceRoles(rolesPost1)
-                    .isActive(true)
-                    .build());
-            criarViewsSeed(p1, rolesPost1);
-        }
-
-        if (secretaryUser != null) {
-            Set<String> rolesPost2 = Set.of(
-                    RolesEnum.ROLE_STUDENT.name(),
-                    RolesEnum.ROLE_PARENT.name());
-            MuralPost p2 = muralPostRepository.save(MuralPost.builder()
-                    .title("Calendário de oficinas — 2º semestre")
-                    .content("O calendário completo das oficinas do 2º semestre já está disponível. Consulte os horários no painel de cada turma.")
-                    .author(secretaryUser)
-                    .createdAt(LocalDateTime.now().minusDays(5))
-                    .audienceRoles(rolesPost2)
-                    .isActive(true)
-                    .build());
-            criarViewsSeed(p2, rolesPost2);
-        }
-
-        if (teacherUser != null) {
-            Set<String> rolesPost3 = Set.of(
-                    RolesEnum.ROLE_STUDENT.name(),
-                    RolesEnum.ROLE_PSYCHOLOGIST.name());
-            MuralPost p3 = muralPostRepository.save(MuralPost.builder()
-                    .title("Reunião pedagógica — próxima segunda-feira")
-                    .content("Lembramos a todos os alunos que a reunião pedagógica mensal acontecerá na próxima segunda-feira. Participação importante!")
-                    .author(teacherUser)
-                    .createdAt(LocalDateTime.now().minusDays(2))
-                    .audienceRoles(rolesPost3)
-                    .isActive(true)
-                    .build());
-            criarViewsSeed(p3, rolesPost3);
-        }
-    }
-
-    private void criarViewsSeed(MuralPost post, Set<String> roles) {
-        for (String role : roles) {
-            List<User> recipients = userRepository.findByRole_Name(role);
-            for (User recipient : recipients) {
-                if (!muralPostViewRepository.existsByPostAndUser(post, recipient)) {
-                    muralPostViewRepository.save(MuralPostView.builder()
-                            .post(post)
-                            .user(recipient)
-                            .viewedAt(null)
-                            .build());
-                }
-            }
         }
     }
 

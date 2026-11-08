@@ -1,34 +1,38 @@
 package br.sing.reports.application.definitions;
 
 import br.sing.reports.application.ReportDefinition;
+import br.sing.reports.domain.ReportColumn;
+import br.sing.reports.domain.ReportColumnType;
 import br.sing.reports.domain.ReportFilterSpec;
 import br.sing.reports.domain.ReportResult;
-import br.sing.reports.infra.jdbc.ReportJdbcRepository;
+import br.sing.reports.infra.remote.CommunicationClient;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Component
-public class MuralEngagementReport extends AbstractReport implements ReportDefinition {
+public class MuralEngagementReport extends RemoteReport implements ReportDefinition {
 
-    private static final String SQL = """
-            SELECT
-                mp.id AS post_id,
-                mp.title,
-                mp.created_at,
-                u.username AS author_username,
-                (SELECT COUNT(*) FROM mural_post_view v WHERE v.post_id = mp.id) AS view_count,
-                (SELECT COUNT(*) FROM mural_post_view v WHERE v.post_id = mp.id AND v.viewed_at IS NOT NULL) AS read_count
-            FROM mural_post mp
-            INNER JOIN users u ON u.id = mp.author_id
-            WHERE mp.is_active = TRUE
-              AND CAST(mp.created_at AS DATE) BETWEEN :start AND :end
-            ORDER BY mp.created_at DESC
-            """;
+    private static final List<ReportColumn> COLUMNS = List.of(
+            column("post_id", ReportColumnType.NUMBER),
+            column("title", ReportColumnType.STRING),
+            column("created_at", ReportColumnType.DATETIME),
+            column("author_username", ReportColumnType.STRING),
+            column("view_count", ReportColumnType.NUMBER),
+            column("read_count", ReportColumnType.NUMBER)
+    );
 
-    public MuralEngagementReport(ReportJdbcRepository jdbc) {
-        super(jdbc);
+    private final CommunicationClient communicationClient;
+
+    public MuralEngagementReport(CommunicationClient communicationClient) {
+        this.communicationClient = communicationClient;
     }
 
     @Override
@@ -58,6 +62,33 @@ public class MuralEngagementReport extends AbstractReport implements ReportDefin
 
     @Override
     public ReportResult execute(Map<String, Object> filterValues) {
-        return jdbc.queryAutoColumns(SQL, params(filterValues));
+        LocalDate start = (LocalDate) filterValues.get("start");
+        LocalDate end = (LocalDate) filterValues.get("end");
+
+        List<CommunicationClient.MuralEngagement> engagement = communicationClient.muralEngagement(start, end);
+
+        List<List<Object>> rows = new ArrayList<>(engagement.size());
+        for (CommunicationClient.MuralEngagement e : engagement) {
+            List<Object> row = new ArrayList<>(COLUMNS.size());
+            row.add(e.postId());
+            row.add(e.title());
+            row.add(parseCreatedAt(e.createdAt()));
+            row.add(e.authorUsername());
+            row.add(e.viewCount());
+            row.add(e.readCount());
+            rows.add(row);
+        }
+        return result(COLUMNS, rows);
+    }
+
+    private static LocalDateTime parseCreatedAt(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        try {
+            return LocalDateTime.parse(value);
+        } catch (DateTimeParseException e) {
+            return OffsetDateTime.parse(value).withOffsetSameInstant(ZoneOffset.UTC).toLocalDateTime();
+        }
     }
 }

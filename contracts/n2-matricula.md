@@ -92,9 +92,9 @@ A exchange `sing.notifications` (`email.send`, `notification.send`, `whatsapp.se
 
 Entrega é pelo menos uma vez. Cada consumidor deduplica de forma persistente pela `eventId` antes de gravar efeito. A segunda cópia não cria outro comprovante nem outra notificação. A deduplicação não fica só em memória.
 
-## Finance — `POST /cobrancas` (proposto)
+## Finance — `POST /cobrancas`
 
-Este caminho não existe no repositório. O financeiro de hoje está no core, em `/api/v1/finance/entries`, `/api/v1/finance/sponsors` e `/api/v1/finance/fiscal-documents`, com valor em `BigDecimal` e sem `matriculaId` único. Esses recursos continuam como estão. O serviço finance deste contrato é .NET com MySQL, idempotente por `matriculaId` (entrega E4, ainda sem código aqui). Este card não implementa o finance; o core só chama o HTTP abaixo.
+O serviço finance é .NET com MySQL, idempotente por `matriculaId`, e é o único dono do financeiro: `/cobrancas` e os recursos `/api/v1/finance/entries`, `/api/v1/finance/sponsors` e `/api/v1/finance/fiscal-documents`. O core só chama o HTTP abaixo.
 
 Contrato HTTP que o core chama depois do commit:
 

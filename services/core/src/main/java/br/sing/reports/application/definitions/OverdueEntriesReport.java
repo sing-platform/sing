@@ -1,36 +1,39 @@
 package br.sing.reports.application.definitions;
 
 import br.sing.reports.application.ReportDefinition;
+import br.sing.reports.domain.ReportColumn;
+import br.sing.reports.domain.ReportColumnType;
 import br.sing.reports.domain.ReportFilterSpec;
 import br.sing.reports.domain.ReportResult;
-import br.sing.reports.infra.jdbc.ReportJdbcRepository;
+import br.sing.reports.infra.remote.FinanceClient;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Component
-public class OverdueEntriesReport extends AbstractReport implements ReportDefinition {
+public class OverdueEntriesReport extends RemoteReport implements ReportDefinition {
 
-    private static final String SQL = """
-            SELECT
-                e.id,
-                e.due_date,
-                e.direction,
-                e.category,
-                e.amount,
-                e.description,
-                s.name AS sponsor_name
-            FROM financial_entry e
-            LEFT JOIN sponsor s ON s.id = e.sponsor_id
-            WHERE e.is_active = TRUE
-              AND e.status = 'PENDING'
-              AND e.due_date < :today
-            ORDER BY e.due_date ASC
-            """;
+    private static final Set<String> OPEN_STATUSES = Set.of("PENDING", "OVERDUE");
 
-    public OverdueEntriesReport(ReportJdbcRepository jdbc) {
-        super(jdbc);
+    private static final List<ReportColumn> COLUMNS = List.of(
+            column("id", ReportColumnType.NUMBER),
+            column("due_date", ReportColumnType.DATE),
+            column("direction", ReportColumnType.STRING),
+            column("category", ReportColumnType.STRING),
+            column("amount", ReportColumnType.NUMBER),
+            column("description", ReportColumnType.STRING),
+            column("sponsor_name", ReportColumnType.STRING)
+    );
+
+    private final FinanceClient financeClient;
+
+    public OverdueEntriesReport(FinanceClient financeClient) {
+        this.financeClient = financeClient;
     }
 
     @Override
@@ -60,8 +63,28 @@ public class OverdueEntriesReport extends AbstractReport implements ReportDefini
 
     @Override
     public ReportResult execute(Map<String, Object> filterValues) {
-        Map<String, Object> p = params(filterValues);
-        p.put("today", java.time.LocalDate.now());
-        return jdbc.queryAutoColumns(SQL, p);
+        LocalDate today = LocalDate.now();
+
+        List<FinanceClient.Entry> entries = financeClient.listEntries(null).stream()
+                .filter(FinanceClient.Entry::ativo)
+                .filter(e -> OPEN_STATUSES.contains(e.status()))
+                .filter(e -> e.dueDate() != null && e.dueDate().isBefore(today))
+                .sorted(Comparator.comparing(FinanceClient.Entry::dueDate)
+                        .thenComparing(FinanceClient.Entry::id, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+
+        List<List<Object>> rows = new ArrayList<>(entries.size());
+        for (FinanceClient.Entry e : entries) {
+            List<Object> row = new ArrayList<>(COLUMNS.size());
+            row.add(e.id());
+            row.add(e.dueDate());
+            row.add(e.direction());
+            row.add(e.category());
+            row.add(e.amount());
+            row.add(e.description());
+            row.add(e.sponsorName());
+            rows.add(row);
+        }
+        return result(COLUMNS, rows);
     }
 }

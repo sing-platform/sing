@@ -53,7 +53,7 @@ Não cole um segredo na página: o botão Authorize só guarda o token no browse
 | core | http://localhost:8080/swagger-ui/index.html | http://localhost:8080/v3/api-docs | `/api/**` com JWT |
 | finance | http://localhost:8080/finance/swagger | http://localhost:8080/finance/swagger/v1/swagger.json | `/api/v1/finance/**` com JWT. `POST /cobrancas` não passa pelo gateway |
 | documents | http://localhost:8080/documents/docs | http://localhost:8080/documents/openapi.json | `/api/documents/**` com JWT. `/api/documents/docs` não é a UI: cai na rota `/{document_id}` |
-| communication | http://localhost:8080/comunicacao/docs | http://localhost:8080/comunicacao/openapi.json | `GET /api/v1/comunicacao/notificacoes/{eventId}` segue sem JWT |
+| communication | http://localhost:8080/comunicacao/docs | http://localhost:8080/comunicacao/openapi.json | `/api/v1/mural/**` e `/api/v1/notifications/**` com JWT. `GET /api/v1/comunicacao/notificacoes/{eventId}` segue sem JWT |
 
 `GET http://localhost:8080/api/v1/instancia` também é público. Devolve o nome real
 da instância do core (`servico` + `instancia`) e o header `X-Pod`. No compose há

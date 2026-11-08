@@ -115,6 +115,7 @@ public class ResilientMessagingService {
     private Class<?> resolveTargetClass(String routingKey) {
         return switch (routingKey) {
             case "email.send" -> br.sing.communication.domain.EmailMessageEvent.class;
+            case "notificacao.solicitada" -> NotificacaoSolicitadaEnvelope.class;
             default           -> Object.class;
         };
     }

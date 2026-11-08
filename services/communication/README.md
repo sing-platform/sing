@@ -1,13 +1,17 @@
 # sing-communication
 
-Recorte NestJS da notificação de `matricula.criada`.
+NestJS: notificação de `matricula.criada`, mural institucional e notificações in-app.
 
 - Fila `communication.matricula.criada` na exchange `sing.events`
 - Mongo próprio, database `sing_communication`
 - Uma notificação por `eventId`
 - `GET /api/v1/comunicacao/notificacoes/{eventId}` devolve a notificação ou 404
 
-Não envia e-mail nem WhatsApp. O `GET /api/v1/notifications` do core continua no PostgreSQL.
+O mural (`/api/v1/mural`) e as notificações in-app (`/api/v1/notifications`) exigem o JWT do core.
+A notificação da matrícula continua pública. Contrato em [`contracts/mural-notificacoes.md`](../../contracts/mural-notificacoes.md).
+
+Variáveis: `JWT_SECRET` (mesmo valor do core; vazio recusa todo token), `CORE_BASE_URL` (padrão `http://localhost:8080`),
+`MONGO_URI`, `RABBITMQ_*`.
 
 ## Teste
 

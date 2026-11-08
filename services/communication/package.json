@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js",
-    "test": "tsc -p tsconfig.json && node --test test/evento.test.js"
+    "test": "tsc -p tsconfig.json && node --test test/evento.test.js test/jwt.test.js test/guard.test.js test/mural.test.js test/email.test.js test/notificacoes-usuario.test.js test/validacao.test.js"
   },
   "dependencies": {
     "@nestjs/common": "10.4.15",

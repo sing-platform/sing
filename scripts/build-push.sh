@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publica core, documents e communication em ghcr.io/sing-platform/<servico>.
+# Publica core, documents, communication e finance em ghcr.io/sing-platform/<servico>.
 # Plataforma linux/amd64, que e a dos nos t3.medium do EKS.
 #
 #   export GHCR_USER=seu-usuario
@@ -23,7 +23,7 @@ fi
 
 echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
-for svc in core documents communication; do
+for svc in core documents communication finance; do
   echo "==> ${REGISTRY}/${svc}:${TAG} (${PLATFORM})"
   tags=(-t "${REGISTRY}/${svc}:${TAG}")
   if [[ -n "${GITHUB_SHA:-}" ]]; then
