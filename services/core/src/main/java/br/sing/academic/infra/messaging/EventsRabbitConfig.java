@@ -21,6 +21,8 @@ public class EventsRabbitConfig {
     public static final String EVENTS_EXCHANGE = "sing.events";
     public static final String ATESTADO_QUEUE = "core.atestado.events";
     public static final String ATESTADO_DLQ = "core.atestado.events.dlq";
+    public static final String NOTIFICACAO_SOLICITADA_RK = "notificacao.solicitada";
+    public static final String NOTIFICACAO_SOLICITADA_QUEUE = "communication.notificacao.solicitada";
 
     @Value("${sing.events.exchange:" + EVENTS_EXCHANGE + "}")
     private String exchangeName;
@@ -50,5 +52,15 @@ public class EventsRabbitConfig {
     @Bean
     public Binding atestadoBinding(Queue atestadoQueue, TopicExchange singEventsExchange) {
         return BindingBuilder.bind(atestadoQueue).to(singEventsExchange).with("atestado.*");
+    }
+
+    @Bean
+    public Queue notificacaoSolicitadaQueue() {
+        return QueueBuilder.durable(NOTIFICACAO_SOLICITADA_QUEUE).build();
+    }
+
+    @Bean
+    public Binding notificacaoSolicitadaBinding(Queue notificacaoSolicitadaQueue, TopicExchange singEventsExchange) {
+        return BindingBuilder.bind(notificacaoSolicitadaQueue).to(singEventsExchange).with(NOTIFICACAO_SOLICITADA_RK);
     }
 }
