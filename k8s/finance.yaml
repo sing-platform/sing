@@ -1,55 +1,103 @@
-# O finance (.NET + MySQL) é do Matheus e ainda não tem código neste repositório.
-# Este arquivo NÃO entra no kustomization.yaml. Se entrasse, o apply tentaria
-# subir um pod sem imagem e o resto da demo não depende dele.
-#
-# O core chama http://finance:8080/cobrancas. Enquanto este Service não existir,
-# a cobrança fica pendente e o core tenta de novo. A matrícula, o comprovante
-# e a notificação seguem sem o finance.
-#
-# Quando a imagem existir, tire os comentários e acrescente o arquivo no
-# kustomization.yaml. O MySQL dele entra junto, no mesmo namespace, com
-# Service próprio (não reutilize o Postgres do core nem o do documents).
-#
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: finance
-#   namespace: sing
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: finance
-#   template:
-#     metadata:
-#       labels:
-#         app: finance
-#     spec:
-#       containers:
-#         - name: finance
-#           image: ghcr.io/sing-platform/finance:latest
-#           ports:
-#             - containerPort: 8080
-#           env:
-#             - name: ASPNETCORE_URLS
-#               value: http://+:8080
-#           resources:
-#             requests:
-#               cpu: 50m
-#               memory: 128Mi
-#             limits:
-#               cpu: 300m
-#               memory: 384Mi
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: finance
-#   namespace: sing
-# spec:
-#   selector:
-#     app: finance
-#   ports:
-#     - name: http
-#       port: 8080
-#       targetPort: 8080
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: finance
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: finance
+  template:
+    metadata:
+      labels:
+        app: finance
+    spec:
+      containers:
+        - name: finance
+          image: ghcr.io/sing-platform/finance:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_URLS
+              value: http://0.0.0.0:8080
+            - name: ConnectionStrings__Finance
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: ConnectionStrings__Finance
+            - name: Jwt__Secret
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: JWT_SECRET
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: JWT_SECRET
+            - name: Core__BaseUrl
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: CORE_BASE_URL
+            - name: RabbitMq__Host
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: RABBITMQ_HOST
+            - name: RabbitMq__Port
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: RABBITMQ_PORT
+            - name: RabbitMq__User
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: RABBITMQ_USER
+            - name: RabbitMq__Password
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: RABBITMQ_PASSWORD
+            - name: RabbitMq__Exchange
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: SING_EVENTS_EXCHANGE
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 5
+            failureThreshold: 36
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: finance
+spec:
+  selector:
+    app: finance
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
