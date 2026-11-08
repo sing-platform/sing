@@ -77,7 +77,6 @@ services:
       JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
       SING_CORS_ALLOWED_ORIGIN_PATTERNS: ${CORS_ORIGINS:-http://localhost:8080,http://localhost:5173}
       LOG_LEVEL_ROOT: ${LOG_LEVEL_ROOT:-INFO}
-      # Finance e .NET e nao sobe neste compose. Sem ele a cobranca fica pendente e o core tenta de novo.
       N2_FINANCE_BASE_URL: ${N2_FINANCE_BASE_URL:-http://finance:8080}
       N2_COBRANCA_VALOR_CENTAVOS: ${N2_COBRANCA_VALOR_CENTAVOS:-15000}
       N2_COBRANCA_PRAZO_DIAS: ${N2_COBRANCA_PRAZO_DIAS:-10}
@@ -157,7 +156,7 @@ services:
 
   # -------------------------------- comprovante e notificacao (N2) ----------
   # Dois Mongos de proposito: credencial e database do comprovante nao sao
-  # os da comunicacao. O finance (.NET + MySQL) fica fora deste compose.
+  # os da comunicacao.
   mongo-documents:
     image: mongo:7
     container_name: sing-mongo-documents
@@ -223,6 +222,60 @@ services:
       timeout: 5s
       retries: 10
       start_period: 25s
+    networks: [sing]
+
+  # ---------------------------------------------------------- finance -------
+  # Servico em C# (.NET 8) com MySQL proprio. Substitui o modulo finance do
+  # core e atende POST /cobrancas do contrato N2.
+  mysql-finance:
+    image: mysql:8.0
+    container_name: sing-mysql-finance
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${FINANCE_DB_NAME:-sing_finance}
+      MYSQL_USER: ${FINANCE_DB_USER:-sing}
+      MYSQL_PASSWORD: ${FINANCE_DB_PASSWORD:-sing}
+      MYSQL_ROOT_PASSWORD: ${FINANCE_DB_ROOT_PASSWORD:-singroot}
+    ports:
+      - "${FINANCE_DB_PORT:-3306}:3306"
+    volumes:
+      - mysqldata-finance:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-u${FINANCE_DB_USER:-sing}", "-p${FINANCE_DB_PASSWORD:-sing}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+    networks: [sing]
+
+  finance:
+    build:
+      context: ../services/finance
+      dockerfile: Dockerfile
+    container_name: sing-finance
+    restart: unless-stopped
+    depends_on:
+      mysql-finance:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      ConnectionStrings__Finance: Server=mysql-finance;Port=3306;Database=${FINANCE_DB_NAME:-sing_finance};User=${FINANCE_DB_USER:-sing};Password=${FINANCE_DB_PASSWORD:-sing};
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      Jwt__Secret: ${JWT_SECRET:?defina JWT_SECRET no .env}
+      Core__BaseUrl: http://core:8080
+      RabbitMq__Host: rabbitmq
+      RabbitMq__Port: 5672
+      RabbitMq__User: ${RABBITMQ_USER:-sing}
+      RabbitMq__Password: ${RABBITMQ_PASSWORD:-sing}
+      RabbitMq__Exchange: ${EVENTS_EXCHANGE:-sing.events}
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health | grep -q '\"status\":\"UP\"' || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
     networks: [sing]
 
   # -------------------------------------------------------- mensageria ------
@@ -318,6 +371,7 @@ services:
 volumes:
   pgdata-core:
   pgdata-documents:
+  mysqldata-finance:
   rabbitmq-data:
   minio-data:
   keycloak-data:

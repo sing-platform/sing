@@ -1,0 +1,35 @@
+using System.Text.Json.Serialization;
+using Sing.Finance.Api;
+using Sing.Finance.Infrastructure;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
+
+builder.Services.AddFinanceJwt(builder.Configuration);
+builder.Services.AddFinanceSwagger();
+builder.Services.AddFinance(builder.Configuration);
+
+var app = builder.Build();
+
+if (!app.Environment.IsEnvironment("Testing"))
+{
+    await app.Services.EnsureFinanceSchemaAsync();
+}
+
+app.UseFinanceSwagger();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapHealthEndpoints();
+app.MapCobrancaEndpoints();
+app.MapSponsorEndpoints();
+app.MapFinancialEntryEndpoints();
+app.MapFiscalDocumentEndpoints();
+
+app.Run();
+
+public partial class Program;

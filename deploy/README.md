@@ -33,6 +33,7 @@ docker compose --profile observability up -d
 | Serviço | URL |
 |---|---|
 | API (via Traefik) | http://localhost:8080/api |
+| Swagger finance | http://localhost:8080/finance/swagger |
 | Swagger | http://localhost:8080/swagger-ui.html |
 | Health | http://localhost:8080/actuator/health |
 | Dashboard Traefik | http://localhost:8081 |
@@ -57,8 +58,7 @@ não derruba o status do serviço.
 
 ## Matrícula criada (N2)
 
-O compose sobe o Mongo do comprovante, o Mongo da comunicação e o serviço Nest.
-O finance em .NET não entra aqui: sem ele a cobrança fica `pendente` e o core tenta de novo.
+O compose sobe o Mongo do comprovante, o Mongo da comunicação, o serviço Nest e o finance (.NET + MySQL).
 
 Testes do fluxo, na raiz do repositório:
 
