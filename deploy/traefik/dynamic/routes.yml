@@ -20,7 +20,8 @@ http:
       priority: 1
 
     documents:
-      rule: "PathPrefix(`/api/documents`)"
+      # /documents/docs fica fora de /api/documents para nao cair em /{document_id}.
+      rule: "PathPrefix(`/api/documents`) || PathPrefix(`/documents/docs`) || PathPrefix(`/documents/openapi.json`)"
       entryPoints: [web]
       service: documents
       # Precisa ganhar do router do core, que tambem casa com esta URL.
@@ -29,7 +30,7 @@ http:
       priority: 200
 
     communication:
-      rule: "PathPrefix(`/api/v1/comunicacao`)"
+      rule: "PathPrefix(`/api/v1/comunicacao`) || PathPrefix(`/comunicacao/docs`) || PathPrefix(`/comunicacao/openapi.json`)"
       entryPoints: [web]
       service: communication
       priority: 200

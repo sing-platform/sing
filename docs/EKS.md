@@ -152,6 +152,17 @@ curl -sI "http://${ELB}/actuator/health" | head
 
 O health tem que responder 200.
 
+As UIs de documentação usam os mesmos paths do Traefik. Troque o host pelo do Load Balancer:
+
+| Serviço | UI | Schema |
+|---|---|---|
+| core | `http://${ELB}/swagger-ui/index.html` | `http://${ELB}/v3/api-docs` |
+| finance | `http://${ELB}/finance/swagger` | `http://${ELB}/finance/swagger/v1/swagger.json` |
+| documents | `http://${ELB}/documents/docs` | `http://${ELB}/documents/openapi.json` |
+| communication | `http://${ELB}/comunicacao/docs` | `http://${ELB}/comunicacao/openapi.json` |
+
+A página é pública. Try it out chama o Ingress. Core, documents e `/api/v1/finance` seguem com JWT. O finance no cluster ainda depende do Deployment dele (o placeholder em `k8s/finance.yaml`).
+
 ## 6. Demo de 5 minutos
 
 ### O que está no ar
@@ -175,13 +186,19 @@ kubectl scale deployment/core -n sing --replicas=3
 kubectl rollout status deployment/core -n sing
 ```
 
-Seis chamadas. O header `X-Pod` muda, porque o Service distribui entre os pods:
+Seis chamadas. O header `X-Pod` e o JSON dizem qual pod respondeu.
+O Service não garante round-robin: duas chamadas seguidas podem cair no mesmo pod.
 
 ```bash
 for i in 1 2 3 4 5 6; do
-  curl -sI "http://${ELB}/actuator/health" | grep -i '^X-Pod'
+  curl -sD - "http://${ELB}/api/v1/instancia" | grep -E -i '^(X-Pod|HTTP)|"instancia"'
+  echo
 done
 ```
+
+`GET /api/v1/instancia` é público e só devolve `servico` e `instancia` (o nome do pod).
+Não traz IP, env nem segredo. No compose existe uma instância só: o valor é o
+hostname daquele container, e isso não prova três réplicas.
 
 ### Matrícula (REST + RabbitMQ)
 

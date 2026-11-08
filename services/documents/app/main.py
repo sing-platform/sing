@@ -37,9 +37,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="SING Documents",
-    description="Documentos, atestados e fluxo de aprovacao.",
+    description=(
+        "Documentos, atestados e fluxo de aprovacao. "
+        "Esta UI e publica. As rotas /api/documents pedem o JWT do core."
+    ),
     version="1.0.0",
     lifespan=lifespan,
+    # Fora de /api/documents: esse prefixo tem /{document_id} e um GET em
+    # /docs ou /openapi.json vira 405 em vez da documentacao.
+    docs_url="/documents/docs",
+    openapi_url="/documents/openapi.json",
+    redoc_url=None,
+    servers=[{"url": "/", "description": "Gateway (Traefik ou Ingress)"}],
 )
 
 app.include_router(documents.router)

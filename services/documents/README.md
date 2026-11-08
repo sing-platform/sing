@@ -80,8 +80,11 @@ alembic upgrade head
 uvicorn app.main:app --reload --port 8000
 ```
 
-Docs em `http://localhost:8000/docs`; health em `/actuator/health` (mesmo caminho
-do core, para o compose e o Prometheus tratarem a stack de forma uniforme).
+A UI no gateway é `http://localhost:8080/documents/docs` (schema em
+`/documents/openapi.json`). Direto no processo, os mesmos caminhos ficam na
+porta 8000. `/api/documents/docs` não é a documentação: essa URL cai em
+`/{document_id}`. Health em `/actuator/health` (mesmo caminho do core, para o
+compose e o Prometheus tratarem a stack de forma uniforme).
 
 ## Contrato da matrícula
 

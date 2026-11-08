@@ -33,8 +33,6 @@ docker compose --profile observability up -d
 | Serviço | URL |
 |---|---|
 | API (via Traefik) | http://localhost:8080/api |
-| Swagger finance | http://localhost:8080/finance/swagger |
-| Swagger | http://localhost:8080/swagger-ui.html |
 | Health | http://localhost:8080/actuator/health |
 | Dashboard Traefik | http://localhost:8081 |
 | RabbitMQ | http://localhost:15672 |
@@ -43,6 +41,24 @@ docker compose --profile observability up -d
 | Notificação da matrícula | http://localhost:8080/api/v1/comunicacao/notificacoes/{eventId} |
 | Jaeger | http://localhost:16686 |
 | Prometheus | http://localhost:9090 |
+
+## Documentação (Swagger / OpenAPI)
+
+A UI é pública no gateway. O negócio continua com o JWT que já tinha.
+No Swagger, **Try it out** chama o mesmo host (Traefik local ou o Ingress no EKS).
+Não cole um segredo na página: o botão Authorize só guarda o token no browser.
+
+| Serviço | UI (pública) | Schema (público) | Negócio |
+|---|---|---|---|
+| core | http://localhost:8080/swagger-ui/index.html | http://localhost:8080/v3/api-docs | `/api/**` com JWT |
+| finance | http://localhost:8080/finance/swagger | http://localhost:8080/finance/swagger/v1/swagger.json | `/api/v1/finance/**` com JWT. `POST /cobrancas` não passa pelo gateway |
+| documents | http://localhost:8080/documents/docs | http://localhost:8080/documents/openapi.json | `/api/documents/**` com JWT. `/api/documents/docs` não é a UI: cai na rota `/{document_id}` |
+| communication | http://localhost:8080/comunicacao/docs | http://localhost:8080/comunicacao/openapi.json | `GET /api/v1/comunicacao/notificacoes/{eventId}` segue sem JWT |
+
+`GET http://localhost:8080/api/v1/instancia` também é público. Devolve o nome real
+da instância do core (`servico` + `instancia`) e o header `X-Pod`. No compose há
+um container só. Três nomes diferentes aparecem no Ingress, com 3 réplicas, e o
+balanceamento não é round-robin estrito.
 
 ## Verificar
 

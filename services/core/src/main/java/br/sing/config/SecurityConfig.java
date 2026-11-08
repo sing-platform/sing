@@ -76,6 +76,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/me/**").authenticated()
                         .requestMatchers(
                                 "/actuator/health",
+                                "/api/v1/instancia",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**",

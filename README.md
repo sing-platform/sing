@@ -68,3 +68,14 @@ docker compose up -d
 ```
 
 Detalhes em [deploy/README.md](deploy/README.md).
+
+A UI de cada serviço passa pelo mesmo gateway (`localhost:8080` no compose, o Ingress no EKS). Ela é pública. As rotas de negócio do core, do documents e do finance continuam pedindo JWT.
+
+| Serviço | UI |
+|---|---|
+| core | http://localhost:8080/swagger-ui/index.html |
+| finance | http://localhost:8080/finance/swagger |
+| documents | http://localhost:8080/documents/docs |
+| communication | http://localhost:8080/comunicacao/docs |
+
+`GET /api/v1/instancia` (público) diz qual instância do core respondeu. No compose é uma só.
