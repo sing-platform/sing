@@ -303,8 +303,10 @@ services:
 
   # ------------------------------------------------------------ storage -----
   # MinIO substitui o Azure Blob. Usado pelo servico documents (E2).
+  # minio/minio saiu do Docker Hub e quay.io/minio/minio responde 401 sem login.
+  # Esta imagem publica sobe o mesmo servidor (RELEASE.2026-10-23), nas portas 9000/9001.
   minio:
-    image: minio/minio:latest
+    image: cgr.dev/chainguard/minio:latest@sha256:a1ac4589a5f8136b616e667b48a0bea9719bb10bd45799ea946f24bbedfafde4
     container_name: sing-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
