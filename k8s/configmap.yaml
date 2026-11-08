@@ -1,0 +1,37 @@
+# O que não é senha. Os hosts são os nomes dos Services (DNS do Kubernetes).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sing-config
+data:
+  DB_URL: jdbc:postgresql://postgres-core:5432/sing_core
+  DB_USER: sing
+  CORE_DB_NAME: sing_core
+  DOCS_DB_NAME: sing_documents
+  DOCS_DB_USER: sing
+  RABBITMQ_HOST: rabbitmq
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USER: sing
+  RABBITMQ_LISTENER_AUTO_STARTUP: "true"
+  SING_EVENTS_EXCHANGE: sing.events
+  RABBITMQ_EXCHANGE: sing.events
+  SING_SERVICES_DOCUMENTS_BASE_URL: http://documents:8000
+  CORE_BASE_URL: http://core:8080
+  S3_ENDPOINT: http://minio:9000
+  S3_ACCESS_KEY: singadmin
+  S3_BUCKET: sing-documents
+  MINIO_USER: singadmin
+  LOG_LEVEL_ROOT: INFO
+  SING_CORS_ALLOWED_ORIGIN_PATTERNS: http://localhost:8080,http://localhost:5173
+  # O Service finance ainda não existe. A cobrança fica pendente e o core tenta de novo.
+  N2_FINANCE_BASE_URL: http://finance:8080
+  N2_COBRANCA_VALOR_CENTAVOS: "15000"
+  N2_COBRANCA_PRAZO_DIAS: "10"
+  N2_RETRY_INTERVALO: 30s
+  N2_RETRY_LIMITE: "10"
+  N2_CLAIM_SEGUNDOS: "60"
+  DOCUMENTS_COMPROVANTE_MAX_BYTES: "1048576"
+  MONGO_DOCUMENTS_USER: documents
+  MONGO_COMMUNICATION_USER: communication
+  MONGO_DOCUMENTS_DB: sing_documents_comprovantes
+  MONGO_COMMUNICATION_DB: sing_communication

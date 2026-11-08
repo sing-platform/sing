@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-communication
+spec:
+  selector:
+    app: mongo-communication
+  ports:
+    - name: mongo
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo-communication
+spec:
+  serviceName: mongo-communication
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-communication
+  template:
+    metadata:
+      labels:
+        app: mongo-communication
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: MONGO_COMMUNICATION_USER
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: MONGO_COMMUNICATION_PASSWORD
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: MONGO_COMMUNICATION_DB
+          args: ["--wiredTigerCacheSizeGB", "0.25"]
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
+            initialDelaySeconds: 25
+            periodSeconds: 5
+            timeoutSeconds: 10
+            failureThreshold: 12
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
+            periodSeconds: 10
+            timeoutSeconds: 10
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - mongosh -u "$MONGO_INITDB_ROOT_USERNAME" -p "$MONGO_INITDB_ROOT_PASSWORD" --authenticationDatabase admin --quiet --eval 'db.adminCommand("ping")'
+            periodSeconds: 20
+            timeoutSeconds: 10
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 1Gi

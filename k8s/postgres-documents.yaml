@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-documents
+spec:
+  selector:
+    app: postgres-documents
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-documents
+spec:
+  serviceName: postgres-documents
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-documents
+  template:
+    metadata:
+      labels:
+        app: postgres-documents
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: DOCS_DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: DOCS_DB_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: DOCS_DB_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
+          startupProbe:
+            exec:
+              command: ["pg_isready", "-U", "sing", "-d", "sing_documents"]
+            periodSeconds: 5
+            failureThreshold: 20
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "sing", "-d", "sing_documents"]
+            periodSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "sing", "-d", "sing_documents"]
+            periodSeconds: 20
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 1Gi

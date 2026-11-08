@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: api
+      port: 9000
+      targetPort: 9000
+    - name: console
+      port: 9001
+      targetPort: 9001
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  serviceName: minio
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: minio
+          # minio/minio saiu do Docker Hub (pull access denied). Esta imagem
+          # da Bitnami sobe o mesmo servidor nas portas 9000 e 9001.
+          image: bitnamilegacy/minio:2024
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          env:
+            - name: MINIO_ROOT_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: sing-config
+                  key: MINIO_USER
+            - name: MINIO_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sing-secrets
+                  key: MINIO_ROOT_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/minio/data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: 9000
+            periodSeconds: 5
+            failureThreshold: 20
+          readinessProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: 9000
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: 9000
+            periodSeconds: 20
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 1Gi
