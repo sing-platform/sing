@@ -11,7 +11,7 @@ A documentação está em `docs/docs/`.
 |---|---|---|---|
 | **core** | Java 21 / Spring Boot | PostgreSQL | Domínio acadêmico (pessoas, turmas, matrículas, chamada). Indivisível — 47% do código original |
 | **documents** | Python / FastAPI | PostgreSQL + MinIO | Upload, atestados, fluxo de aprovação |
-| **communication** | Node 20 / NestJS | MongoDB | Notificações, mural |
+| **communication** | Node 20 / NestJS | MongoDB | Mural, notificações in-app, notificação da matrícula |
 | **finance** | C# / .NET 8 | MySQL | Transações, patrocinadores, cobrança |
 | **reports** | Python / FastAPI | PostgreSQL (read model) | Relatórios via CQRS |
 
@@ -40,7 +40,9 @@ docs/           decisões e notas de implementação
 
 ## Contrato N2
 
-O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance (.NET + MySQL) atende `POST /cobrancas` e os recursos em `/api/v1/finance/*`.
+O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](contracts/n2-matricula.md). O core grava a matrícula e a pendência na mesma transação, publica `matricula.criada` e chama `POST /cobrancas`. O documents e o communication consomem filas separadas, cada um no próprio Mongo. O finance (.NET + MySQL) atende `POST /cobrancas` e os recursos em `/api/v1/finance/*`; o core não tem mais API financeira.
+
+O mural e as notificações in-app moram no communication ([contracts/mural-notificacoes.md](contracts/mural-notificacoes.md)). Os caminhos `/api/v1/mural` e `/api/v1/notifications` não mudaram; o gateway os manda ao communication.
 
 ## Entregas
 
@@ -48,7 +50,7 @@ O recorte fechado da matrícula criada está em [contracts/n2-matricula.md](cont
 |---|---|---|
 | **E1** | Infra base (compose, Traefik, Keycloak, OTel) + core migrado para PostgreSQL | ✅ concluída |
 | **E2** | [`documents`](services/documents) (Python + PostgreSQL + MinIO), evento `AtestadoApproved` | ✅ concluída |
-| E3 | `communication` (Node/TS + MongoDB) | ⬜ |
+| **E3** | [`communication`](services/communication) (Node/TS + MongoDB), mural e notificações in-app | ✅ concluída |
 | **E4** | [`finance`](services/finance) (C#/.NET + MySQL), `POST /cobrancas` | ✅ concluída |
 | E5 | `reports` (Python + read model CQRS) | ⬜ |
 
@@ -69,7 +71,7 @@ docker compose up -d
 
 Detalhes em [deploy/README.md](deploy/README.md).
 
-A UI de cada serviço passa pelo mesmo gateway (`localhost:8080` no compose, o Ingress no EKS). Ela é pública. As rotas de negócio do core, do documents e do finance continuam pedindo JWT.
+A UI de cada serviço passa pelo mesmo gateway (`localhost:8080` no compose, o Ingress no EKS). Ela é pública. As rotas de negócio do core, do documents, do finance e do communication continuam pedindo JWT.
 
 | Serviço | UI |
 |---|---|

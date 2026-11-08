@@ -67,7 +67,8 @@ mensagens de antes.
 }
 ```
 
-`recipients` já exclui o autor e só traz usuários habilitados. O communication chama esta
+`recipients` já exclui o autor. Como antes, o público por turma traz só alunos com usuário
+habilitado; o público por papel traz todos os usuários do papel. O communication chama esta
 rota ao criar e ao editar um post; na edição, só quem ainda não tinha visualização ganha
 visualização e e-mail.
 
