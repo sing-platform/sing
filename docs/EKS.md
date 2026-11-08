@@ -5,14 +5,14 @@ O passo a passo cabe numa sessão do lab. **Apague o cluster no final.** Nó e
 Load Balancer ligados continuam gastando crédito mesmo depois da apresentação.
 
 O Keycloak fica de fora: o login da demo usa o JWT do próprio core (`JWT_SECRET`).
-O finance (Matheus, .NET + MySQL) também fica de fora. O manifesto comentado está
-em `k8s/finance.yaml`. Sem ele a cobrança fica `pendente`; a matrícula, o
-comprovante e a notificação não dependem disso.
+O finance (.NET + MySQL) sobe com `k8s/finance.yaml` e `k8s/mysql-finance.yaml`.
+Se ele cair, a cobrança fica `pendente` e o core tenta de novo; a matrícula, o
+comprovante e a notificação não dependem dele.
 
 ## 0. Imagens no GHCR
 
-Os Deployments usam `ghcr.io/sing-platform/core`, `documents` e `communication`,
-tag `latest`, arquitetura **linux/amd64**.
+Os Deployments usam `ghcr.io/sing-platform/core`, `documents`, `communication` e
+`finance`, tag `latest`, arquitetura **linux/amd64**.
 
 Na sua máquina, com Docker:
 
@@ -125,6 +125,7 @@ kubectl get pods -n sing
 kubectl wait --for=condition=ready pod -l app=core -n sing --timeout=360s
 kubectl wait --for=condition=ready pod -l app=documents -n sing --timeout=180s
 kubectl wait --for=condition=ready pod -l app=communication -n sing --timeout=180s
+kubectl wait --for=condition=ready pod -l app=finance -n sing --timeout=240s
 ```
 
 O core demora porque roda o Flyway e a carga inicial. Três pods `core` têm que
@@ -161,7 +162,7 @@ As UIs de documentação usam os mesmos paths do Traefik. Troque o host pelo do 
 | documents | `http://${ELB}/documents/docs` | `http://${ELB}/documents/openapi.json` |
 | communication | `http://${ELB}/comunicacao/docs` | `http://${ELB}/comunicacao/openapi.json` |
 
-A página é pública. Try it out chama o Ingress. Core, documents e `/api/v1/finance` seguem com JWT. O finance no cluster ainda depende do Deployment dele (o placeholder em `k8s/finance.yaml`).
+A página é pública. Try it out chama o Ingress. As rotas de negócio do core, do documents, do finance e do communication (`/api/v1/mural`, `/api/v1/notifications`) seguem com JWT.
 
 ## 6. Demo de 5 minutos
 
@@ -232,8 +233,8 @@ curl -s -X POST "http://${ELB}/api/v1/enrollments" \
   -d "{\"studentId\": ${ALUNO}, \"schoolRoomIds\": [${SALA}]}"
 ```
 
-A resposta 201 traz `matriculaId` e `eventId`. A publicação no Rabbit é logo
-depois. A cobrança continua `pendente` (não há finance).
+A resposta 201 traz `matriculaId` e `eventId`. A publicação no Rabbit e a
+cobrança no finance são logo depois.
 
 ```bash
 # troque pelos valores impressos acima
