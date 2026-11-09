@@ -14,8 +14,12 @@ if ! minikube status --format '{{.Host}}' 2>/dev/null | grep -q Running; then
 fi
 
 for svc in "${SERVICOS[@]}"; do
+  contexto="$ROOT/services/${svc}"
+  if command -v cygpath >/dev/null 2>&1; then
+    contexto="$(cygpath -w "$contexto")"
+  fi
   echo "==> ${REGISTRY}/${svc}:latest dentro do minikube"
-  minikube image build -t "${REGISTRY}/${svc}:latest" "$ROOT/services/${svc}"
+  minikube image build -t "${REGISTRY}/${svc}:latest" "$contexto"
 done
 
 echo "Imagens prontas. Reinicie os pods para pegar a versão nova:"
