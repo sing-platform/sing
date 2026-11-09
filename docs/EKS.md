@@ -1,298 +1,292 @@
 # EKS no AWS Academy Learner Lab
 
-Sobe o SING num cluster pequeno (2 nós `t3.medium`) e mostra a demo da matrícula.
-O passo a passo cabe numa sessão do lab. **Apague o cluster no final.** Nó e
-Load Balancer ligados continuam gastando crédito mesmo depois da apresentação.
+Sobe o SING num cluster EKS pequeno e mostra a demo: pods, Services, balanceamento entre
+réplicas do core, REST e RabbitMQ. Todos os comandos são para o **Git Bash**, no terminal
+que tem as credenciais do lab.
 
-O Keycloak fica de fora: o login da demo usa o JWT do próprio core (`JWT_SECRET`).
-O finance (.NET + MySQL) sobe com `k8s/finance.yaml` e `k8s/mysql-finance.yaml`.
-Se ele cair, a cobrança fica `pendente` e o core tenta de novo; a matrícula, o
-comprovante e a notificação não dependem dele.
+**Apague tudo no final** (seção 9). Encerrar a sessão do lab para os EC2, mas o control plane,
+o Load Balancer, os IPs públicos e os discos continuam cobrando. "End Lab" não zera a conta, e
+o painel de crédito mostra o consumo com atraso.
 
-## 0. Imagens no GHCR
+## Sessão de 4 horas
 
-Os Deployments usam `ghcr.io/sing-platform/core`, `documents`, `communication` e
-`finance`, tag `latest`, arquitetura **linux/amd64**.
+A sessão do Learner Lab dura 4 horas. Quando ela acaba:
 
-Na sua máquina, com Docker:
+- os EC2 (os nós) param e a demo sai do ar;
+- control plane, NLB, discos e IPs do NLB **continuam cobrando**, cerca de US$0,14/h sem nada funcionar;
+- o `aws_session_token` expira: no próximo **Start Lab**, cole as credenciais novas antes de usar `aws` ou `kubectl`;
+- ao religar os nós, os pods dos bancos voltam vazios (`emptyDir`) e o core refaz a carga inicial.
 
-```bash
-export GHCR_USER=seu-usuario-github
-export GHCR_TOKEN=seu-token-com-write-packages
-./scripts/build-push.sh
-```
+Por isso tudo cabe numa sessão só: criar (~30 min), validar (~20 min) e apagar (~20 min).
+No dia da apresentação, clique em **Start Lab** cerca de 1h30 antes: o contador volta para 4h e
+não acaba no meio da demo. Se a sessão acabar com o cluster criado, abra outra só para terminar
+a limpeza.
 
-Depois que esta branch estiver na `main`, o mesmo script roda em
-Actions → **imagens** → Run workflow.
+## O que sobe
 
-No pacote do GHCR, deixe a visibilidade **pública** para o nó puxar sem senha.
-Se ficar privado, crie o secret no cluster (depois do `apply` do namespace) e
-coloque `imagePullSecrets` nos três Deployments:
+| Item | Escolha |
+|---|---|
+| Kubernetes | 1.36, política de suporte `STANDARD` (não cai no suporte estendido de US$0,60/h) |
+| Cluster | modo padrão, sem Auto Mode, criado pela CLI |
+| Nós | node group gerenciado, 3× `t3.medium` On-Demand, AL2023, disco de 20 GiB |
+| Rede | VPC padrão, subnets públicas de us-east-1a, 1b e 1c, sem NAT e sem mudar rotas |
+| Entrada | NGINX Ingress Controller da F5/NGINX (chart `nginx-ingress` 2.8.0) atrás de um NLB |
+| Imagens | `ghcr.io/sing-platform/<servico>:<sha da main>`, públicas |
+| Bancos | Postgres ×2, Mongo ×2, MySQL, RabbitMQ e MinIO em StatefulSets com `emptyDir` |
 
-```bash
-kubectl create secret docker-registry ghcr -n sing \
-  --docker-server=ghcr.io \
-  --docker-username="$GHCR_USER" \
-  --docker-password="$GHCR_TOKEN"
-```
+O controlador comunitário `ingress-nginx` foi aposentado em março de 2026 e não recebe mais
+correção de segurança; por isso o Ingress usa o controlador da F5, que segue mantido. O
+`k8s/ingress.yaml` traz as anotações dos dois, e cada controlador ignora as do outro.
 
-```yaml
-imagePullSecrets:
-  - name: ghcr
-```
+## Custo
 
-## 1. Start Lab
+Preços sob demanda em us-east-1, conferidos em novembro de 2026.
 
-Abra o Learner Lab e clique em **Start Lab**. Espere o sinal verde.
-Em **AWS Details**, copie a credencial de CLI (access key, secret e session token).
+| Recurso | Preço | Por hora |
+|---|---|---|
+| Control plane EKS (suporte padrão) | US$0,10/h | 0,100 |
+| 3× EC2 `t3.medium` | US$0,0418/h cada | 0,125 |
+| 3× EBS gp3 de 20 GiB | US$0,08/GB-mês | 0,007 |
+| 5 IPv4 públicos (3 nós + 2 do NLB) | US$0,005/h cada | 0,025 |
+| NLB | US$0,0225/h + ~US$0,006/NLCU-h | 0,029 |
+| **Total** | | **≈ US$0,29/h** |
 
-```bash
-aws configure
-# região: us-east-1
-# cole também o aws_session_token no arquivo ~/.aws/credentials
-```
+Teste de 3 h ≈ US$0,90. Deixar ligado por 40 h ≈ US$11,60. O mais barato é subir para testar,
+apagar e subir de novo no dia da apresentação (≈ US$0,90 cada vez).
 
-Confira:
+## 0. Pré-requisitos
+
+- AWS CLI v2, `kubectl` e `helm` instalados.
+- Lab iniciado e credenciais coladas em `~/.aws/credentials` (com `aws_session_token`).
+- Região us-east-1.
 
 ```bash
 aws sts get-caller-identity
+aws eks list-clusters --region us-east-1
+aws eks describe-cluster-versions --region us-east-1 --query "clusterVersions[?versionStatus=='STANDARD_SUPPORT'].clusterVersion"
 ```
 
-A região da demo é **us-east-1**. No canto do console, troque para `US East (N. Virginia)`.
+Se `list-clusters` já mostrar um `sing`, não crie outro: siga do passo que faltar.
+
+As roles e subnets abaixo são as da conta do lab usada no projeto. Em outra conta, troque
+pelos valores dela (`aws iam list-roles --query "Roles[?contains(RoleName,'LabEks')].Arn"` e
+`aws ec2 describe-subnets --filters Name=default-for-az,Values=true`). Nos values do
+controlador (`deploy/eks/nginx-ingress-values.yaml`) as subnets do NLB também são dessa conta.
+
+## 1. Imagens
+
+O workflow **imagens** builda core, documents, communication e finance em `linux/amd64` e
+publica com a tag `latest` e com o SHA do commit:
+
+```bash
+gh workflow run imagens --repo sing-platform/sing --ref main
+gh run watch --repo sing-platform/sing
+```
+
+No GitHub, deixe os quatro pacotes **públicos** (org → Packages → pacote → Package settings →
+Change visibility). Sem isso o nó recebe 403 e o pod fica em `ImagePullBackOff`.
+
+`deploy/eks/kustomization.yaml` fixa as imagens no SHA `d6c15375…`. Se publicar de outro
+commit, troque o `newTag` das quatro imagens.
 
 ## 2. Cluster
 
-EKS → **Create cluster**.
-
-| Campo | Valor |
-|---|---|
-| Name | `sing` |
-| Kubernetes version | a padrão do console |
-| Cluster service role | `LabEksClusterRole` |
-
-Networking:
-
-- VPC **default** da conta do lab
-- Subnets **públicas** (pelo menos duas, em zonas diferentes)
-- Cluster endpoint: **Public**
-- Não crie role nova. O lab não deixa.
-
-Create e espere o status **Active** (uns 10 minutos).
-
-## 3. Node group
-
-Dentro do cluster, **Compute** → **Add node group**.
-
-| Campo | Valor |
-|---|---|
-| Name | `sing-nodes` |
-| Node IAM role | `LabEksNodeRole` |
-| AMI | Amazon Linux, a padrão |
-| Capacity | On-Demand |
-| Instance type | `t3.medium` |
-| Desired / Min / Max | `2` / `2` / `2` |
-| Disk | 20 GiB |
-
-Sem SSH key. Sem escalar além de 2: cada nó a mais gasta crédito.
-
-Espere os dois nós **Ready**:
+Sem `--compute-config`: o cluster sobe no modo padrão, não no Auto Mode.
 
 ```bash
+aws eks create-cluster --region us-east-1 --name sing --kubernetes-version 1.36 \
+  --role-arn arn:aws:iam::730335192519:role/c222296a5607975l18258519t1w730335-LabEksClusterRole-6YCj8cOuj23M \
+  --resources-vpc-config subnetIds=subnet-02e136981a6c0f04c,subnet-0352c1463d6ddde74,subnet-0f516cbe6290922a2,endpointPublicAccess=true,endpointPrivateAccess=true \
+  --access-config authenticationMode=API_AND_CONFIG_MAP,bootstrapClusterCreatorAdminPermissions=true \
+  --upgrade-policy supportType=STANDARD
+aws eks wait cluster-active --region us-east-1 --name sing
+```
+
+Leva de 10 a 15 minutos. Se der `AccessDenied` em `iam:PassRole`, pare: o lab não deixa usar
+a role, e não há como contornar sem IAM novo.
+
+## 3. Nós
+
+```bash
+aws eks create-nodegroup --region us-east-1 --cluster-name sing --nodegroup-name sing-nodes \
+  --node-role arn:aws:iam::730335192519:role/c222296a5607975l18258519t1w730335192-LabEksNodeRole-AkX6QL6O0w3u \
+  --subnets subnet-02e136981a6c0f04c subnet-0352c1463d6ddde74 subnet-0f516cbe6290922a2 \
+  --instance-types t3.medium --ami-type AL2023_x86_64_STANDARD --capacity-type ON_DEMAND \
+  --disk-size 20 --scaling-config minSize=3,maxSize=3,desiredSize=3
+aws eks wait nodegroup-active --region us-east-1 --cluster-name sing --nodegroup-name sing-nodes
 aws eks update-kubeconfig --region us-east-1 --name sing
-kubectl get nodes
+kubectl get nodes -o wide
 ```
 
-## 4. Ingress NGINX
+Três nós `Ready`.
 
-O acesso de fora é por este Ingress. Ele abre um Load Balancer na AWS.
+## 4. NGINX Ingress Controller
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.3/deploy/static/provider/aws/deploy.yaml
-kubectl rollout status deployment/ingress-nginx-controller -n ingress-nginx --timeout=180s
+helm install nginx-ingress oci://ghcr.io/nginx/charts/nginx-ingress --version 2.8.0 \
+  -n nginx-ingress --create-namespace -f deploy/eks/nginx-ingress-values.yaml
+kubectl get svc -n nginx-ingress -w
 ```
 
-## 5. Aplicar o SING
+Espere a coluna `EXTERNAL-IP` mostrar o DNS do NLB.
 
-As senhas estão em `k8s/secrets.example.yaml` e são as mesmas de
-`deploy/.env.example` (`trocar-esta-senha`, etc.). Servem só para o lab.
-Não commite senha real. Se for trocar, copie para `k8s/secret.yaml`
-(esse nome está no `.gitignore`), ajuste o `kustomization.yaml` na sua máquina
-e não faça push desse arquivo.
+## 5. Segredos e deploy
+
+`scripts/eks-segredos.sh` gera `deploy/eks/secrets.local.yaml` com senhas e `JWT_SECRET`
+aleatórios. O arquivo fica fora do git e o script não imprime os valores. O `JWT_SECRET` sai
+com 56 caracteres hex (42 bytes): com esse tamanho o core assina em HS256, o único algoritmo
+que o documents aceita.
 
 ```bash
-kubectl apply -k k8s/
-kubectl get pods -n sing
-kubectl wait --for=condition=ready pod -l app=core -n sing --timeout=360s
-kubectl wait --for=condition=ready pod -l app=documents -n sing --timeout=180s
-kubectl wait --for=condition=ready pod -l app=communication -n sing --timeout=180s
-kubectl wait --for=condition=ready pod -l app=finance -n sing --timeout=240s
+./scripts/eks-segredos.sh
+kubectl apply -k deploy/eks
+kubectl get pods -n sing -w
 ```
 
-O core demora porque roda o Flyway e a carga inicial. Três pods `core` têm que
-ficar `Running`. Os bancos (`postgres-core`, `postgres-documents`,
-`mongo-documents`, `mongo-communication`), o `rabbitmq` e o `minio` também.
-O MinIO usa `bitnamilegacy/minio:2024`: a imagem `minio/minio` saiu do Docker Hub.
-
-Os volumes são `emptyDir`. No Learner Lab o driver de disco (EBS CSI) em geral
-não está instalado, e um PVC ficaria `Pending` para sempre. Se o pod do banco
-morrer, o dado da demo some. Para a apresentação isso basta.
-
-O endereço externo:
+O core demora (Flyway e carga inicial em cada pod). Tudo pronto:
 
 ```bash
-kubectl get ingress -n sing
+kubectl wait --for=condition=ready pod --all -n sing --timeout=600s
 ```
 
-Espere a coluna ADDRESS sair de vazia. É o DNS do Load Balancer.
+Endereço público:
 
 ```bash
 ELB=$(kubectl get ingress -n sing sing -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 echo "$ELB"
-curl -sI "http://${ELB}/actuator/health" | head
+curl -sI "http://${ELB}/actuator/health" | head -1
 ```
 
-O health tem que responder 200.
+O DNS do NLB pode levar alguns minutos para resolver.
 
-As UIs de documentação usam os mesmos paths do Traefik. Troque o host pelo do Load Balancer:
+## 6. Validação
 
-| Serviço | UI | Schema |
-|---|---|---|
-| core | `http://${ELB}/swagger-ui/index.html` | `http://${ELB}/v3/api-docs` |
-| finance | `http://${ELB}/finance/swagger` | `http://${ELB}/finance/swagger/v1/swagger.json` |
-| documents | `http://${ELB}/documents/docs` | `http://${ELB}/documents/openapi.json` |
-| communication | `http://${ELB}/comunicacao/docs` | `http://${ELB}/comunicacao/openapi.json` |
-
-A página é pública. Try it out chama o Ingress. As rotas de negócio do core, do documents, do finance e do communication (`/api/v1/mural`, `/api/v1/notifications`) seguem com JWT.
-
-## 6. Demo de 5 minutos
-
-### O que está no ar
+### Pods, Services e discovery
 
 ```bash
-kubectl get pods,svc,ingress -n sing
+kubectl get pods,svc,ingress -n sing -o wide
+kubectl run dns-teste -n sing --rm -it --restart=Never --image=busybox:1.36 -- \
+  sh -c 'for s in core finance documents communication rabbitmq postgres-core mysql-finance; do nslookup $s.sing.svc.cluster.local | tail -2; done'
+```
+
+Todo Service é `ClusterIP`: bancos, RabbitMQ e MinIO não têm endereço externo. A única
+entrada é o NLB do controlador NGINX.
+
+### APIs e documentação
+
+| Serviço | Swagger |
+|---|---|
+| core | `http://${ELB}/swagger-ui/index.html` |
+| finance | `http://${ELB}/finance/swagger` |
+| documents | `http://${ELB}/documents/docs` |
+| communication | `http://${ELB}/comunicacao/docs` |
+
+A documentação é pública; as rotas de negócio não:
+
+```bash
+curl -s -o /dev/null -w "sem token: %{http_code}\n" "http://${ELB}/api/v1/finance/entries"
+```
+
+Deve responder `401`.
+
+### Réplicas e balanceamento
+
+```bash
 kubectl get pods -n sing -l app=core -o wide
+for i in $(seq 1 9); do curl -s "http://${ELB}/api/v1/instancia"; echo; done
+for i in $(seq 1 6); do curl -sI "http://${ELB}/actuator/health" | grep -i '^X-Pod'; done
 ```
 
-Três pods do core, Services com DNS interno (`core`, `documents`,
-`communication`, `rabbitmq`, `postgres-core`, …) e o Ingress na frente.
-O documents acha o core em `http://core:8080`. O core acha o Rabbit em
-`rabbitmq`. Isso é o Service Discovery.
+Os nomes vêm do Downward API (`POD_NAME`) e são os mesmos de `kubectl get pods`. Repetir o
+mesmo pod em sequência é normal: o balanceamento não é round-robin estrito.
 
-### Balanceamento
+### Matrícula: REST + RabbitMQ
 
-O Deployment do core já pede 3 réplicas. Se estiver com menos:
+Login de teste da carga inicial: `admin@sing.local` / `SING@123`.
 
 ```bash
-kubectl scale deployment/core -n sing --replicas=3
-kubectl rollout status deployment/core -n sing
+TOKEN=$(curl -s -X POST "http://${ELB}/api/v1/auth/authenticate" -H 'Content-Type: application/json' \
+  -d '{"email":"admin@sing.local","password":"SING@123"}' | python -c 'import json,sys; print(json.load(sys.stdin)["token"])')
+
+SALA=$(curl -s "http://${ELB}/api/v1/schoolrooms" -H "Authorization: Bearer $TOKEN" \
+  | python -c 'import json,sys; print(next(r["id"] for r in json.load(sys.stdin) if r["activeEnrollmentCount"]>0))')
+
+ALUNO=$(curl -s "http://${ELB}/api/v1/schoolrooms/${SALA}/enrollments?size=1" -H "Authorization: Bearer $TOKEN" \
+  | python -c 'import json,sys; print(json.load(sys.stdin)["content"][0]["studentId"])')
+
+curl -s -o /dev/null -w "cancela: %{http_code}\n" -X DELETE \
+  "http://${ELB}/api/v1/enrollments/student/${ALUNO}/room/${SALA}" -H "Authorization: Bearer $TOKEN"
+
+curl -s -X POST "http://${ELB}/api/v1/enrollments" -H "Authorization: Bearer $TOKEN" \
+  -H 'Content-Type: application/json' -d "{\"studentId\": ${ALUNO}, \"schoolRoomIds\": [${SALA}]}"
 ```
 
-Seis chamadas. O header `X-Pod` e o JSON dizem qual pod respondeu.
-O Service não garante round-robin: duas chamadas seguidas podem cair no mesmo pod.
+A resposta traz `matriculaId` e `eventId`. Troque os valores abaixo pelos impressos:
 
 ```bash
-for i in 1 2 3 4 5 6; do
-  curl -sD - "http://${ELB}/api/v1/instancia" | grep -E -i '^(X-Pod|HTTP)|"instancia"'
-  echo
-done
-```
-
-`GET /api/v1/instancia` é público e só devolve `servico` e `instancia` (o nome do pod).
-Não traz IP, env nem segredo. No compose existe uma instância só: o valor é o
-hostname daquele container, e isso não prova três réplicas.
-
-### Matrícula (REST + RabbitMQ)
-
-A semente já matricula os alunos. A demo cancela um vínculo e cria de novo,
-para nascer um `matricula.criada` novo. Login da semente: `admin@sing.local` /
-`SING@123`.
-
-```bash
-TOKEN=$(curl -s -X POST "http://${ELB}/api/v1/auth/authenticate" \
-  -H 'Content-Type: application/json' \
-  -d '{"email":"admin@sing.local","password":"SING@123"}' \
-  | python3 -c 'import json,sys; print(json.load(sys.stdin)["token"])')
-
-# A listagem /api/v1/students com filtro vazio quebra no PostgreSQL
-# (o banco não infere o tipo do parâmetro nulo). A turma devolve o aluno.
-SALA=$(curl -s "http://${ELB}/api/v1/schoolrooms" \
-  -H "Authorization: Bearer $TOKEN" \
-  | python3 -c 'import json,sys; rooms=json.load(sys.stdin); print(next(r["id"] for r in rooms if r["activeEnrollmentCount"]>0))')
-
-ALUNO=$(curl -s "http://${ELB}/api/v1/schoolrooms/${SALA}/enrollments?size=1" \
-  -H "Authorization: Bearer $TOKEN" \
-  | python3 -c 'import json,sys; print(json.load(sys.stdin)["content"][0]["studentId"])')
-
-curl -s -o /dev/null -w "delete %{http_code}\n" \
-  -X DELETE "http://${ELB}/api/v1/enrollments/student/${ALUNO}/room/${SALA}" \
-  -H "Authorization: Bearer $TOKEN"
-
-curl -s -X POST "http://${ELB}/api/v1/enrollments" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H 'Content-Type: application/json' \
-  -d "{\"studentId\": ${ALUNO}, \"schoolRoomIds\": [${SALA}]}"
-```
-
-A resposta 201 traz `matriculaId` e `eventId`. A publicação no Rabbit e a
-cobrança no finance são logo depois.
-
-```bash
-# troque pelos valores impressos acima
 MATRICULA=1
 EVENTO=00000000-0000-4000-8000-000000000000
-
-curl -s "http://${ELB}/api/v1/enrollments/${MATRICULA}/integracoes" \
-  -H "Authorization: Bearer $TOKEN"
+curl -s "http://${ELB}/api/v1/enrollments/${MATRICULA}/integracoes" -H "Authorization: Bearer $TOKEN"
 ```
 
-Quando `publicacao` for `concluida`, os dois consumidores já podem ter gravado.
+Com `publicacao` e `cobranca` em `concluida`:
 
-Notificação (communication, pela Ingress, path `/api/v1/comunicacao`):
+- **Cobrança** (REST core → finance, MySQL):
+  ```bash
+  kubectl exec -n sing mysql-finance-0 -- sh -c 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" sing_finance -e "select id, matricula_id, valor_centavos, status from cobranca"'
+  ```
+- **Notificação** (RabbitMQ → communication, Mongo próprio):
+  ```bash
+  curl -s "http://${ELB}/api/v1/comunicacao/notificacoes/${EVENTO}"
+  ```
+- **Comprovante** (RabbitMQ → documents, Mongo próprio). Não há endpoint de leitura; a consulta é no pod:
+  ```bash
+  kubectl exec -n sing mongo-documents-0 -- sh -c "mongosh -u \"\$MONGO_INITDB_ROOT_USERNAME\" -p \"\$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin sing_documents_comprovantes --quiet --eval \"db.comprovantes.find({eventId: '${EVENTO}'}, {arquivoBase64: 0}).toArray()\""
+  ```
+
+Notificação e comprovante saem da mesma mensagem na exchange `sing.events`, cada um na sua fila.
+
+### Isolamento dos bancos
+
+Cada serviço tem banco, Service e credencial próprios: core → `postgres-core`, documents →
+`postgres-documents` + `mongo-documents` + MinIO, communication → `mongo-communication`,
+finance → `mysql-finance`. Quando um precisa de dado do outro, chama a API (finance pede o
+aluno ao core por REST) ou consome evento.
+
+## 7. Roteiro de 5 minutos
+
+1. `kubectl get nodes,pods,svc,ingress -n sing -o wide`: 3 nós, 3 réplicas do core em nós diferentes, Services sem IP externo.
+2. Loop de `/api/v1/instancia`: nomes de pod diferentes respondendo.
+3. Um Swagger público e o `401` sem token.
+4. Matrícula pelo `curl` e `integracoes` em `concluida`.
+5. Cobrança no MySQL, notificação pela API e comprovante no Mongo: um REST e dois consumidores RabbitMQ.
+
+## 8. Limitações
+
+- **Persistência:** os bancos usam `emptyDir`. Se um pod de banco reinicia ou muda de nó, os dados somem. Um volume EBS exigiria o driver EBS CSI com role IAM própria, que o lab não permite criar.
+- **Login de teste:** a senha da carga inicial (`SING@123`) é pública. Enquanto o NLB existir, qualquer um entra como admin; subir só perto da apresentação reduz a janela.
+- **NLB:** cada subnet listada nos values ganha um IP público cobrado.
+
+## 9. Limpeza
+
+Nesta ordem: o `helm uninstall` remove o NLB antes do cluster, para ele não ficar órfão.
 
 ```bash
-curl -s "http://${ELB}/api/v1/comunicacao/notificacoes/${EVENTO}"
+kubectl delete -k deploy/eks
+helm uninstall nginx-ingress -n nginx-ingress
+aws elbv2 describe-load-balancers --region us-east-1 --query "LoadBalancers[].LoadBalancerName"
+aws eks delete-nodegroup --region us-east-1 --cluster-name sing --nodegroup-name sing-nodes
+aws eks wait nodegroup-deleted --region us-east-1 --cluster-name sing --nodegroup-name sing-nodes
+aws eks delete-cluster --region us-east-1 --name sing
+aws eks wait cluster-deleted --region us-east-1 --name sing
 ```
 
-Comprovante (documents). Esse recorte não tem GET: ele só consome a fila e
-grava no Mongo dele. A consulta é no pod:
+Depois confira que não sobrou nada cobrando:
 
 ```bash
-kubectl exec -n sing mongo-documents-0 -- \
-  mongosh -u documents -p 'trocar-esta-senha' --authenticationDatabase admin \
-  sing_documents_comprovantes --quiet \
-  --eval "db.comprovantes.find({eventId: '${EVENTO}'}, {arquivoBase64: 0}).toArray()"
+aws ec2 describe-volumes --region us-east-1 --filters Name=status,Values=available --query "Volumes[].VolumeId"
+aws ec2 describe-security-groups --region us-east-1 --filters Name=tag-key,Values=kubernetes.io/cluster/sing --query "SecurityGroups[].GroupId"
+aws ec2 describe-addresses --region us-east-1 --query "Addresses[].PublicIp"
 ```
 
-Tem que aparecer um documento `tipo: comprovante` com o `nomeArquivo`
-`comprovante-matricula-<id>.pdf`. A notificação e o comprovante saem da mesma
-mensagem na exchange `sing.events`, cada um na sua fila.
-
-Fila, se quiser mostrar na UI (não fica aberta na internet):
-
-```bash
-kubectl port-forward -n sing svc/rabbitmq 15672:15672
-```
-
-Usuário `sing`, senha `trocar-esta-senha`. Exchange `sing.events`.
-
-## 7. Derrubar tudo
-
-Faça isso **antes** de End Lab. A ordem importa: o Load Balancer some junto
-com o Service do ingress. Se apagar o cluster primeiro, o balanceador pode
-ficar órfão e continuar na conta.
-
-```bash
-kubectl delete -k k8s/
-kubectl delete namespace ingress-nginx
-```
-
-No console EC2 → Load Balancers, espere a lista ficar vazia.
-No EKS:
-
-1. Apague o node group `sing-nodes` e espere sumir.
-2. Apague o cluster `sing` e espere sumir.
-3. EC2 → Volumes: apague volume `available` que tenha sobrado.
-4. Só então **End Lab**.
-
-Se o `kubectl delete` falhar porque o lab já expirou, apague o Load Balancer,
-o node group e o cluster pelo console mesmo assim.
+Só então **End Lab**. Se o lab expirar antes, apague pelo console na mesma ordem.
