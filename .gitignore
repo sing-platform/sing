@@ -42,6 +42,7 @@ project.lock.json
 *.key
 !deploy/**/*.example
 k8s/secret.yaml
+deploy/eks/secrets.local.yaml
 
 # ---- Dados de container (volumes locais) ----
 deploy/**/data/
