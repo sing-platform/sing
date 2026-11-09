@@ -69,7 +69,7 @@ cp .env.example .env
 docker compose up -d
 ```
 
-Detalhes em [deploy/README.md](deploy/README.md).
+Detalhes em [deploy/README.md](deploy/README.md). Kubernetes local com os manifests do EKS: [docs/MINIKUBE.md](docs/MINIKUBE.md). Cluster na AWS: [docs/EKS.md](docs/EKS.md).
 
 A UI de cada serviço passa pelo mesmo gateway (`localhost:8080` no compose, o Ingress no EKS). Ela é pública. As rotas de negócio do core, do documents, do finance e do communication continuam pedindo JWT.
 
