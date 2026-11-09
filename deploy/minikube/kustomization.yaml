@@ -1,0 +1,6 @@
+namespace: sing
+resources:
+  - ../../k8s
+  - hpa-core.yaml
+patches:
+  - path: core.yaml
