@@ -1,8 +1,10 @@
 controller:
+  allowEmptyIngressHost: true
   ingressClass:
     name: nginx
   service:
     type: LoadBalancer
+    externalTrafficPolicy: Cluster
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-type: nlb
       service.beta.kubernetes.io/aws-load-balancer-subnets: subnet-02e136981a6c0f04c,subnet-0352c1463d6ddde74
