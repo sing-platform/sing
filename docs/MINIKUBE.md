@@ -18,8 +18,10 @@ O minikube roda dentro da VM do Docker Desktop. A stack pede perto de 2 GB de re
 com 2 réplicas do core, e cada réplica extra pede mais 384 Mi.
 
 - Pare a stack do compose antes: `docker compose -p sgs-sing-ms stop` (os volumes ficam).
-- Com 4 GB no Docker Desktop, use `--memory=3500mb`. Com 6 GB ou mais
-  (Settings → Resources), use `--memory=5g` e o HPA chega às 3 réplicas com folga.
+- Com 4 GB no Docker Desktop, use `--memory=3500mb`. Pods, balanceamento e a subida do
+  HPA para 3 réplicas funcionam, mas com 3 JVMs o nó satura: o metrics-server cai, o HPA
+  fica com `<unknown>` e não desce de volta.
+- Com 6 GB ou mais (Settings → Resources), use `--memory=5g` para ver o HPA subir e descer.
 
 ## 1. Subir o cluster
 
