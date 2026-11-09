@@ -38,6 +38,15 @@ O controlador comunitário `ingress-nginx` foi aposentado em março de 2026 e n�
 correção de segurança; por isso o Ingress usa o controlador da F5, que segue mantido. O
 `k8s/ingress.yaml` traz as anotações dos dois, e cada controlador ignora as do outro.
 
+O controlador da F5 tem quatro diferenças que já estão tratadas no repositório:
+
+| Comportamento padrão da F5 | Ajuste |
+|---|---|
+| Recusa Ingress sem `host` (`spec.rules[0].host: Required value`) | `allowEmptyIngressHost: true` nos values: o SING é acessado pelo endereço do NLB, sem domínio |
+| Service com `externalTrafficPolicy: Local`: só o nó do controlador passa no health check do NLB | `externalTrafficPolicy: Cluster` nos values: qualquer nó repassa ao controlador |
+| Redireciona HTTP para HTTPS mesmo sem certificado | `nginx.org/ssl-redirect: "false"` no Ingress |
+| Não grava o endereço do NLB no status do Ingress | o endereço é lido do Service `nginx-ingress-controller` |
+
 ## Custo
 
 Preços sob demanda em us-east-1, conferidos em novembro de 2026.
@@ -128,7 +137,8 @@ helm install nginx-ingress oci://ghcr.io/nginx/charts/nginx-ingress --version 2.
 kubectl get svc -n nginx-ingress -w
 ```
 
-Espere a coluna `EXTERNAL-IP` mostrar o DNS do NLB.
+Espere a coluna `EXTERNAL-IP` mostrar o DNS do NLB. O NLB leva de 2 a 3 minutos para marcar
+os nós como saudáveis.
 
 ## 5. Segredos e deploy
 
@@ -152,7 +162,7 @@ kubectl wait --for=condition=ready pod --all -n sing --timeout=600s
 Endereço público:
 
 ```bash
-ELB=$(kubectl get ingress -n sing sing -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+ELB=$(kubectl get svc -n nginx-ingress nginx-ingress-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 echo "$ELB"
 curl -sI "http://${ELB}/actuator/health" | head -1
 ```
