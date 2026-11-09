@@ -13,8 +13,12 @@ Edite o `.env` — três valores **não** têm default e o compose falha sem ele
 `JWT_SECRET`, `MINIO_PASSWORD`, `KEYCLOAK_PASSWORD`.
 
 ```bash
-openssl rand -hex 48    # use a saída como JWT_SECRET
+openssl rand -hex 28    # use a saída como JWT_SECRET
 ```
+
+São 56 caracteres hex (42 bytes): com esse tamanho o core assina o token em HS256, o único
+algoritmo que o documents aceita. Um segredo maior faz o core assinar em HS384 ou HS512 e o
+documents recusar todos os tokens.
 
 ```bash
 docker compose up -d --build

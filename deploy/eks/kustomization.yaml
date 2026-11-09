@@ -1,0 +1,14 @@
+namespace: sing
+resources:
+  - ../../k8s
+images:
+  - name: ghcr.io/sing-platform/core
+    newTag: d6c15375cd9c2d0327aea95f0ccf1b06f3850b22
+  - name: ghcr.io/sing-platform/documents
+    newTag: d6c15375cd9c2d0327aea95f0ccf1b06f3850b22
+  - name: ghcr.io/sing-platform/communication
+    newTag: d6c15375cd9c2d0327aea95f0ccf1b06f3850b22
+  - name: ghcr.io/sing-platform/finance
+    newTag: d6c15375cd9c2d0327aea95f0ccf1b06f3850b22
+patches:
+  - path: secrets.local.yaml
